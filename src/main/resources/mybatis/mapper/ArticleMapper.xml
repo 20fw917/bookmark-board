@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="me.cocoblue.springfreeboard.mapper.ArticleMapper">
-    <select id="findAllOrderByCreatedAt" resultType="me.cocoblue.springfreeboard.dto.ArticleDTO">
+<mapper namespace="com.project.bookmarkboard.mapper.ArticleMapper">
+    <select id="findAllOrderByCreatedAt" resultType="com.project.bookmarkboard.dto.ArticleDTO">
         SELECT * FROM article ORDER BY created_at DESC
     </select>
 
-    <insert id="insertArticle" parameterType="me.cocoblue.springfreeboard.dto.ArticleDTO">
+    <insert id="insertArticle" parameterType="com.project.bookmarkboard.dto.ArticleDTO">
         INSERT INTO article(author_id, title, content, created_at)
         VALUES (#{authorId}, #{title}, #{content}, #{createdAt})
     </insert>

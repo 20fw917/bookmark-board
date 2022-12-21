@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.bookmarkboard.mapper.BookmarkMapper">
+    <select id="getAllByOwnerOrderByIdDesc" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
+        SELECT * FROM bookmark WHERE owner = #{owner} ORDER BY id DESC
+    </select>
+
+    <select id="getCountByOwner" resultType="int">
+        SELECT count(*) FROM bookmark WHERE owner = #{owner}
+    </select>
+
+    <select id="getAllByOwnerOrderByIdDescLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
+        SELECT * FROM bookmark
+        WHERE owner = #{owner}
+        ORDER BY id DESC
+        LIMIT #{from}, #{to}
+    </select>
+
+    <insert id="insertBookmark" parameterType="com.project.bookmarkboard.dto.BookmarkDTO">
+        INSERT INTO bookmark(`owner`, `title`, `memo`, `url`, `is_shared`)
+        VALUES(#{owner}, #{title}, #{memo}, #{url}, #{isShared})
+    </insert>
+</mapper>

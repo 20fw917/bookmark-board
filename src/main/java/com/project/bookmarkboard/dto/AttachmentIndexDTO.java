@@ -1,14 +1,17 @@
 package com.project.bookmarkboard.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentLikeDTO {
+public class AttachmentIndexDTO {
     private long id;
-    private long userId;
-    private long commentId;
+    private String originalFilename;
+    private String renamedFilename;
+    private long articleId;
 }
