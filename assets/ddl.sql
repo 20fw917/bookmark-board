@@ -3,9 +3,9 @@ CREATE TABLE `user` (
     `username` varchar(30) NOT NULL UNIQUE COMMENT '로그인 할 때 사용할 것',
     `password` varchar(256) NOT NULL COMMENT 'SHA1',
     `email` varchar(320) NOT NULL COMMENT '이메일 ID 부분은 최대 64자 + @ + 도메인은 255자까지 320자',
-    `role` varchar(15) NOT NULL COMMENT 'For Spring Security',
     `nickname` varchar(15) NOT NULL UNIQUE COMMENT '닉네임 15자 제한',
-    `profile_image` varchar(36) NULL DEFAULT NULL COMMENT 'UUID는 36글자로 구성'
+    `profile_image` varchar(36) NULL DEFAULT NULL COMMENT 'UUID는 36글자로 구성',
+    `role` varchar(15) NOT NULL COMMENT 'For Spring Security'
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE `bookmark` (
@@ -87,4 +87,11 @@ CREATE VIEW `article_view` AS (
     FROM `article` a
     JOIN `user` u
     ON a.author_id = u.internal_id
+);
+
+CREATE VIEW `comment_view` AS (
+  SELECT c.id AS `id`, c.content AS `content`,
+     c.created_at AS `created_at`, c.author_id AS `author_id`, u.nickname AS `author_nickname`
+  FROM `comment` c
+    JOIN `user` u ON c.author_id = u.internal_id
 );

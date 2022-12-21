@@ -7,8 +7,6 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleViewDTO extends ArticleDTO {
-    private long authorId;
+public class CommentViewDTO extends CommentDTO {
     private String authorNickname;
-    private int likeCount;
 }

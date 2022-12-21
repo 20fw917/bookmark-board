@@ -14,7 +14,7 @@ public class UserDTO extends User implements Serializable {
     private String passwordRe;
 
     public User toUser() {
-        return new User(super.getInternalId(), super.getUsername(), super.getNickname(), super.getPassword(),
-                super.getEmail(), super.getRole());
+        return new User(super.getInternalId(), super.getUsername(), super.getPassword(), super.getEmail(),
+                super.getNickname(), super.getProfileImage(), super.getRole());
     }
 }

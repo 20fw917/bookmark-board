@@ -3,6 +3,7 @@ package com.project.bookmarkboard.service;
 import com.project.bookmarkboard.dto.User;
 import com.project.bookmarkboard.dto.UserRole;
 import com.project.bookmarkboard.mapper.UserMapper;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +12,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Log4j2
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class UserService {
     private final UserMapper userMapper;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
     public boolean isNicknameExists(String nickname) {

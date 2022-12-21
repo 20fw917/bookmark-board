@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="me.cocoblue.springfreeboard.mapper.UserMapper">
+<mapper namespace="com.project.bookmarkboard.mapper.UserMapper">
     <select id="countByNickname" parameterType="String" resultType="int">
         SELECT count(*) FROM user
         WHERE nickname = #{nickname}
@@ -25,7 +25,7 @@
 
     <insert id="insertUser" parameterType="com.project.bookmarkboard.dto.User"
             useGeneratedKeys="true" keyProperty="internalId">
-        INSERT INTO user(`username`, `name`, `password`, `role`, `email`)
-        VALUES(#{username}, #{name}, #{password}, #{role}, #{email})
+        INSERT INTO user(`username`, `password`, `nickname`, `role`, `email`)
+        VALUES(#{username}, #{password}, #{nickname}, #{role}, #{email})
     </insert>
 </mapper>
