@@ -1,7 +1,7 @@
 CREATE TABLE `user` (
-    `internal_id` bigint(20) NOT NULL COMMENT '내부 분류 아이디' PRIMARY KEY auto_increment,
+    `internal_id` bigint(20) NOT NULL PRIMARY KEY auto_increment COMMENT '내부 분류 아이디',
     `username` varchar(30) NOT NULL UNIQUE COMMENT '로그인 할 때 사용할 것',
-    `password` varchar(256) NOT NULL COMMENT 'SHA256',
+    `password` varchar(256) NOT NULL COMMENT 'SHA1',
     `email` varchar(320) NOT NULL COMMENT '이메일 ID 부분은 최대 64자 + @ + 도메인은 255자까지 320자',
     `role` varchar(15) NOT NULL COMMENT 'For Spring Security',
     `nickname` varchar(15) NOT NULL UNIQUE COMMENT '닉네임 15자 제한',
@@ -14,6 +14,7 @@ CREATE TABLE `bookmark` (
     `title` varchar(100) NOT NULL COMMENT '제목 100자 제한',
     `memo` TEXT DEFAULT NULL COMMENT '메모가 없을 수도 있으니 NULLABLE',
     `url` TEXT NOT NULL,
+    `created_at` datetime NOT NULL DEFAULT now(),
     `is_shared` tinyint(1) NOT NULL DEFAULT 0 COMMENT '공유가 켜졌는가',
     FOREIGN KEY (`owner`) REFERENCES `user` (`internal_id`) ON DELETE CASCADE
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -24,7 +25,9 @@ CREATE TABLE `folder` (
   `title` varchar(100) NOT NULL COMMENT '제목 100자 제한',
   `memo` TEXT DEFAULT NULL COMMENT '메모가 없을 수도 있으니 NULLABLE',
   `thumbnail` varchar(36) DEFAULT NULL COMMENT 'UUID는 36글자로 구성',
+  `created_at` datetime NOT NULL DEFAULT now(),
   `is_shared` tinyint(1) NOT NULL DEFAULT 0 COMMENT '공유가 켜졌는가',
+  `is_stared` tinyint(1) NOT NULL DEFAULT 0 COMMENT '즐겨찾기로 등록되었는가',
   FOREIGN KEY (`owner`) REFERENCES `user` (`internal_id`) ON DELETE CASCADE
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -32,6 +35,7 @@ CREATE TABLE `folder_item` (
    `id` bigint(20) PRIMARY KEY auto_increment,
    `bookmark_id` bigint(20) NOT NULL,
    `parent_folder` bigint(20) NOT NULL,
+   `created_at` datetime NOT NULL DEFAULT now(),
    FOREIGN KEY (`bookmark_id`) REFERENCES `bookmark` (`id`) ON DELETE CASCADE,
    FOREIGN KEY (`parent_folder`) REFERENCES `folder` (`id`) ON DELETE CASCADE
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -54,7 +58,7 @@ CREATE TABLE `comment` (
    `id` bigint(20) NOT NULL PRIMARY KEY auto_increment,
    `author_id` bigint(20) NOT NULL,
    `article_id` bigint(20) NOT NULL,
-   `content` varchar(1000) NOT NULL,
+   `content` varchar(1000) NOT NULL COMMENT '댓글 1,000자 제한',
    `created_at` datetime NOT NULL DEFAULT now(),
    FOREIGN KEY (`author_id`) REFERENCES `user` (`internal_id`) ON DELETE CASCADE,
    FOREIGN KEY (`article_id`) REFERENCES `article` (`id`) ON DELETE CASCADE
