@@ -14,49 +14,81 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <div class="container">
-    <h1>내가 등록한 북마크가 표시되는 공간</h1>
+    <h1>내 북마크 리스트</h1>
 </div>
 <div class="container">
-    <div class="container">
-        <div class="card-body">
-            <h5 class="card-title">네이버k</h5>
-            <p class="card-text">여기는 내가 찾는 네이버!</p>
-            <a href="www.naver.com" class="btn btn-primary stretched-link">www.naver.com</a>
+    <br>
+    <div class="row">
+        <div class="col-sm-6" style="margin-bottom: 10px">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Special title treatment</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <table class="table table-striped table-hover">
-        <thead>
-        <tr>
-            <th scope="col">제목</th>
-            <th scope="col">메모</th>
-            <th scope="col">주소</th>
-        </tr>
-        </thead>
-        <tbody>
+        <div class="col-sm-6" style="margin-bottom: 10px">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Special title treatment</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6" style="margin-bottom: 10px">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Special title treatment</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6" style="margin-bottom: 10px">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Special title treatment</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        </div>
+
         <c:forEach items="${items}" var="item">
-            <tr>
-                <td>${item.title}</td>
-                <td>${item.memo}</td>
-                <td>${item.url}</td>
-            </tr>
+        <div class="card-body">
+            <h5 class="card-title">${item.title}</h5>
+            <p class="card-text">${item.memo}</p>
+            <a href="${item.url}" class="btn btn-primary stretched-link">${item.url}</a>
+        </div>
         </c:forEach>
-        <tr>
-            <td>안녕하세요. 가입했습니다.</td>
-            <td>코코블루</td>
-            <td>3</td>
-        </tr>
-        <tr>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-        </tr>
-        <tr>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-        </tr>
-        </tbody>
-    </table>
+    </div>
+</div>
+<br>
+<div class="container">
+    <nav>
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item active" aria-current="page">
+                <span class="page-link">2</span>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
 </body>
 </html>
