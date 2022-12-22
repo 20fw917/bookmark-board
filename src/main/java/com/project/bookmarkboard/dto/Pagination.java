@@ -1,10 +1,12 @@
 package com.project.bookmarkboard.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Pagination {
@@ -13,9 +15,9 @@ public class Pagination {
      */
 
     // 전체 Item의 갯수
-    private int totalCount;
+    protected int totalCount;
     // 현재 페이지의 번호
-    private int currentPageNum;
+    protected int currentPageNum;
     // 마지막 페이지의 번호
-    private int finalPageNum;
+    protected int finalPageNum;
 }

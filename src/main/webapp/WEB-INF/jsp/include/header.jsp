@@ -20,7 +20,14 @@
                text-white
           </c:otherwise>
       </c:choose>">홈</a></li>
-        <li><a href="#" class="nav-link px-2 text-white">Features</a></li>
+        <li><a href="${pageContext.request.contextPath}/bookmark" class="nav-link px-2 <c:choose>
+          <c:when test="${URL eq '/WEB-INF/jsp/bookmark/bookmark_list.jsp'}">
+               link-secondary
+          </c:when>
+          <c:otherwise>
+               text-white
+          </c:otherwise>
+      </c:choose>">내 북마크</a></li>
       </ul>
 
       <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
