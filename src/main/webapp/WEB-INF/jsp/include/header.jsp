@@ -21,13 +21,23 @@
           </c:otherwise>
       </c:choose>">홈</a></li>
         <li><a href="${pageContext.request.contextPath}/bookmark" class="nav-link px-2 <c:choose>
-          <c:when test="${URL eq '/WEB-INF/jsp/bookmark/bookmark_list.jsp'}">
+          <c:when test="${URL eq '/WEB-INF/jsp/bookmark/list.jsp'}">
                link-secondary
           </c:when>
           <c:otherwise>
                text-white
           </c:otherwise>
       </c:choose>">내 북마크</a></li>
+      </ul>
+      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+      <li><a href="${pageContext.request.contextPath}/folder" class="nav-link px-2 <c:choose>
+          <c:when test="${URL eq '/WEB-INF/jsp/folder/list.jsp'}">
+               link-secondary
+          </c:when>
+          <c:otherwise>
+               text-white
+          </c:otherwise>
+      </c:choose>">폴더</a></li>
       </ul>
 
       <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
