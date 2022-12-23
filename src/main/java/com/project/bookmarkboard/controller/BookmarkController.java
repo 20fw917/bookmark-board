@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/bookmark")
 @RequiredArgsConstructor
-public class MyBookmarkController {
+public class BookmarkController {
     private final BookmarkService bookmarkService;
 
     @GetMapping("")
@@ -25,6 +25,6 @@ public class MyBookmarkController {
 
         model.addAttribute("pagination", bookmarkPagination.getPagination());
         model.addAttribute("items", bookmarkPagination.getBookmarkDTOList());
-        return "/bookmark/bookmark_list";
+        return "bookmark/list";
     }
 }

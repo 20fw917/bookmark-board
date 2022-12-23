@@ -15,6 +15,7 @@
 
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
+
 <div class="container">
     <div class="py-5 text-center">
         <img class="d-block mx-auto mb-4" src="" alt="" width="72" height="72">
