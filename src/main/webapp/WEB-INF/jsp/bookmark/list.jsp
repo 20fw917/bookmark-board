@@ -24,7 +24,12 @@
                 <div class="card-body">
                     <h5 class="card-title">Special title treatment</h5>
                     <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                    <p class="card-text">https://www.naver.com</p>
+                    <div class="text-end">
+                        <a href="https://www.naver.com" class="btn btn-primary">방문</a>
+                        <button class="btn btn-secondary">편집</button>
+                        <button class="btn btn-danger">삭제</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -64,6 +69,10 @@
             <h5 class="card-title">${item.title}</h5>
             <p class="card-text">${item.memo}</p>
             <a href="${item.url}" class="btn btn-primary stretched-link">${item.url}</a>
+            <div class="text-end">
+                <button class="btn btn-secondary">편집</button>
+                <button class="btn btn-danger">삭제</button>
+            </div>
         </div>
         </c:forEach>
     </div>
@@ -72,6 +81,31 @@
 <div class="container">
     <nav>
         <ul class="pagination justify-content-center">
+            <c:if test="${pagination.previousPageExists}">
+                <li class="page-item">
+                    <a class="page-link" href="${pageContext.request.contextPath}/bookmark?page=${pagination.startIndexNum - 10}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            </c:if>
+
+            <c:forEach var="item" items="${items}" begin="1" end="10" step="1" varStatus="status">
+
+                <c:if test="${status.current eq pagination.currentPageNum}">
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link">${status.current}</span>
+                    </li>
+                </c:if>
+            </c:forEach>
+
+            <c:if test="${pagination.nextPageExists}">
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </c:if>
+
             <li class="page-item">
                 <a class="page-link" href="#" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
