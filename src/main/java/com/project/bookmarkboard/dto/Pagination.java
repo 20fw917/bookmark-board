@@ -25,17 +25,17 @@ public class Pagination {
     // 마지막 페이지의 번호
     protected int finalPageNum;
     // 이전 페이지 여부
-    protected boolean isPreviousPageExists;
+    public boolean previousPageExists;
     // 다음 페이지 여부
-    protected boolean isNextPageExists;
+    protected boolean nextPageExists;
 
     public Pagination(int totalCount, int currentPageNum, int finalPageNum) {
         this.totalCount = totalCount;
         this.startIndexNum = (currentPageNum - (currentPageNum % 10)) + 1;
         this.currentPageNum = currentPageNum;
         this.finalPageNum = finalPageNum;
-        this.isPreviousPageExists = currentPageNum - 10 > 0;
-        this.isNextPageExists = this.startIndexNum + 9 < finalPageNum;
-        this.endIndexNum = isNextPageExists ? startIndexNum + 9 : this.finalPageNum;
+        this.previousPageExists = currentPageNum - 10 > 0;
+        this.nextPageExists = this.startIndexNum + 9 < finalPageNum;
+        this.endIndexNum = nextPageExists ? startIndexNum + 9 : this.finalPageNum;
     }
 }

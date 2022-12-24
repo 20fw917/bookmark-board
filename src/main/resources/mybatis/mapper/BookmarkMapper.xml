@@ -8,7 +8,7 @@
     </select>
 
     <select id="getCountByOwner" resultType="int">
-        SELECT count(*) FROM bookmark WHERE owner = #{owner}
+        SELECT count(*) FROM bookmark WHERE owner = #{owner} AND is_stared = #{isStared}
     </select>
 
     <select id="getAllByOwnerAndIsStaredOrderByIdDescLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
@@ -19,7 +19,11 @@
     </select>
 
     <insert id="insertBookmark" parameterType="com.project.bookmarkboard.dto.BookmarkDTO">
-        INSERT INTO bookmark(`owner`, `title`, `memo`, `url`, `is_shared`)
-        VALUES(#{owner}, #{title}, #{memo}, #{url}, #{isShared})
+        INSERT INTO bookmark(`owner`, `title`, `memo`, `url`, `is_shared`, `is_stared`)
+        VALUES(#{owner}, #{title}, #{memo}, #{url}, #{isShared}, #{isStared})
     </insert>
+
+    <delete id="deleteBookmarkById">
+        DELETE FROM bookmark WHERE id = #{id};
+    </delete>
 </mapper>
