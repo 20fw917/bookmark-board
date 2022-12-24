@@ -8,6 +8,7 @@
     <jsp:include page="/WEB-INF/jsp/include/bootstrap.jsp"/>
     <link href="${pageContext.request.contextPath}/static/css/common/floating_labels.css" rel="stylesheet">
     <sec:csrfMetaTags/>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/bookmark/list.js"></script>
 </head>
 
 <body>
@@ -54,10 +55,10 @@
                                 <i class="bi bi-pencil"></i>
                                 편집
                             </button>
-                            <a href="${pageContext.request.contextPath}/" class="btn btn-danger">
+                            <button onclick="deleteBookmark(${item.id})" class="btn btn-danger">
                                 <i class="bi bi-trash3"></i>
                                 삭제
-                            </a>
+                            </button>
                             <br>
                             <p class="fst-italic">${item.createdAtFormatted}에 추가 됨.</p>
                         </div>
@@ -151,10 +152,10 @@
                             <i class="bi bi-pencil"></i>
                             편집
                         </button>
-                        <a href="${pageContext.request.contextPath}/" class="btn btn-danger">
+                        <button onclick="deleteBookmark(${item.id})" class="btn btn-danger">
                             <i class="bi bi-trash3"></i>
                             삭제
-                        </a>
+                        </button>
                         <br>
                         <p class="fst-italic">${item.createdAtFormatted}에 추가 됨.</p>
                     </div>
