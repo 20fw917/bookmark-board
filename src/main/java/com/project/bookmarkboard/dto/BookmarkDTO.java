@@ -20,4 +20,5 @@ public class BookmarkDTO {
     private String url;
     private LocalDateTime createdAt;
     private boolean isShared;
+    private boolean isStarted;
 }

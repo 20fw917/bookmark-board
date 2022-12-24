@@ -28,9 +28,7 @@
                text-white
           </c:otherwise>
       </c:choose>">내 북마크</a></li>
-      </ul>
-      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-      <li><a href="${pageContext.request.contextPath}/folder" class="nav-link px-2 <c:choose>
+        <li><a href="${pageContext.request.contextPath}/folder" class="nav-link px-2 <c:choose>
           <c:when test="${URL eq '/WEB-INF/jsp/folder/list.jsp'}">
                link-secondary
           </c:when>
@@ -39,6 +37,7 @@
           </c:otherwise>
       </c:choose>">폴더</a></li>
       </ul>
+
 
       <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
         <input type="search" class="form-control form-control-dark text-bg-dark" placeholder="검색" aria-label="Search">
@@ -65,13 +64,8 @@
       <sec:authorize access="isAnonymous()">
         <c:if test="${URL ne '/WEB-INF/jsp/login.jsp'}">
           <div class="text-end">
-            <a href="${pageContext.request.contextPath}/login">
-              <button type="button" class="btn btn-outline-light me-2">로그인</button>
-            </a>
-            <a href="${pageContext.request.contextPath}/user/register">
-              <button type="button" class="btn btn-warning">회원가입</button>
-            </a>
-
+            <a href="${pageContext.request.contextPath}/login" class="btn btn-outline-light me-2">로그인</a>
+            <a href="${pageContext.request.contextPath}/user/register" class="btn btn-warning">회원가입</a>
           </div>
         </c:if>
       </sec:authorize>

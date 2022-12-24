@@ -17,11 +17,11 @@ public class BookmarkService {
     @Value("${items-per-page}")
     private Integer itemsPerPage;
 
-    public BookmarkPagination getAllByOwnerOrderByIdDescLimitByFromAndTo(long owner, int pageNum) {
+    public BookmarkPagination getAllByOwnerOrderByIdDescLimitByFromAndTo(long owner, int pageNum, boolean isStared) {
         final int itemsCount = bookmarkMapper.getCountByOwner(owner);
         final int startItemNum = pageNum * itemsPerPage;
         final int endPageItemNum = (pageNum + 1) * itemsPerPage;
-        final List<BookmarkDTO> bookmarkDTOList = bookmarkMapper.getAllByOwnerOrderByIdDescLimitByFromAndTo(owner, startItemNum, endPageItemNum);
+        final List<BookmarkDTO> bookmarkDTOList = bookmarkMapper.getAllByOwnerAndIsStaredOrderByIdDescLimitByFromAndTo(owner, isStared, startItemNum, endPageItemNum);
 
         final int finalPageNum = (itemsCount / itemsPerPage) + 1;
 

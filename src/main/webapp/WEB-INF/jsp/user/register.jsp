@@ -22,7 +22,7 @@
         <h2>회원 가입</h2>
     </div>
 
-    <div>
+    <div class="container">
         <form:form class="needs-validation">
             <div class="row">
                 <div class="col-md-7 mb-3">

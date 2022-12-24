@@ -11,9 +11,9 @@
         SELECT count(*) FROM bookmark WHERE owner = #{owner}
     </select>
 
-    <select id="getAllByOwnerOrderByIdDescLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
+    <select id="getAllByOwnerAndIsStaredOrderByIdDescLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
         SELECT * FROM bookmark
-        WHERE owner = #{owner}
+        WHERE owner = #{owner} AND is_stared = #{isStared}
         ORDER BY id DESC
         LIMIT #{from}, #{to}
     </select>

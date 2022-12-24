@@ -18,6 +18,8 @@ public class Pagination {
     protected int totalCount;
     // 시작하는 Index 번호
     protected int startIndexNum;
+    // 이번 Index의 마지막 번호
+    protected int endIndexNum;
     // 현재 페이지의 번호
     protected int currentPageNum;
     // 마지막 페이지의 번호
@@ -34,5 +36,6 @@ public class Pagination {
         this.finalPageNum = finalPageNum;
         this.isPreviousPageExists = currentPageNum - 10 > 0;
         this.isNextPageExists = this.startIndexNum + 9 < finalPageNum;
+        this.endIndexNum = isNextPageExists ? startIndexNum + 9 : this.finalPageNum;
     }
 }

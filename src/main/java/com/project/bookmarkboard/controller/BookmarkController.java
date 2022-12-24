@@ -23,12 +23,25 @@ public class BookmarkController {
     public String getMyBookmarkList(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                     @RequestParam(value = "page", required = false, defaultValue = "1") int pageNum,
                                     Model model) {
-        final BookmarkPagination bookmarkPagination = bookmarkService.getAllByOwnerOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), pageNum);
+        final BookmarkPagination staredBookmarkPagination = bookmarkService.getAllByOwnerOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), pageNum, true);
+        final BookmarkPagination notStaredBookmarkPagination = bookmarkService.getAllByOwnerOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), pageNum, false);
 
-        model.addAttribute("pagination", bookmarkPagination.getPagination());
-        log.info("pagination: " + bookmarkPagination.getPagination());
-        model.addAttribute("items", bookmarkPagination.getBookmarkDTOList());
-        log.info("items: " + bookmarkPagination.getBookmarkDTOList());
+
+        model.addAttribute("staredBookmarkPagination", staredBookmarkPagination.getPagination());
+        log.info("staredBookmarkPagination: " + staredBookmarkPagination.getPagination());
+        model.addAttribute("staredBookmarkItems", staredBookmarkPagination.getBookmarkDTOList());
+        log.info("staredBookmarkItems: " + staredBookmarkPagination.getBookmarkDTOList());
+
+        model.addAttribute("notStaredBookmarkPagination", notStaredBookmarkPagination.getPagination());
+        log.info("notStaredBookmarkPagination: " + notStaredBookmarkPagination.getPagination());
+        model.addAttribute("notStaredBookmarkItems", notStaredBookmarkPagination.getBookmarkDTOList());
+        log.info("notStaredBookmarkItems: " + notStaredBookmarkPagination.getBookmarkDTOList());
+
         return "bookmark/list";
+    }
+
+    @GetMapping("/add")
+    public String getAddBookmark() {
+        return "bookmark/form";
     }
 }
