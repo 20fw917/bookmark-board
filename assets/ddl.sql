@@ -107,3 +107,10 @@ CREATE VIEW `comment_view` AS (
   FROM `comment` c
     JOIN `user` u ON c.author_id = u.internal_id
 );
+
+CREATE VIEW `folder_view` AS (
+  SELECT f.id AS `id`, f.owner AS `owner`, f.title AS `title`, f.memo AS `memo`, f.thumbnail AS thumbnail,
+         f.created_at AS `created_at`, f.is_shared as `is_shared`, f.is_stared as `is_stared`,
+         (SELECT COUNT(*) FROM folder_item fi WHERE fi.parent_folder = id) AS `count`
+  FROM `folder` f
+  );

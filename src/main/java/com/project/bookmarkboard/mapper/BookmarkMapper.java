@@ -12,7 +12,7 @@ public interface BookmarkMapper {
     List<BookmarkDTO> getAllByOwnerAndIsStaredOrderByIdDescLimitByFromAndTo(@Param("owner") long owner, @Param("isStared") boolean isStared,
                                                                             @Param("from") int from, @Param("to") int to);
     int insertBookmark(BookmarkDTO bookmarkDTO);
-    int getCountByOwner(@Param("owner") long owner, @Param("isStared") boolean isStared);
+    int getCountByOwnerAndIsStared(@Param("owner") long owner, @Param("isStared") boolean isStared);
     int deleteBookmarkById(@Param("id") long id);
     int updateIsStaredById(@Param("id") long id, @Param("isStared") boolean isStared);
     int updateIsSharedById(@Param("id") long id, @Param("isShared") boolean isShared);

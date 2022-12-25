@@ -7,7 +7,7 @@
         SELECT * FROM bookmark WHERE id = #{id}
     </select>
 
-    <select id="getCountByOwner" resultType="int">
+    <select id="getCountByOwnerAndIsStared" resultType="int">
         SELECT count(*) FROM bookmark WHERE owner = #{owner} AND is_stared = #{isStared}
     </select>
 

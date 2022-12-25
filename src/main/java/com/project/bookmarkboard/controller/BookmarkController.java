@@ -1,7 +1,7 @@
 package com.project.bookmarkboard.controller;
 
 import com.project.bookmarkboard.dto.BookmarkDTO;
-import com.project.bookmarkboard.dto.BookmarkPagination;
+import com.project.bookmarkboard.dto.pagination.BookmarkBasicPagination;
 import com.project.bookmarkboard.dto.CustomUserDetails;
 import com.project.bookmarkboard.dto.response.BasicResponse;
 import com.project.bookmarkboard.dto.response.CommonResponse;
@@ -28,9 +28,8 @@ public class BookmarkController {
                                     @RequestParam(value = "not_stared_page", required = false, defaultValue = "1") int notStaredPageNum,
                                     @RequestParam(value = "stared_page", required = false, defaultValue = "1") int staredPageNum,
                                     Model model) {
-        final BookmarkPagination staredBookmarkPagination = bookmarkService.getAllByOwnerOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), staredPageNum, true);
-        final BookmarkPagination notStaredBookmarkPagination = bookmarkService.getAllByOwnerOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), notStaredPageNum, false);
-
+        final BookmarkBasicPagination staredBookmarkPagination = bookmarkService.getAllByOwnerOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), staredPageNum, true);
+        final BookmarkBasicPagination notStaredBookmarkPagination = bookmarkService.getAllByOwnerOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), notStaredPageNum, false);
 
         model.addAttribute("staredBookmarkPagination", staredBookmarkPagination.getPagination());
         model.addAttribute("staredBookmarkItems", staredBookmarkPagination.getBookmarkDTOList());

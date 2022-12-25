@@ -4,7 +4,12 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <html>
 <head>
-  <title>북마크 등록</title>
+  <c:if test="${isModify eq true}">
+    <title>북마크 수정</title>
+  </c:if>
+  <c:if test="${isModify eq false}">
+    <title>북마크 등록</title>
+  </c:if>
   <jsp:include page="/WEB-INF/jsp/include/bootstrap.jsp"/>
   <link href="${pageContext.request.contextPath}/static/css/common/floating_labels.css" rel="stylesheet">
   <sec:csrfMetaTags/>
@@ -23,7 +28,7 @@
   </div>
 
   <div class="container">
-    <form:form class="needs-validation">
+    <form:form>
       <div class="row">
         <c:if test="${isModify eq true}">
           <input type="hidden" name="id" value="${toModifyItem.id}">

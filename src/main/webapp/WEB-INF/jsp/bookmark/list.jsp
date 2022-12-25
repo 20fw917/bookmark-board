@@ -17,7 +17,7 @@
     <h1>내 북마크 리스트</h1>
     <br>
     <p class="text-justify">총 ${staredBookmarkPagination.totalCount + notStaredBookmarkPagination.totalCount} 개의 저장된 북마크가 있습니다.</p>
-    <div class="container text-end">
+    <div class="container text-end border-bottom pt-3 pb-2 mb-3">
         <a href="${pageContext.request.contextPath}/bookmark/add" class="btn btn-primary">
             <i class="bi bi-bookmark-plus"></i>
             북마크 추가
@@ -54,7 +54,7 @@
                                 편집
                             </a>
                             <button onclick="deleteBookmark(${item.id})" class="btn btn-danger">
-                                <i class="bi bi-trash3"></i>
+                                <i class="bi bi-trash"></i>
                                 삭제
                             </button>
                             <br>
@@ -152,7 +152,7 @@
                             편집
                         </a>
                         <button onclick="deleteBookmark(${item.id})" class="btn btn-danger">
-                            <i class="bi bi-trash3"></i>
+                            <i class="bi bi-trash"></i>
                             삭제
                         </button>
                         <br>

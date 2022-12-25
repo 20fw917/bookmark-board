@@ -1,4 +1,4 @@
-package com.project.bookmarkboard.dto;
+package com.project.bookmarkboard.dto.pagination;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Pagination {
+public class BasicPagination {
     /*
         페이징 기능 구현을 위해 현재 페이지의 정보를 담는 DTO
      */
@@ -29,7 +29,7 @@ public class Pagination {
     // 다음 페이지 여부
     protected boolean nextPageExists;
 
-    public Pagination(int totalCount, int currentPageNum, int finalPageNum) {
+    public BasicPagination(int totalCount, int currentPageNum, int finalPageNum) {
         this.totalCount = totalCount;
         this.startIndexNum = (currentPageNum - (currentPageNum % 10)) + 1;
         this.currentPageNum = currentPageNum;
