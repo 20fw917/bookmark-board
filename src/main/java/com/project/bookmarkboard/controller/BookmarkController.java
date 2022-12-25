@@ -33,14 +33,14 @@ public class BookmarkController {
 
 
         model.addAttribute("staredBookmarkPagination", staredBookmarkPagination.getPagination());
-        log.info("staredBookmarkPagination: " + staredBookmarkPagination.getPagination());
         model.addAttribute("staredBookmarkItems", staredBookmarkPagination.getBookmarkDTOList());
-        log.info("staredBookmarkItems: " + staredBookmarkPagination.getBookmarkDTOList());
+        log.debug("staredBookmarkPagination: " + staredBookmarkPagination.getPagination());
+        log.debug("staredBookmarkItems: " + staredBookmarkPagination.getBookmarkDTOList());
 
         model.addAttribute("notStaredBookmarkPagination", notStaredBookmarkPagination.getPagination());
-        log.info("notStaredBookmarkPagination: " + notStaredBookmarkPagination.getPagination());
         model.addAttribute("notStaredBookmarkItems", notStaredBookmarkPagination.getBookmarkDTOList());
-        log.info("notStaredBookmarkItems: " + notStaredBookmarkPagination.getBookmarkDTOList());
+        log.debug("notStaredBookmarkPagination: " + notStaredBookmarkPagination.getPagination());
+        log.debug("notStaredBookmarkItems: " + notStaredBookmarkPagination.getBookmarkDTOList());
 
         return "bookmark/list";
     }
@@ -58,6 +58,10 @@ public class BookmarkController {
                                   BookmarkDTO bookmarkDTO,
                                   @ModelAttribute("isShared") String isShared,
                                   @ModelAttribute("isStared") String isStared) {
+        log.info("Bookmark Add Request Received");
+        log.debug("Received Items: " + bookmarkDTO);
+        log.debug("Received isShared: " + isShared + " / isStared: " + isStared);
+
         bookmarkDTO.setOwner(customUserDetails.getUserInternalId());
         if(!isShared.equals("")) {
             bookmarkDTO.setShared(Boolean.parseBoolean(isShared));
@@ -75,15 +79,42 @@ public class BookmarkController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @ResponseBody
     public ResponseEntity<? extends BasicResponse> deleteBookmark(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                                                   @PathVariable long id) {
+        log.info("Bookmark Delete Request Received");
+        final BookmarkDTO bookmarkDTO = bookmarkMapper.getOneById(id);
+        if(customUserDetails.getUserInternalId() != bookmarkDTO.getOwner()) {
+            log.warn("It is different from the logged in user and the owner of the requested item. Therefore, the deletion does not proceed.");
+            // 권한이 없을 경우 에러 표출
+            return ResponseEntity.badRequest().body(new CommonResponse<>("false"));
+        }
+
+        if(bookmarkMapper.deleteBookmarkById(id) == 1) {
+            log.info("This request is valid and the deletion is successfully.");
+            // 정상적으로 삭제가 된 경우
+            return ResponseEntity.ok().body(new CommonResponse<>("true"));
+        }
+
+        // 정상적으로 진행이 안 된 경우
+        return ResponseEntity.internalServerError().body(new CommonResponse<>("false"));
+    }
+
+    @PatchMapping("/update/stared/{id}")
+    public ResponseEntity<? extends BasicResponse> updateStared(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                                  @PathVariable long id, @RequestParam("to_modify_stared_status") boolean toModifyStaredStatus) {
         final BookmarkDTO bookmarkDTO = bookmarkMapper.getOneById(id);
         if(customUserDetails.getUserInternalId() != bookmarkDTO.getOwner()) {
             // 권한이 없을 경우 에러 표출
             return ResponseEntity.badRequest().body(new CommonResponse<>("false"));
         }
 
-        if(bookmarkMapper.deleteBookmarkById(id) == 1) {
+        if(bookmarkDTO.isStared() == toModifyStaredStatus) {
+            // 동일한 상태로 변경을 요청한 경우
+            return ResponseEntity.badRequest().body(new CommonResponse<>("false"));
+        }
+
+        if(bookmarkMapper.updateIsStaredById(id, toModifyStaredStatus) == 1) {
             // 정상적으로 삭제가 된 경우
             return ResponseEntity.ok().body(new CommonResponse<>("true"));
         }

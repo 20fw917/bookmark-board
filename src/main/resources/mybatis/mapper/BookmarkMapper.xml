@@ -26,4 +26,16 @@
     <delete id="deleteBookmarkById">
         DELETE FROM bookmark WHERE id = #{id};
     </delete>
+
+    <update id="updateIsStaredById">
+        UPDATE bookmark
+        SET is_stared = #{isStared}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateIsSharedById">
+        UPDATE bookmark
+        SET is_shared = #{isShared}
+        WHERE id = #{id}
+    </update>
 </mapper>
