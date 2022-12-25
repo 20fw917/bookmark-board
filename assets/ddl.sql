@@ -1,5 +1,6 @@
 DROP VIEW IF EXISTS `comment_view`;
 DROP VIEW IF EXISTS `article_view`;
+DROP VIEW IF EXISTS `folder_view`;
 DROP TABLE IF EXISTS `comment`;
 DROP TABLE IF EXISTS `folder_item`;
 DROP TABLE IF EXISTS `attachment_index`;
