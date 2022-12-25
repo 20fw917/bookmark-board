@@ -59,8 +59,6 @@ public class BookmarkController {
                                   @ModelAttribute("isShared") String isShared,
                                   @ModelAttribute("isStared") String isStared) {
         log.info("Bookmark Add Request Received");
-        log.debug("Received Items: " + bookmarkDTO);
-        log.debug("Received isShared: " + isShared + " / isStared: " + isStared);
 
         bookmarkDTO.setOwner(customUserDetails.getUserInternalId());
         if(!isShared.equals("")) {
@@ -70,12 +68,51 @@ public class BookmarkController {
         if(!isStared.equals("")) {
             bookmarkDTO.setStared(Boolean.parseBoolean(isStared));
         }
-        log.info("Received bookmarkDTO: " + bookmarkDTO);
+        log.debug("Received bookmarkDTO: " + bookmarkDTO);
 
         if(bookmarkMapper.insertBookmark(bookmarkDTO) == 1) {
             log.info("Bookmark Insert Successfully");
         }
+        return "redirect:/bookmark";
+    }
+
+    @GetMapping("/update")
+    public String getUpdateBookmarkPage(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                  @RequestParam("id") long id, Model model) {
+        log.info("Bookmark Update Page Get Request Received");
+        final BookmarkDTO bookmarkDTO = bookmarkMapper.getOneById(id);
+        if(customUserDetails.getUserInternalId() != bookmarkDTO.getOwner()) {
+            log.warn("Requested by not owner. returning the main page.");
+            // 본인 것을 수정하는 것이 아니라면 메인으로 이동 처리.
+            return "redirect:/";
+        }
+
+        model.addAttribute("toModifyItem", bookmarkDTO);
+        model.addAttribute("isModify", true);
         return "bookmark/form";
+    }
+
+    @PostMapping("/update")
+    public String postUpdateBookmarkPage(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                         BookmarkDTO bookmarkDTO,
+                                         @ModelAttribute("isShared") String isShared,
+                                         @ModelAttribute("isStared") String isStared) {
+        log.info("Bookmark Update Post Request Received");
+        log.debug("Received bookmarkDTO: " + bookmarkDTO);
+        bookmarkDTO.setOwner(customUserDetails.getUserInternalId());
+        if(!isShared.equals("")) {
+            bookmarkDTO.setShared(Boolean.parseBoolean(isShared));
+        }
+
+        if(!isStared.equals("")) {
+            bookmarkDTO.setStared(Boolean.parseBoolean(isStared));
+        }
+
+        if(bookmarkMapper.updateBookmarkById(bookmarkDTO) == 1) {
+            log.info("Bookmark Update Successfully.");
+        }
+
+        return "redirect:/bookmark";
     }
 
     @DeleteMapping("/delete/{id}")

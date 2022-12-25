@@ -25,9 +25,13 @@
   <div class="container">
     <form:form class="needs-validation">
       <div class="row">
+        <c:if test="${isModify eq true}">
+          <input type="hidden" name="id" value="${toModifyItem.id}">
+        </c:if>
+
         <div class="col-md-7 mb-3">
           <div class="form-label-group position-relative">
-            <input type="text" class="form-control" name="title" id="inputTitle" placeholder="제목" maxlength="100" required>
+              <input type="text" class="form-control" name="title" id="inputTitle" placeholder="제목" <c:if test="${isModify eq true}">value="${toModifyItem.title}"</c:if> maxlength="100" required>
             <label for="inputTitle">제목</label>
             <small class="ml-1 form-text text-muted">제목은 100자까지 지정할 수 있습니다.</small>
           </div>
@@ -37,8 +41,9 @@
       <div class="row">
         <div class="col-md-7 mb-3">
           <div class="form-floating">
-            <textarea class="form-control" name="memo" id="inputMemo" rows="3"></textarea>
+            <textarea class="form-control" name="memo" id="inputMemo" rows="3" maxlength="1000" ><c:if test="${isModify eq true}">${toModifyItem.memo}</c:if></textarea>
             <label for="inputMemo">메모</label>
+            <small class="ml-1 form-text text-muted">메모는 1,000자까지 입력하실 수 있습니다.</small>
           </div>
         </div>
       </div>
@@ -47,21 +52,21 @@
       <div class="row">
         <div class="col-md-7 mb-3">
           <div class="form-label-group position-relative">
-            <input type="url" class="form-control" name="url" id="inputURL" placeholder="URL" required>
+            <input type="url" class="form-control" name="url" id="inputURL" placeholder="URL" <c:if test="${isModify eq true}">value="${toModifyItem.url}"</c:if> required>
             <label for="inputURL">URL</label>
           </div>
         </div>
       </div>
 
       <div class="form-check">
-        <input class="form-check-input" name="isShared" type="checkbox" value="true" id="shareCheckBox">
+        <input class="form-check-input" name="isShared" type="checkbox" value="true" id="shareCheckBox" <c:if test="${isModify eq true}"><c:if test="${toModifyItem.shared}">checked</c:if></c:if>>
         <label class="form-check-label" for="shareCheckBox">
           이 북마크를 프로필에 공유합니다.
         </label>
       </div>
 
       <div class="form-check">
-        <input class="form-check-input" name="isStared" type="checkbox" value="true" id="starCheckbox">
+        <input class="form-check-input" name="isStared" type="checkbox" value="true" id="starCheckbox" <c:if test="${isModify eq true}"><c:if test="${toModifyItem.stared}">checked</c:if></c:if>>
         <label class="form-check-label" for="starCheckbox">
           이 북마크를 즐겨찾기에 등록합니다.
         </label>
@@ -69,7 +74,7 @@
 
       <hr class="mb-4">
       <div>
-        <button class="btn btn-primary btn-lg" onsubmit="return registerSubmitCheck(this)" type="submit">저장</button>
+        <button class="btn btn-primary btn-lg" type="submit">저장</button>
         <button type="button" class="btn btn-secondary btn-lg" data-bs-toggle="modal" data-bs-target="#cancelModal">
           취소
         </button>
@@ -90,7 +95,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-primary" data-bs-dismiss="modal">계속 진행</button>
-            <a href="/"><button type="button" class="btn btn-danger">취소하고 이동</button></a>
+            <a href="${pageContext.request.contextPath}/bookmark"><button type="button" class="btn btn-danger">취소하고 이동</button></a>
           </div>
         </div>
       </div>

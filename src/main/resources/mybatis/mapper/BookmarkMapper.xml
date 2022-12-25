@@ -38,4 +38,10 @@
         SET is_shared = #{isShared}
         WHERE id = #{id}
     </update>
+
+    <update id="updateBookmarkById" parameterType="com.project.bookmarkboard.dto.BookmarkDTO">
+        UPDATE bookmark
+        SET title = #{title}, memo = #{memo}, url = #{url}
+        WHERE id = #{id}
+    </update>
 </mapper>
