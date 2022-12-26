@@ -19,7 +19,10 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("")
 public class MainController {
     @GetMapping({"/"})
-    public String getMain() {
+    public String getMain(Model model) {
+    	// model.addAttribute("is_stared", is_stared);
+    	// model.addAttribute("recommended", recommended);
+    	
         return "main";
     }
 
@@ -37,5 +40,13 @@ public class MainController {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
         return "redirect:/";
+    }
+    
+    @GetMapping({"/search"})
+    public String search(Model model) {
+    	// model.addAttribute("myFolder", myFolder);
+    	// model.addAttribute("ourFolder", ourFolder);
+    	
+        return "search";
     }
 }
