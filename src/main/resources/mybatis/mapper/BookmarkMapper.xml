@@ -3,23 +3,45 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.project.bookmarkboard.mapper.BookmarkMapper">
-    <select id="getAllByOwnerOrderByIdDesc" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
-        SELECT * FROM bookmark WHERE owner = #{owner} ORDER BY id DESC
+    <select id="getOneById" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
+        SELECT * FROM bookmark WHERE id = #{id}
     </select>
 
-    <select id="getCountByOwner" resultType="int">
-        SELECT count(*) FROM bookmark WHERE owner = #{owner}
+    <select id="getCountByOwnerAndIsStared" resultType="int">
+        SELECT count(*) FROM bookmark WHERE owner = #{owner} AND is_stared = #{isStared}
     </select>
 
-    <select id="getAllByOwnerOrderByIdDescLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
+    <select id="getAllByOwnerAndIsStaredOrderByIdDescLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
         SELECT * FROM bookmark
-        WHERE owner = #{owner}
+        WHERE owner = #{owner} AND is_stared = #{isStared}
         ORDER BY id DESC
         LIMIT #{from}, #{to}
     </select>
 
     <insert id="insertBookmark" parameterType="com.project.bookmarkboard.dto.BookmarkDTO">
-        INSERT INTO bookmark(`owner`, `title`, `memo`, `url`, `is_shared`)
-        VALUES(#{owner}, #{title}, #{memo}, #{url}, #{isShared})
+        INSERT INTO bookmark(`owner`, `title`, `memo`, `url`, `is_shared`, `is_stared`)
+        VALUES(#{owner}, #{title}, #{memo}, #{url}, #{isShared}, #{isStared})
     </insert>
+
+    <delete id="deleteBookmarkById">
+        DELETE FROM bookmark WHERE id = #{id};
+    </delete>
+
+    <update id="updateIsStaredById">
+        UPDATE bookmark
+        SET is_stared = #{isStared}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateIsSharedById">
+        UPDATE bookmark
+        SET is_shared = #{isShared}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateBookmarkById" parameterType="com.project.bookmarkboard.dto.BookmarkDTO">
+        UPDATE bookmark
+        SET title = #{title}, memo = #{memo}, url = #{url}, is_stared = #{isStared}, is_shared = #{isShared}
+        WHERE id = #{id}
+    </update>
 </mapper>

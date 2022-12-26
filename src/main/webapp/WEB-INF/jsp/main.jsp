@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <title>자유 게시판</title>
+    <title>북마크 시스템</title>
     <jsp:include page="/WEB-INF/jsp/include/bootstrap.jsp"/>
 </head>
 
