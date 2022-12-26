@@ -22,8 +22,9 @@ public class FolderController {
     @GetMapping("")
     public String getFolderPage(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                 @RequestParam(value = "page", required = false, defaultValue = "1") int pageNum,
+                                @RequestParam(value = "care_stared", required = false, defaultValue = "true") boolean careStared,
                                 Model model) {
-        final FolderViewBasicPagination folderViewPagination = folderViewService.getAllByOwnerOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), pageNum);
+        final FolderViewBasicPagination folderViewPagination = folderViewService.getAllByOwnerOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), pageNum, careStared);
 
         model.addAttribute("pagination", folderViewPagination.getPagination());
         model.addAttribute("items", folderViewPagination.getFolderViewDTOList());

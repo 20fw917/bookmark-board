@@ -21,7 +21,7 @@
 
 <div class="container">
     <%--  툴바 --%>
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
       <!--중앙 위 타이틀-->
       <h2 class="h2">내 폴더</h2>
       <div class="btn-toolbar mt-3 mb-2 mb-md-3"> <!--mb-md- 메인 멘트 간격조정-->
@@ -33,61 +33,116 @@
         </div>
         <div class="btn-group me-2"> <!--me 버튼 간격-->
           <!--최신순 버튼-->
-          <button type="button" class="btn btn btn-outline-secondary">
+          <c:url value="${pageContext.request.contextPath}/folder" var="url">
+            <c:param name="care_stared" value="true" />
+          </c:url>
+          <a href="${url}" class="btn btn btn-outline-secondary">
             <i class="bi bi-bookmark-heart"></i>
             즐겨찾기 우선
-          </button>
+          </a>
 
+          <c:url value="${pageContext.request.contextPath}/folder" var="url">
+            <c:param name="care_stared" value="false" />
+          </c:url>
           <!--최신순 버튼-->
-          <button type="button" class="btn btn btn-outline-secondary">
+          <a href="${url}" class="btn btn btn-outline-secondary">
             <i class="bi bi-clock"></i>
             최신순
-          </button>
+          </a>
         </div>
       </div>
+    </div>
+    <div class="border-bottom">
+      <p class="text-justify">${pagination.totalCount} 개의 폴더가 있습니다.</p>
     </div>
 </div>
 
 <div class="container">
   <div class="content">
     <div class="row">
+      <c:forEach items="${items}" var="item">
+        <!--카드-->
+        <div class="card p-3" style="width: 17rem; float: left; margin: 20px;">
+          <img src="https://cdn.britannica.com/82/152982-050-11159CF4/Daniel-Radcliffe-Rupert-Grint-Emma-Watson-Harry.jpg" class="card-img-top" alt="">
+          <div class="card-body">
+            <h5 class="card-title">${item.title}</h5>
+            <p class="card-text">${item.memo}</p>
+            <p class="card-text text-end">${item.itemCount}개의 북마크가 있습니다.</p>
+            <!--자세히 보기 Button-->
+            <button type="button" class="btn btn-sm" style="background-color: #935dffce; color: white;" onclick="window.open('https://www.youtube.com/watch?v=8KDuTVZgR0Y')">Link</button>
+
+            <!--즐겨찾기 Button-->
+            <button type="button" class="btn btn-sm">
+              <i class="bi-star" style="font-size:20px; color: #FDD017; cursor: pointer;"></i>
+              <script>
+                let i = 0;
+                $('i').on('click',function(){
+                  if(i === 0){
+                    $(this).attr('class','bi-star-fill');
+                    i++;
+                  } else if(i === 1){
+                    $(this).attr('class','bi-star');
+                    i--;
+                  }
+                });
+              </script>
+            </button>
+
+            <!--Edit Button-->
+            <button type="button" class="btn btn-sm" style="background-color: #935dffce; color: white;">
+              <i class="bi bi-pencil-square"></i>
+              <!--Button 내용-->
+            </button>
+
+            <!--Delete Button-->
+            <button type="button" class="btn btn-sm" style="background-color: #935dffce; color: white;">
+              <i class="bi bi-trash"></i>
+              <!--공백란-->
+            </button>
+          </div>
+        </div>
+      </c:forEach>
       <!--카드-->
       <div class="card p-3" style="width: 17rem; float: left; margin: 20px;">
         <img src="https://cdn.britannica.com/82/152982-050-11159CF4/Daniel-Radcliffe-Rupert-Grint-Emma-Watson-Harry.jpg" class="card-img-top" alt="">
         <div class="card-body">
-          <h5 class="card-title">Harry Potter</h5>
-          <p class="card-text">Funny clips</p>
-          <!--Link Button-->
-          <button type="button" class="btn btn-sm" style="background-color: #935dffce; color: white;" onclick="window.open('https://www.youtube.com/watch?v=8KDuTVZgR0Y')">Link</button>
+          <h5 class="card-title">제목</h5>
+          <p class="card-text">메모메모</p>
+          <p class="card-text">3개의 북마크가 있습니다.</p>
+          <div class="text-end">
+            <!--즐겨찾기 Button-->
+            <button type="button" class="btn btn-sm">
+              <i class="bi-star" style="font-size:20px; color: #FDD017; cursor: pointer;"></i>
+              <script>
+                let i = 0;
+                $('i').on('click',function(){
+                  if(i === 0){
+                    $(this).attr('class','bi-star-fill');
+                    i++;
+                  } else if(i === 1){
+                    $(this).attr('class','bi-star');
+                    i--;
+                  }
+                });
+              </script>
+            </button>
+            <!--자세히 보기 Button-->
+            <button type="button" class="btn btn-sm" style="background-color: #935dffce; color: white;">
+              <i class="bi bi-search"></i>
+            </button>
 
-          <!--즐겨찾기 Button-->
-          <button type="button" class="btn btn-sm">
-            <i class="bi-star" style="font-size:20px; color: #FDD017; cursor: pointer;"></i>
-            <script>
-              let i = 0;
-              $('i').on('click',function(){
-                if(i === 0){
-                  $(this).attr('class','bi-star-fill');
-                  i++;
-                } else if(i === 1){
-                  $(this).attr('class','bi-star');
-                  i--;
-                }
-              });
-            </script>
-          </button>
+            <!--Edit Button-->
+            <button type="button" class="btn btn-sm" style="background-color: #935dffce; color: white;">
+              <i class="bi bi-pencil-square"></i>
+              <!--Button 내용-->
+            </button>
 
-          <!--Edit Button-->
-          <button type="button" class="btn btn-sm" style="background-color: #935dffce; color: white;">
-            <i class="bi bi-pencil-square"></i>
-            <!--Button 내용-->
-          </button>
-
-          <!--Delete Button-->
-          <button type="button" class="btn btn-sm" style="background-color: #935dffce; color: white;">
-            <i class="bi bi-trash"></i>
-            <!--공백란-->
-          </button>
+            <!--Delete Button-->
+            <button type="button" class="btn btn-sm" style="background-color: #935dffce; color: white;">
+              <i class="bi bi-trash"></i>
+              <!--공백란-->
+            </button>
+          </div>
         </div>
       </div>
   </div>

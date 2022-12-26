@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.project.bookmarkboard.mapper.FolderViewMapper">
+<mapper namespace="com.project.bookmarkboard.mapper.FolderMapper">
     <select id="getCountByOwner" resultType="int">
         SELECT count(*) FROM folder WHERE owner = #{owner}
     </select>

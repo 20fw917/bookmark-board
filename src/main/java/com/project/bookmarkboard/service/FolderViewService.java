@@ -19,12 +19,12 @@ public class FolderViewService {
     @Value("${items-per-page}")
     private Integer itemsPerPage;
 
-    public FolderViewBasicPagination getAllByOwnerOrderByIdDescLimitByFromAndTo(long owner, int pageNum) {
+    public FolderViewBasicPagination getAllByOwnerOrderByIdDescLimitByFromAndTo(long owner, int pageNum, boolean careStared) {
         final int itemsCount = folderMapper.getCountByOwner(owner);
         final int startItemNum = (pageNum - 1) * itemsPerPage;
         final int endPageItemNum = pageNum * itemsPerPage;
 
-        final List<FolderViewDTO> folderViewDTOList = folderViewMapper.getAllByOwnerAndIsStaredOrderByIsStaredAndIdDescLimitByFromAndTo(owner, startItemNum, endPageItemNum);
+        final List<FolderViewDTO> folderViewDTOList = folderViewMapper.getAllByOwnerAndIsStaredOrderByIsStaredAndIdDescLimitByFromAndTo(owner, careStared, startItemNum, endPageItemNum);
 
         final int finalPageNum = ((itemsCount - 1) / itemsPerPage) + 1;
 

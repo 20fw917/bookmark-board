@@ -41,7 +41,7 @@
 
     <update id="updateBookmarkById" parameterType="com.project.bookmarkboard.dto.BookmarkDTO">
         UPDATE bookmark
-        SET title = #{title}, memo = #{memo}, url = #{url}
+        SET title = #{title}, memo = #{memo}, url = #{url}, is_stared = #{isStared}, is_shared = #{isShared}
         WHERE id = #{id}
     </update>
 </mapper>

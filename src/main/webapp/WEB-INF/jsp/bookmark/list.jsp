@@ -13,21 +13,22 @@
 
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
-<div class="container">
-    <h1>내 북마크 리스트</h1>
-    <br>
-    <p class="text-justify">총 ${staredBookmarkPagination.totalCount + notStaredBookmarkPagination.totalCount} 개의 저장된 북마크가 있습니다.</p>
-    <div class="container text-end border-bottom pt-3 pb-2 mb-3">
-        <a href="${pageContext.request.contextPath}/bookmark/add" class="btn btn-primary">
+<div class="container d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+    <h2 style="width: 50%" class="h2">내 북마크 리스트</h2>
+    <div class="container text-end">
+        <a href="${pageContext.request.contextPath}/bookmark/add" class="btn btn-outline-secondary">
             <i class="bi bi-bookmark-plus"></i>
             북마크 추가
         </a>
     </div>
     <br>
 </div>
+<div class="container border-bottom">
+    <p class="text-justify">총 ${staredBookmarkPagination.totalCount + notStaredBookmarkPagination.totalCount} 개의 저장된 북마크가 있습니다.</p>
+</div>
 
 <%-- 즐겨찾기한 북마크 Area --%>
-<div class="container">
+<div class="container" style="margin-top: 20px">
     <c:if test="${staredBookmarkPagination.totalCount ne 0}">
     <h3>즐겨찾는 북마크</h3>
     <br>

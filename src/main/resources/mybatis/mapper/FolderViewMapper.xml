@@ -7,15 +7,14 @@
         SELECT * FROM folder_view WHERE id = #{id}
     </select>
 
-    <select id="getCountByOwner" resultType="int">
-        SELECT count(*) FROM folder_view WHERE owner = #{owner}
-    </select>
-
     <select id="getAllByOwnerAndIsStaredOrderByIsStaredAndIdDescLimitByFromAndTo"
             resultType="com.project.bookmarkboard.dto.FolderViewDTO">
         SELECT * FROM folder_view
         WHERE owner = #{owner}
-        ORDER BY is_stared DESC, id DESC
+        ORDER BY is_stared DESC
+       <if test="careStared == true">
+        , id DESC
+       </if>
         LIMIT #{from}, #{to}
     </select>
 </mapper>
