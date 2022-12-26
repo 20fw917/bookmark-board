@@ -1,16 +1,20 @@
 package com.project.bookmarkboard.controller;
 
+import com.project.bookmarkboard.dto.BookmarkDTO;
 import com.project.bookmarkboard.dto.CustomUserDetails;
+import com.project.bookmarkboard.dto.FolderDTO;
 import com.project.bookmarkboard.dto.pagination.FolderViewBasicPagination;
+import com.project.bookmarkboard.dto.response.BasicResponse;
+import com.project.bookmarkboard.dto.response.CommonResponse;
+import com.project.bookmarkboard.mapper.FolderMapper;
 import com.project.bookmarkboard.service.FolderViewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Log4j2
 @RequestMapping("/folder")
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class FolderController {
     private final FolderViewService folderViewService;
+    private final FolderMapper folderMapper;
 
     @GetMapping("")
     public String getFolderPage(@AuthenticationPrincipal CustomUserDetails customUserDetails,
@@ -32,5 +37,60 @@ public class FolderController {
         log.debug("items: " + folderViewPagination.getFolderViewDTOList());
 
         return "folder/list";
+    }
+
+    @GetMapping("/add")
+    public String getAddFolder(Model model) {
+        model.addAttribute("isModify", false);
+
+        return "bookmark/form";
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @ResponseBody
+    public ResponseEntity<? extends BasicResponse> deleteFolder(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                                  @PathVariable long id) {
+        log.info("Folder Delete Request Received");
+        final FolderDTO folderDTO = folderMapper.getOneById(id);
+        if(customUserDetails.getUserInternalId() != folderDTO.getOwner()) {
+            log.warn("It is different from the logged in user and the owner of the requested item. Therefore, the update does not proceed.");
+            // 권한이 없을 경우 에러 표출
+            return ResponseEntity.badRequest().body(new CommonResponse<>("false"));
+        }
+
+        if(folderMapper.deleteById(id) == 1) {
+            log.info("This request is valid and the deletion is successfully.");
+            // 정상적으로 삭제가 된 경우
+            return ResponseEntity.ok().body(new CommonResponse<>("true"));
+        }
+
+        // 정상적으로 진행이 안 된 경우
+        return ResponseEntity.internalServerError().body(new CommonResponse<>("false"));
+    }
+
+    @PatchMapping("/update/stared/{id}")
+    public ResponseEntity<? extends BasicResponse> updateStared(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                                @PathVariable long id, @RequestParam("to_modify_stared_status") boolean toModifyStaredStatus) {
+        log.info("Folder stared status update request received.");
+        final FolderDTO folderDTO = folderMapper.getOneById(id);
+        if(customUserDetails.getUserInternalId() != folderDTO.getOwner()) {
+            log.warn("It is different from the logged in user and the owner of the requested item. Therefore, the update does not proceed.");
+            // 권한이 없을 경우 에러 표출
+            return ResponseEntity.badRequest().body(new CommonResponse<>("false"));
+        }
+
+        if(folderDTO.isStared() == toModifyStaredStatus) {
+            // 동일한 상태로 변경을 요청한 경우
+            log.warn("This request requested a change to the same status. so this is not processed.");
+            return ResponseEntity.badRequest().body(new CommonResponse<>("false"));
+        }
+
+        if(folderMapper.updateIsStaredById(id, toModifyStaredStatus) == 1) {
+            // 정상적으로 변경이 된 경우
+            return ResponseEntity.ok().body(new CommonResponse<>("true"));
+        }
+
+        // 정상적으로 진행이 안 된 경우
+        return ResponseEntity.internalServerError().body(new CommonResponse<>("false"));
     }
 }

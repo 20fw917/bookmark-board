@@ -47,7 +47,6 @@ public class BookmarkController {
     @GetMapping("/add")
     public String getAddBookmark(Model model) {
         model.addAttribute("isModify", false);
-        model.addAttribute("bookmarkDTO", new BookmarkDTO());
 
         return "bookmark/form";
     }
@@ -139,19 +138,22 @@ public class BookmarkController {
     @PatchMapping("/update/stared/{id}")
     public ResponseEntity<? extends BasicResponse> updateStared(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                                                   @PathVariable long id, @RequestParam("to_modify_stared_status") boolean toModifyStaredStatus) {
+        log.info("Bookmark stared status update request received.");
         final BookmarkDTO bookmarkDTO = bookmarkMapper.getOneById(id);
         if(customUserDetails.getUserInternalId() != bookmarkDTO.getOwner()) {
+            log.warn("It is different from the logged in user and the owner of the requested item. Therefore, the update does not proceed.");
             // 권한이 없을 경우 에러 표출
             return ResponseEntity.badRequest().body(new CommonResponse<>("false"));
         }
 
         if(bookmarkDTO.isStared() == toModifyStaredStatus) {
             // 동일한 상태로 변경을 요청한 경우
+            log.warn("This request requested a change to the same status. so this is not processed.");
             return ResponseEntity.badRequest().body(new CommonResponse<>("false"));
         }
 
         if(bookmarkMapper.updateIsStaredById(id, toModifyStaredStatus) == 1) {
-            // 정상적으로 삭제가 된 경우
+            // 정상적으로 변경이 된 경우
             return ResponseEntity.ok().body(new CommonResponse<>("true"));
         }
 

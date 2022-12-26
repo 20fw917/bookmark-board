@@ -12,6 +12,7 @@
   <meta name="generator" content="Hugo 0.104.2">
   <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/dashboard/">
   <title>폴더 리스트</title>
+  <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/folder/list.js"></script>
   <jsp:include page="/WEB-INF/jsp/include/bootstrap.jsp"/>
   <sec:csrfMetaTags/>
 </head>
@@ -69,33 +70,28 @@
             <p class="card-text">${item.memo}</p>
             <p class="card-text text-end">${item.itemCount}개의 북마크가 있습니다.</p>
             <!--자세히 보기 Button-->
-            <button type="button" class="btn btn-sm" style="background-color: #935dffce; color: white;" onclick="window.open('https://www.youtube.com/watch?v=8KDuTVZgR0Y')">Link</button>
+            <button type="button" class="btn btn-sm btn-primary" onclick="window.open('https://www.youtube.com/watch?v=8KDuTVZgR0Y')">Link</button>
 
             <!--즐겨찾기 Button-->
-            <button type="button" class="btn btn-sm">
-              <i class="bi-star" style="font-size:20px; color: #FDD017; cursor: pointer;"></i>
-              <script>
-                let i = 0;
-                $('i').on('click',function(){
-                  if(i === 0){
-                    $(this).attr('class','bi-star-fill');
-                    i++;
-                  } else if(i === 1){
-                    $(this).attr('class','bi-star');
-                    i--;
-                  }
-                });
-              </script>
-            </button>
+            <c:if test="${item.stared eq true}">
+              <button type="button" onclick="updateStared(${item.id}, false)" class="btn btn-sm">
+                <i class="bi-star-fill"></i>
+              </button>
+            </c:if>
+            <c:if test="${item.stared eq false}">
+              <button type="button" onclick="updateStared(${item.id}, true)" class="btn btn-sm">
+                <i class="bi-star"></i>
+              </button>
+            </c:if>
 
             <!--Edit Button-->
-            <button type="button" class="btn btn-sm" style="background-color: #935dffce; color: white;">
+            <button type="button" class="btn btn-sm btn-secondary">
               <i class="bi bi-pencil-square"></i>
               <!--Button 내용-->
             </button>
 
             <!--Delete Button-->
-            <button type="button" class="btn btn-sm" style="background-color: #935dffce; color: white;">
+            <button type="button" onclick="deleteFolder(${item.id})" class="btn btn-sm btn-danger">
               <i class="bi bi-trash"></i>
               <!--공백란-->
             </button>
@@ -127,18 +123,18 @@
               </script>
             </button>
             <!--자세히 보기 Button-->
-            <button type="button" class="btn btn-sm" style="background-color: #935dffce; color: white;">
+            <button type="button" class="btn btn-sm btn-primary">
               <i class="bi bi-search"></i>
             </button>
 
             <!--Edit Button-->
-            <button type="button" class="btn btn-sm" style="background-color: #935dffce; color: white;">
+            <button type="button" class="btn btn-sm btn-secondary">
               <i class="bi bi-pencil-square"></i>
               <!--Button 내용-->
             </button>
 
             <!--Delete Button-->
-            <button type="button" class="btn btn-sm" style="background-color: #935dffce; color: white;">
+            <button type="button" class="btn btn-sm btn-danger">
               <i class="bi bi-trash"></i>
               <!--공백란-->
             </button>

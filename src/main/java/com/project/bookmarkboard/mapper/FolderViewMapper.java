@@ -10,6 +10,7 @@ import java.util.List;
 @Mapper
 public interface FolderViewMapper {
     FolderViewDTO getOneById(@Param("id") long id);
-    List<FolderViewDTO> getAllByOwnerAndIsStaredOrderByIsStaredAndIdDescLimitByFromAndTo(@Param("owner") long owner, @Param("careStared") boolean careStared,
+    List<FolderViewDTO> getAllByOwnerAndIsStaredOrderByIsStaredAndIdDescLimitByFromAndTo(@Param("owner") long owner,
+                                                                                         @Param("careStared") boolean careStared,
                                                                             @Param("from") int from, @Param("to") int to);
 }

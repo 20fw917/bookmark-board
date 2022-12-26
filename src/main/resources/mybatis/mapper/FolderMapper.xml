@@ -6,4 +6,19 @@
     <select id="getCountByOwner" resultType="int">
         SELECT count(*) FROM folder WHERE owner = #{owner}
     </select>
+
+    <delete id="deleteById">
+        DELETE FROM folder WHERE id = #{id};
+    </delete>
+
+    <select id="getOneById" resultType="com.project.bookmarkboard.dto.FolderDTO">
+        SELECT * FROM folder
+        WHERE id = #{id}
+    </select>
+
+    <update id="updateIsStaredById">
+        UPDATE bookmark
+        SET is_shared = #{isShared}
+        WHERE id = #{id}
+    </update>
 </mapper>
