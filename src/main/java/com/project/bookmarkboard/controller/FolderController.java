@@ -6,6 +6,7 @@ import com.project.bookmarkboard.dto.FolderDTO;
 import com.project.bookmarkboard.dto.pagination.FolderViewBasicPagination;
 import com.project.bookmarkboard.dto.response.BasicResponse;
 import com.project.bookmarkboard.dto.response.CommonResponse;
+import com.project.bookmarkboard.mapper.BookmarkMapper;
 import com.project.bookmarkboard.mapper.FolderMapper;
 import com.project.bookmarkboard.service.FolderViewService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Log4j2
 @RequestMapping("/folder")
 @RequiredArgsConstructor
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 public class FolderController {
     private final FolderViewService folderViewService;
     private final FolderMapper folderMapper;
+    private final BookmarkMapper bookmarkMapper;
 
     @GetMapping("")
     public String getFolderPage(@AuthenticationPrincipal CustomUserDetails customUserDetails,
@@ -40,10 +44,15 @@ public class FolderController {
     }
 
     @GetMapping("/add")
-    public String getAddFolder(Model model) {
+    public String getAddFolder(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                               Model model) {
         model.addAttribute("isModify", false);
 
-        return "bookmark/form";
+        final List<BookmarkDTO> bookmarkDTOList = bookmarkMapper.getAllByOwnerOrderByIdAndStaredDesc(customUserDetails.getUserInternalId());
+        log.debug("Got from DB BookmarkDTOList: " + bookmarkDTOList);
+        model.addAttribute("bookmarkList", bookmarkDTOList);
+
+        return "folder/form";
     }
 
     @DeleteMapping("/delete/{id}")

@@ -27,10 +27,10 @@
       <h2 class="h2">내 폴더</h2>
       <div class="btn-toolbar mt-3 mb-2 mb-md-3"> <!--mb-md- 메인 멘트 간격조정-->
         <div class="btn-group me-3"> <!--me 버튼 간격-->
-          <button type="button" class="btn btn-outline-secondary">
+          <a href="${pageContext.request.contextPath}/folder/add" class="btn btn-outline-secondary">
             <i class="bi bi-folder-plus"></i>
             폴더 생성
-          </button>
+          </a>
         </div>
         <div class="btn-group me-2"> <!--me 버튼 간격-->
           <!--최신순 버튼-->
