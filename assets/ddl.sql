@@ -1,3 +1,15 @@
+DROP VIEW IF EXISTS `comment_view`;
+DROP VIEW IF EXISTS `article_view`;
+DROP VIEW IF EXISTS `folder_view`;
+DROP TABLE IF EXISTS `comment`;
+DROP TABLE IF EXISTS `folder_item`;
+DROP TABLE IF EXISTS `attachment_index`;
+DROP TABLE IF EXISTS `article_like`;
+DROP TABLE IF EXISTS `article`;
+DROP TABLE IF EXISTS `folder`;
+DROP TABLE IF EXISTS `bookmark`;
+DROP TABLE IF EXISTS `user`;
+
 CREATE TABLE `user` (
     `internal_id` bigint(20) NOT NULL PRIMARY KEY auto_increment COMMENT '내부 분류 아이디',
     `username` varchar(30) NOT NULL UNIQUE COMMENT '로그인 할 때 사용할 것',
@@ -16,6 +28,7 @@ CREATE TABLE `bookmark` (
     `url` TEXT NOT NULL,
     `created_at` datetime NOT NULL DEFAULT now(),
     `is_shared` tinyint(1) NOT NULL DEFAULT 0 COMMENT '공유가 켜졌는가',
+    `is_stared` tinyint(1) NOT NULL DEFAULT 0 COMMENT '즐겨찾기 여부',
     FOREIGN KEY (`owner`) REFERENCES `user` (`internal_id`) ON DELETE CASCADE
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -95,3 +108,10 @@ CREATE VIEW `comment_view` AS (
   FROM `comment` c
     JOIN `user` u ON c.author_id = u.internal_id
 );
+
+CREATE VIEW `folder_view` AS (
+  SELECT f.id AS `id`, f.owner AS `owner`, f.title AS `title`, f.memo AS `memo`, f.thumbnail AS thumbnail,
+         f.created_at AS `created_at`, f.is_shared as `is_shared`, f.is_stared as `is_stared`,
+         (SELECT COUNT(*) FROM folder_item fi WHERE fi.parent_folder = id) AS `count`
+  FROM `folder` f
+  );

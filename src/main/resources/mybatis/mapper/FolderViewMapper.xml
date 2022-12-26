@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.bookmarkboard.mapper.FolderViewMapper">
+    <select id="getOneById" resultType="com.project.bookmarkboard.dto.FolderViewDTO">
+        SELECT * FROM folder_view WHERE id = #{id}
+    </select>
+
+    <select id="getAllByOwnerAndIsStaredOrderByIsStaredAndIdDescLimitByFromAndTo"
+            resultType="com.project.bookmarkboard.dto.FolderViewDTO">
+        SELECT * FROM folder_view
+        WHERE owner = #{owner}
+        ORDER BY is_stared DESC
+       <if test="careStared == true">
+        , id DESC
+       </if>
+        LIMIT #{from}, #{to}
+    </select>
+</mapper>

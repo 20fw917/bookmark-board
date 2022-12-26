@@ -22,7 +22,7 @@
         <h2>회원 가입</h2>
     </div>
 
-    <div>
+    <div class="container">
         <form:form class="needs-validation">
             <div class="row">
                 <div class="col-md-7 mb-3">
@@ -121,7 +121,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">계속 진행</button>
-                    <a href="/main"><button type="button" class="btn btn-danger">취소하고 이동</button></a>
+                    <a href="/"><button type="button" class="btn btn-danger">취소하고 이동</button></a>
                 </div>
             </div>
         </div>
