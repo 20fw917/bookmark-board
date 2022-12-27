@@ -15,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Log4j2
 @Controller
 @RequestMapping("/bookmark")
@@ -159,5 +161,18 @@ public class BookmarkController {
 
         // 정상적으로 진행이 안 된 경우
         return ResponseEntity.internalServerError().body(new CommonResponse<>("false"));
+    }
+
+
+    @PostMapping("/search")
+    @ResponseBody
+    public List<BookmarkDTO> getSearchBookmarkDTO(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                  @RequestParam("keyword") String keyword) {
+        log.info("Bookmark Search Request Received!");
+        log.debug("Received Keyword(Trim): " + keyword.trim());
+        final List<BookmarkDTO> result = bookmarkMapper.getAllByOwnerAndKeywordOrderByIsStaredDescAndIdDesc(customUserDetails.getUserInternalId(), keyword.trim());
+        log.debug("Search Result: " + result);
+
+        return result;
     }
 }

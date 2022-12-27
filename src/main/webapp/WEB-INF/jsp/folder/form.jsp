@@ -22,7 +22,7 @@
 </div>
 
 <div class="container">
-  <form:form>
+  <form:form enctype="multipart/form-data">
     <div class="row">
       <c:if test="${isModify eq true}">
         <input type="hidden" name="id" value="${toModifyItem.id}">
@@ -31,7 +31,7 @@
       <div>
         <label for="inputImage">폴더 섬네일</label>
         <div class="form-label-group position-relative">
-          <input class="form-control" type="file" id="inputImage" accept="image/*" onchange="setThumbnail(this);"/>
+          <input class="form-control" name="folderThumbnail" type="file" id="inputImage" accept="image/*" onchange="setThumbnail(this);"/>
           <br>
         </div>
 
@@ -60,11 +60,40 @@
     </div>
 
     <br>
-    <div class="row overflow-auto">
-      <div class="col-md-7 mb-3">
-        <div class="form-label-group position-relative">
-          <input type="url" class="form-control" name="url" id="inputURL" placeholder="URL" <c:if test="${isModify eq true}">value="${toModifyItem.url}"</c:if> required>
-          <label for="inputURL">URL</label>
+    <div class="row">
+      <div class="col-md-5 mb-3">
+        <h4 class="h4">추가할 북마크</h4>
+        <div class="form-label">
+          <div class="border form-outline overflow-auto" style="height: 300px; padding: 10px">
+            <input onkeyup="searchKeyword(this)" type="search" id="itemSearch" class="form-control" placeholder="북마크 검색"/>
+            <p class="text-justify">추가할 북마크를 고르세요.</p>
+            <div id="toAddBookmarkArea">
+              <c:forEach items="${bookmarkList}" var="item">
+                <div class="card w-100" id="itemCard_${item.id}" style="margin-bottom: 10px">
+                  <div class="card-body" style="padding: 5px;"></div>
+                    <%--                  <input class="form-check-input" name="check_${item.id}" type="checkbox" value="${item.id}" id="check_${item.id}">--%>
+                  <h5 class="card-title" id="itemTitle_${item.id}" style="padding-left: 5px;">${item.title}</h5>
+                  <p class="card-text" id="itemMemo_${item.id}" style="padding-left: 5px;">${item.memo}</p>
+                  <p class="card-text" id="itemUrl_${item.id}" style="padding-left: 5px;">${item.url}</p>
+                  <div class="text-end" style="padding: 5px">
+                    <button type="button" onclick="addBookmark('${item.id}')" class="btn btn-primary">
+                      <i class="bi bi-plus"></i>
+                      추가
+                    </button>
+                  </div>
+                </div>
+              </c:forEach>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-5 mb-3">
+        <h4 class="h4">추가된 북마크</h4>
+        <div class="form-label">
+          <div class="border form-outline overflow-auto" id="addedBookmarkArea" style="height: 300px; padding: 10px">
+              <%-- 추가 버튼 누르면 여기로 들어감 --%>
+          </div>
         </div>
       </div>
     </div>
@@ -85,7 +114,7 @@
 
     <hr class="mb-4">
     <div>
-      <button class="btn btn-primary btn-lg" type="submit">저장</button>
+      <button class="btn btn-primary btn-lg" type="submit">추가</button>
       <button type="button" class="btn btn-secondary btn-lg" data-bs-toggle="modal" data-bs-target="#cancelModal">
         취소
       </button>
@@ -106,7 +135,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" data-bs-dismiss="modal">계속 진행</button>
-          <a href="${pageContext.request.contextPath}/bookmark"><button type="button" class="btn btn-danger">취소하고 이동</button></a>
+          <a href="${pageContext.request.contextPath}/folder"><button type="button" class="btn btn-danger">취소하고 이동</button></a>
         </div>
       </div>
     </div>

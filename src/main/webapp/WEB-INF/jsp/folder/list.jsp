@@ -64,83 +64,45 @@
       <c:forEach items="${items}" var="item">
         <!--카드-->
         <div class="card p-3" style="width: 17rem; float: left; margin: 20px;">
-          <img src="https://cdn.britannica.com/82/152982-050-11159CF4/Daniel-Radcliffe-Rupert-Grint-Emma-Watson-Harry.jpg" class="card-img-top" alt="">
+          <img src="${pageContext.request.contextPath}/attachment/${item.thumbnail}" class="card-img-top" alt="">
           <div class="card-body">
             <h5 class="card-title">${item.title}</h5>
             <p class="card-text">${item.memo}</p>
             <p class="card-text text-end">${item.itemCount}개의 북마크가 있습니다.</p>
-            <!--자세히 보기 Button-->
-            <button type="button" class="btn btn-sm btn-primary" onclick="window.open('https://www.youtube.com/watch?v=8KDuTVZgR0Y')">Link</button>
 
-            <!--즐겨찾기 Button-->
-            <c:if test="${item.stared eq true}">
-              <button type="button" onclick="updateStared(${item.id}, false)" class="btn btn-sm">
-                <i class="bi-star-fill"></i>
+            <div class="text-end">
+              <!--즐겨찾기 Button-->
+              <c:if test="${item.stared eq true}">
+                <button type="button" onclick="updateStared(${item.id}, false)" class="btn btn-sm">
+                  <i class="bi-star-fill" style="font-size:20px; color: #FDD017; cursor: pointer;"></i>
+                </button>
+              </c:if>
+              <c:if test="${item.stared eq false}">
+                <button type="button" onclick="updateStared(${item.id}, true)" class="btn btn-sm">
+                  <i class="bi-star" style="font-size:20px; color: #FDD017; cursor: pointer;"></i>
+                </button>
+              </c:if>
+
+              <!--자세히 보기 Button-->
+              <button type="button" class="btn btn-sm btn-primary" onclick="window.open('https://www.youtube.com/watch?v=8KDuTVZgR0Y')">
+                <i class="bi bi-search"></i>
               </button>
-            </c:if>
-            <c:if test="${item.stared eq false}">
-              <button type="button" onclick="updateStared(${item.id}, true)" class="btn btn-sm">
-                <i class="bi-star"></i>
+
+              <!--Edit Button-->
+              <button type="button" class="btn btn-sm btn-secondary">
+                <i class="bi bi-pencil-square"></i>
+                <!--Button 내용-->
               </button>
-            </c:if>
 
-            <!--Edit Button-->
-            <button type="button" class="btn btn-sm btn-secondary">
-              <i class="bi bi-pencil-square"></i>
-              <!--Button 내용-->
-            </button>
-
-            <!--Delete Button-->
-            <button type="button" onclick="deleteFolder(${item.id})" class="btn btn-sm btn-danger">
-              <i class="bi bi-trash"></i>
-              <!--공백란-->
-            </button>
+              <!--Delete Button-->
+              <button type="button" onclick="deleteFolder(${item.id})" class="btn btn-sm btn-danger">
+                <i class="bi bi-trash"></i>
+                <!--공백란-->
+              </button>
+            </div>
           </div>
         </div>
       </c:forEach>
-      <!--카드-->
-      <div class="card p-3" style="width: 17rem; float: left; margin: 20px;">
-        <img src="https://cdn.britannica.com/82/152982-050-11159CF4/Daniel-Radcliffe-Rupert-Grint-Emma-Watson-Harry.jpg" class="card-img-top" alt="">
-        <div class="card-body">
-          <h5 class="card-title">제목</h5>
-          <p class="card-text">메모메모</p>
-          <p class="card-text">3개의 북마크가 있습니다.</p>
-          <div class="text-end">
-            <!--즐겨찾기 Button-->
-            <button type="button" class="btn btn-sm">
-              <i class="bi-star" style="font-size:20px; color: #FDD017; cursor: pointer;"></i>
-              <script>
-                let i = 0;
-                $('i').on('click',function(){
-                  if(i === 0){
-                    $(this).attr('class','bi-star-fill');
-                    i++;
-                  } else if(i === 1){
-                    $(this).attr('class','bi-star');
-                    i--;
-                  }
-                });
-              </script>
-            </button>
-            <!--자세히 보기 Button-->
-            <button type="button" class="btn btn-sm btn-primary">
-              <i class="bi bi-search"></i>
-            </button>
-
-            <!--Edit Button-->
-            <button type="button" class="btn btn-sm btn-secondary">
-              <i class="bi bi-pencil-square"></i>
-              <!--Button 내용-->
-            </button>
-
-            <!--Delete Button-->
-            <button type="button" class="btn btn-sm btn-danger">
-              <i class="bi bi-trash"></i>
-              <!--공백란-->
-            </button>
-          </div>
-        </div>
-      </div>
   </div>
 </div>
 

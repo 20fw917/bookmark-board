@@ -24,6 +24,12 @@
         LIMIT #{from}, #{to}
     </select>
 
+    <select id="getAllByOwnerAndKeywordOrderByIsStaredDescAndIdDesc" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
+        SELECT * FROM bookmark
+        WHERE owner = #{owner} AND (title LIKE CONCAT('%',#{keyword},'%') OR url LIKE CONCAT('%',#{keyword},'%') OR memo LIKE CONCAT('%',#{keyword},'%'))
+        ORDER BY is_stared DESC, id DESC
+    </select>
+
     <insert id="insertBookmark" parameterType="com.project.bookmarkboard.dto.BookmarkDTO">
         INSERT INTO bookmark(`owner`, `title`, `memo`, `url`, `is_shared`, `is_stared`)
         VALUES(#{owner}, #{title}, #{memo}, #{url}, #{isShared}, #{isStared})

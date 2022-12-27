@@ -16,4 +16,9 @@ public class FolderItemDTO {
     private long bookmarkId;
     private long parentFolder;
     private LocalDateTime createdAt;
+
+    public FolderItemDTO(long bookmarkId, long parentFolder) {
+        this.bookmarkId = bookmarkId;
+        this.parentFolder = parentFolder;
+    }
 }

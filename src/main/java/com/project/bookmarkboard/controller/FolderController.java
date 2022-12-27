@@ -3,11 +3,13 @@ package com.project.bookmarkboard.controller;
 import com.project.bookmarkboard.dto.BookmarkDTO;
 import com.project.bookmarkboard.dto.CustomUserDetails;
 import com.project.bookmarkboard.dto.FolderDTO;
+import com.project.bookmarkboard.dto.FolderRequestDTO;
 import com.project.bookmarkboard.dto.pagination.FolderViewBasicPagination;
 import com.project.bookmarkboard.dto.response.BasicResponse;
 import com.project.bookmarkboard.dto.response.CommonResponse;
 import com.project.bookmarkboard.mapper.BookmarkMapper;
 import com.project.bookmarkboard.mapper.FolderMapper;
+import com.project.bookmarkboard.service.FolderService;
 import com.project.bookmarkboard.service.FolderViewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Log4j2
@@ -27,6 +30,7 @@ public class FolderController {
     private final FolderViewService folderViewService;
     private final FolderMapper folderMapper;
     private final BookmarkMapper bookmarkMapper;
+    private final FolderService folderService;
 
     @GetMapping("")
     public String getFolderPage(@AuthenticationPrincipal CustomUserDetails customUserDetails,
@@ -55,6 +59,25 @@ public class FolderController {
         return "folder/form";
     }
 
+    @PostMapping("/add")
+    public String postAddFolder(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                FolderRequestDTO folderRequestDTO,
+                                @ModelAttribute("isShared") String isShared,
+                                @ModelAttribute("isStared") String isStared) throws IOException {
+        folderRequestDTO.setOwner(customUserDetails.getUserInternalId());
+        if(!isShared.equals("")) {
+            folderRequestDTO.setShared(Boolean.parseBoolean(isShared));
+        }
+
+        if(!isStared.equals("")) {
+            folderRequestDTO.setStared(Boolean.parseBoolean(isStared));
+        }
+
+        folderService.insertFolder(folderRequestDTO);
+
+        return "redirect:/folder";
+    }
+
     @DeleteMapping("/delete/{id}")
     @ResponseBody
     public ResponseEntity<? extends BasicResponse> deleteFolder(@AuthenticationPrincipal CustomUserDetails customUserDetails,
@@ -67,7 +90,7 @@ public class FolderController {
             return ResponseEntity.badRequest().body(new CommonResponse<>("false"));
         }
 
-        if(folderMapper.deleteById(id) == 1) {
+        if(folderService.deleteFolder(folderDTO)) {
             log.info("This request is valid and the deletion is successfully.");
             // 정상적으로 삭제가 된 경우
             return ResponseEntity.ok().body(new CommonResponse<>("true"));

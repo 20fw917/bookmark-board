@@ -16,9 +16,15 @@
         WHERE id = #{id}
     </select>
 
+    <insert id="insertFolder" parameterType="com.project.bookmarkboard.dto.FolderDTO"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO folder(`owner`, `title`, `memo`, `thumbnail`, `is_stared`, `is_shared`)
+        VALUES(#{owner}, #{title}, #{memo}, #{thumbnail}, #{isShared}, #{isStared})
+    </insert>
+
     <update id="updateIsStaredById">
-        UPDATE bookmark
-        SET is_shared = #{isShared}
+        UPDATE folder
+        SET is_stared = #{isStared}
         WHERE id = #{id}
     </update>
 </mapper>
