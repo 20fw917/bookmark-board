@@ -13,6 +13,11 @@
         WHERE username = #{username}
     </select>
 
+    <select id="findByInternalId" parameterType="long" resultType="com.project.bookmarkboard.dto.User">
+        SELECT * FROM user
+        WHERE internal_id = #{internalId}
+    </select>
+
     <select id="countByUsername" parameterType="String" resultType="int">
         SELECT count(*) FROM user
         WHERE username = #{username}
@@ -28,4 +33,13 @@
         INSERT INTO user(`username`, `password`, `nickname`, `role`, `email`)
         VALUES(#{username}, #{password}, #{nickname}, #{role}, #{email})
     </insert>
+
+    <update id="updateUser" parameterType="com.project.bookmarkboard.dto.User">
+        UPDATE user
+        SET username = #{username}, nickname = #{nickname}, email = #{email}
+        <if test="password != null and !password.equals('')">
+           , password = #{password}
+        </if>
+        WHERE internal_id = #{internalId}
+    </update>
 </mapper>
