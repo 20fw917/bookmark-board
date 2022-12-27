@@ -25,10 +25,13 @@ public class FolderService {
 
     @Transactional
     public void insertFolder(FolderRequestDTO folderRequestDTO) throws IOException  {
-        final String renamedFileName = attachmentService.saveFile(folderRequestDTO.getFolderThumbnail(), "folder_thumbnail");
-        folderRequestDTO.setThumbnail(renamedFileName);
+        if(folderRequestDTO.getThumbnail() != null) {
+            final String renamedFileName = attachmentService.saveFile(folderRequestDTO.getFolderThumbnail(), "folder_thumbnail");
+            folderRequestDTO.setThumbnail(renamedFileName);
 
-        log.debug("RECEIVED folderRequestDTO: "  + folderRequestDTO);
+            log.debug("RECEIVED folderRequestDTO: "  + folderRequestDTO);
+        }
+
         final FolderDTO folderDTO = folderRequestDTO.getFolderDTO();
         folderMapper.insertFolder(folderDTO);
 
