@@ -1,16 +1,19 @@
 const setThumbnail = (inputElement) => {
     let preview = document.getElementById('preview');
+    let previewArea = document.getElementById('previewArea');
+    let deleteRequest = document.getElementById('deleteRequest');
 
     if (inputElement.files && inputElement.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
             preview.src = e.target.result;
-            preview.style.display = 'block';
+            previewArea.style.display = 'block';
+            deleteRequest.value = 'false';
         };
         reader.readAsDataURL(inputElement.files[0]);
     } else {
         preview.src = "";
-        preview.style.display = 'none';
+        previewArea.style.display = 'none';
     }
 }
 
@@ -35,7 +38,7 @@ const addBookmark = (itemId) => {
         "<p class=\"card-text\" style=\"padding-left: 5px;\">" + url + "</p>\n" +
         "<div class=\"text-end\" style=\"padding: 5px\">\n" +
         "<button type='button' onclick='deleteBookmark(" + itemId + ")' class=\"btn btn-danger\">\n" +
-        "<i class=\"bi bi-plus-lg\"></i>\n" +
+        "<i class=\"bi bi-x\"></i>\n" +
         "삭제\n" +
         "</button>\n" +
         "</div>\n" +
@@ -92,4 +95,16 @@ const addItem = (item) => {
         "</div>"
 
     document.getElementById('toAddBookmarkArea').innerHTML += toAddElement;
+}
+
+const deleteThumbnail = () => {
+    let preview = document.getElementById('preview');
+    let inputImage = document.getElementById('inputImage');
+    let previewArea = document.getElementById('previewArea');
+    let deleteRequest = document.getElementById('deleteRequest');
+
+    inputImage.value= '';
+    preview.src = '';
+    previewArea.style.display = 'none';
+    deleteRequest.value = 'true';
 }

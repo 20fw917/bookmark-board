@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -25,7 +25,7 @@ public class FolderService {
 
     @Transactional
     public void insertFolder(FolderRequestDTO folderRequestDTO) throws IOException  {
-        if(folderRequestDTO.getThumbnail() != null) {
+        if(folderRequestDTO.getFolderThumbnail().getSize() != 0) {
             final String renamedFileName = attachmentService.saveFile(folderRequestDTO.getFolderThumbnail(), "folder_thumbnail");
             folderRequestDTO.setThumbnail(renamedFileName);
 
@@ -35,14 +35,9 @@ public class FolderService {
         final FolderDTO folderDTO = folderRequestDTO.getFolderDTO();
         folderMapper.insertFolder(folderDTO);
 
-        List<FolderItemDTO> toAddFolderItemDTOList = new ArrayList<FolderItemDTO>();
-        for(String itemId : folderRequestDTO.getCheckedItem()) {
-            FolderItemDTO folderItemDTO = new FolderItemDTO(Long.parseLong(itemId), folderDTO.getId());
-            toAddFolderItemDTOList.add(folderItemDTO);
+        if(folderRequestDTO.getCheckedItem() != null) {
+            insertFolderItemToDB(folderRequestDTO.getCheckedItem(), folderRequestDTO.getId());
         }
-
-        log.debug("toAddFolderItemDTOList: " + toAddFolderItemDTOList);
-        folderItemMapper.insertFolderItem(toAddFolderItemDTOList);
     }
 
     @Transactional
@@ -53,5 +48,49 @@ public class FolderService {
         folderMapper.deleteById(folderDTO.getId());
 
         return true;
+    }
+
+    public List<Long> getBookmarkIdListInFolderById(long folderId) {
+        final List<FolderItemDTO> folderItemDTOList = folderItemMapper.getAllByParentFolderOrderByIdDesc(folderId);
+        return folderItemDTOList.stream().map(FolderItemDTO::getBookmarkId).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void updateFolder(FolderRequestDTO folderRequestDTO) throws IOException {
+        // 1. 섬네일이 기존에서 변경된 경우 (기존 섬네일을 지워야함.)
+        if(folderRequestDTO.getThumbnail() != null && folderRequestDTO.getFolderThumbnail().getSize() != 0) {
+            attachmentService.deleteImage(folderRequestDTO.getThumbnail());
+            folderRequestDTO.setThumbnail(null);
+        }
+
+        // 2. 섬네일 삭제를 요구한 경우
+        if(folderRequestDTO.getThumbnail() != null && folderRequestDTO.isDeleteRequest()) {
+            attachmentService.deleteImage(folderRequestDTO.getThumbnail());
+            folderRequestDTO.setThumbnail(null);
+        }
+
+        if(folderRequestDTO.getFolderThumbnail().getSize() != 0) {
+            final String renamedFileName = attachmentService.saveFile(folderRequestDTO.getFolderThumbnail(), "folder_thumbnail");
+            folderRequestDTO.setThumbnail(renamedFileName);
+        }
+
+        folderMapper.updateFolderById(folderRequestDTO.getFolderDTO());
+        folderItemMapper.deleteByParentFolder(folderRequestDTO.getId());
+
+        if(folderRequestDTO.getCheckedItem() != null) {
+            insertFolderItemToDB(folderRequestDTO.getCheckedItem(), folderRequestDTO.getId());
+        }
+    }
+
+    private void insertFolderItemToDB(String[] toInsertItem, long folderId) {
+        List<FolderItemDTO> toAddFolderItemDTOList = new ArrayList<FolderItemDTO>();
+
+        for (String itemId : toInsertItem) {
+            FolderItemDTO folderItemDTO = new FolderItemDTO(Long.parseLong(itemId), folderId);
+            toAddFolderItemDTOList.add(folderItemDTO);
+        }
+
+        log.debug("toAddFolderItemDTOList: " + toAddFolderItemDTOList);
+        folderItemMapper.insertFolderItem(toAddFolderItemDTOList);
     }
 }

@@ -4,7 +4,12 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <html>
 <head>
-  <title>폴더 추가</title>
+  <c:if test="${isModify eq true}">
+    <title>폴더 수정</title>
+  </c:if>
+  <c:if test="${isModify eq false}">
+    <title>폴더 추가</title>
+  </c:if>
   <jsp:include page="/WEB-INF/jsp/include/bootstrap.jsp"/>
   <sec:csrfMetaTags/>
   <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/folder/add.js"></script>
@@ -26,6 +31,8 @@
     <div class="row">
       <c:if test="${isModify eq true}">
         <input type="hidden" name="id" value="${toModifyItem.id}">
+        <input type="hidden" name="deleteRequest" value="false" id="deleteRequest">
+        <input type="hidden" name="thumbnail" value="${toModifyItem.thumbnail}">
       </c:if>
 
       <div>
@@ -35,7 +42,21 @@
           <br>
         </div>
 
-        <img id="preview" style="display: none; width: 300px; height: 300px"/>
+        <c:if test="${isModify eq true}">
+            <div id="previewArea" style="display: <c:if test="${toModifyItem.thumbnail ne null}">block</c:if><c:if test="${toModifyItem.thumbnail eq null}">none</c:if>;">
+              <img id="preview" <c:if test="${toModifyItem.thumbnail ne null}">src="${pageContext.request.contextPath}/attachment/${toModifyItem.thumbnail}"</c:if> style="width: 300px; height: 300px"/>
+        </c:if>
+        <c:if test="${isModify eq false}">
+          <div id="previewArea" style="display: none;">
+            <img id="preview" style="width: 300px; height: 300px"/>
+        </c:if>
+            <br>
+            <button type="button" onclick="deleteThumbnail()" class="btn btn-danger">
+              <i class="bi bi-x"></i>
+              섬네일 삭제
+            </button>
+            <br>
+          </div>
         <br>
       </div>
 
@@ -93,6 +114,23 @@
         <div class="form-label">
           <div class="border form-outline overflow-auto" id="addedBookmarkArea" style="height: 300px; padding: 10px">
               <%-- 추가 버튼 누르면 여기로 들어감 --%>
+                <c:if test="${isModify eq true}">
+                <c:forEach items="${alreadyAddedBookmarkDTOList}" var="item">
+                <div class="card w-100" id="checkedItemCard_${item.id}" style="margin-bottom: 10px">
+                <div class="card-body" style="padding: 5px;"></div>
+                  <input name="checkedItem" type="hidden" value="${item.id}">
+                  <h5 class="card-title" style="padding-left: 5px;">${item.title}</h5>
+                  <p class="card-text" style="padding-left: 5px;">${item.memo}</p>
+                  <p class="card-text" style="padding-left: 5px;">${item.url}</p>
+                  <div class="text-end" style="padding: 5px">
+                    <button type='button' onclick='deleteBookmark(${item.id})' class="btn btn-danger">
+                      <i class="bi bi-x"></i>
+                      삭제
+                    </button>
+                  </div>
+                </div>
+                </c:forEach>
+                </c:if>
           </div>
         </div>
       </div>
@@ -114,7 +152,12 @@
 
     <hr class="mb-4">
     <div>
-      <button class="btn btn-primary btn-lg" type="submit">추가</button>
+      <c:if test="${isModify eq true}">
+        <button class="btn btn-primary btn-lg" type="submit">수정</button>
+      </c:if>
+      <c:if test="${isModify eq false}">
+        <button class="btn btn-primary btn-lg" type="submit">추가</button>
+      </c:if>
       <button type="button" class="btn btn-secondary btn-lg" data-bs-toggle="modal" data-bs-target="#cancelModal">
         취소
       </button>

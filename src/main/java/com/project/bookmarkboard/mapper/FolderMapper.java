@@ -11,4 +11,5 @@ public interface FolderMapper {
     FolderDTO getOneById(@Param("id") long id);
     int updateIsStaredById(@Param("id") long id, @Param("isStared") boolean isStared);
     long insertFolder(FolderDTO folderDTO);
+    int updateFolderById(FolderDTO folderDTO);
 }

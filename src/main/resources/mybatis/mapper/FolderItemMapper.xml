@@ -10,4 +10,15 @@
             (#{item.bookmarkId}, #{item.parentFolder})
         </foreach>
     </insert>
+    
+    <select id="getAllByParentFolderOrderByIdDesc" resultType="com.project.bookmarkboard.dto.FolderItemDTO">
+        SELECT * FROM folder_item
+        WHERE parent_folder = #{id}
+        ORDER BY id DESC
+    </select>
+
+    <delete id="deleteByParentFolder">
+        DELETE FROM folder_item
+        WHERE parent_folder = #{parentFolderId}
+    </delete>
 </mapper>

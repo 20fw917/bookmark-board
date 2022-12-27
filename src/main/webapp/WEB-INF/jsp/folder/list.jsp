@@ -67,10 +67,10 @@
           <c:if test="${item.thumbnail ne null}">
             <img src="${pageContext.request.contextPath}/attachment/${item.thumbnail}" class="card-img-top" alt="">
           </c:if>
-          <c:if test="${item.thumbnail eq null}">
+          <c:if test="${item.thumbnail eq null || item.thumbnail eq ''}">
             <div class="card-img-top">
               <svg xmlns="http://www.w3.org/2000/svg" width="238" height="238" fill="currentColor" class="bi bi-archive" viewBox="0 0 16 16">
-                <path d="M0 2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1v7.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 12.5V5a1 1 0 0 1-1-1V2zm2 3v7.5A1.5 1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 0 1.5-1.5V5H2zm13-3H1v2h14V2zM5 7.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+                <path d="M0 2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1v7.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 12.5V5a1 1 0 0 1-1-1V2zm2 3v7.5A1.5 1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 0 1.5-1.5V5H2zm13-3H1v2h14V2zM5 7.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"></path>
               </svg>
             </div>
           </c:if>
@@ -98,10 +98,13 @@
               </button>
 
               <!--Edit Button-->
-              <button type="button" class="btn btn-sm btn-secondary">
+              <c:url value="${pageContext.request.contextPath}/folder/update" var="url">
+                <c:param name="id" value="${item.id}" />
+              </c:url>
+              <a href="${url}" class="btn btn-sm btn-secondary">
                 <i class="bi bi-pencil-square"></i>
                 <!--Button 내용-->
-              </button>
+              </a>
 
               <!--Delete Button-->
               <button type="button" onclick="deleteFolder(${item.id})" class="btn btn-sm btn-danger">

@@ -48,7 +48,6 @@ CREATE TABLE `folder_item` (
    `id` bigint(20) PRIMARY KEY auto_increment,
    `bookmark_id` bigint(20) NOT NULL,
    `parent_folder` bigint(20) NOT NULL,
-   `created_at` datetime NOT NULL DEFAULT now(),
    FOREIGN KEY (`bookmark_id`) REFERENCES `bookmark` (`id`) ON DELETE CASCADE,
    FOREIGN KEY (`parent_folder`) REFERENCES `folder` (`id`) ON DELETE CASCADE
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

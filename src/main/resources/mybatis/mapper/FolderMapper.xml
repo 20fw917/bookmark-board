@@ -27,4 +27,10 @@
         SET is_stared = #{isStared}
         WHERE id = #{id}
     </update>
+
+    <update id="updateFolderById" parameterType="com.project.bookmarkboard.dto.FolderDTO">
+        UPDATE folder
+        SET title = #{title}, memo = #{memo}, thumbnail = #{thumbnail}, is_stared = #{isStared}, is_shared = #{isShared}
+        WHERE id = #{id}
+    </update>
 </mapper>

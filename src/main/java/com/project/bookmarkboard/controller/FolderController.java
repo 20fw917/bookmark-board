@@ -64,6 +64,8 @@ public class FolderController {
                                 FolderRequestDTO folderRequestDTO,
                                 @ModelAttribute("isShared") String isShared,
                                 @ModelAttribute("isStared") String isStared) throws IOException {
+        log.info("Folder Add Request Received");
+        log.info("folderRequestDTO: " + folderRequestDTO);
         folderRequestDTO.setOwner(customUserDetails.getUserInternalId());
         if(!isShared.equals("")) {
             folderRequestDTO.setShared(Boolean.parseBoolean(isShared));
@@ -74,6 +76,58 @@ public class FolderController {
         }
 
         folderService.insertFolder(folderRequestDTO);
+
+        return "redirect:/folder";
+    }
+
+    @GetMapping("/update")
+    public String getUpdateFolderPage(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                        @RequestParam("id") long id, Model model) {
+        log.info("Folder Update Page Get Request Received");
+        final FolderDTO folderDTO = folderMapper.getOneById(id);
+        if(customUserDetails.getUserInternalId() != folderDTO.getOwner()) {
+            log.warn("Requested by not owner. returning the main page.");
+            // 본인 것을 수정하는 것이 아니라면 메인으로 이동 처리.
+            return "redirect:/";
+        }
+
+        final List<BookmarkDTO> bookmarkDTOList = bookmarkMapper.getAllByOwnerOrderByIdAndStaredDesc(customUserDetails.getUserInternalId());
+        log.debug("Got from DB BookmarkDTOList: " + bookmarkDTOList);
+        model.addAttribute("bookmarkList", bookmarkDTOList);
+
+        final List<BookmarkDTO> alreadyAddedBookmarkDTOList = bookmarkMapper.getAllByIdListOrderByIsStaredDescAndIdDesc(folderService.getBookmarkIdListInFolderById(id));
+        log.debug("alreadyAddedBookmarkDTOList: " + alreadyAddedBookmarkDTOList);
+        model.addAttribute("alreadyAddedBookmarkDTOList", alreadyAddedBookmarkDTOList);
+
+        model.addAttribute("toModifyItem", folderDTO);
+        log.debug("toModifyItem: " + folderDTO);
+        model.addAttribute("isModify", true);
+        return "folder/form";
+    }
+
+    @PostMapping("/update")
+    public String postUpdateFolder(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                FolderRequestDTO folderRequestDTO,
+                                @ModelAttribute("isShared") String isShared,
+                                @ModelAttribute("isStared") String isStared,
+                               @ModelAttribute("deleteRequest") String deleteRequest) throws IOException {
+        log.info("Folder Update Post Request Received");
+        log.info("Received folderRequestDTO: " + folderRequestDTO);
+
+        folderRequestDTO.setOwner(customUserDetails.getUserInternalId());
+        if(!isShared.equals("")) {
+            folderRequestDTO.setShared(Boolean.parseBoolean(isShared));
+        }
+
+        if(!isStared.equals("")) {
+            folderRequestDTO.setStared(Boolean.parseBoolean(isStared));
+        }
+
+        if(!deleteRequest.equals("")) {
+            folderRequestDTO.setDeleteRequest(Boolean.parseBoolean(deleteRequest));
+        }
+
+        folderService.updateFolder(folderRequestDTO);
 
         return "redirect:/folder";
     }

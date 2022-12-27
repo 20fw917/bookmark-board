@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class FolderRequestDTO extends FolderDTO {
     private MultipartFile folderThumbnail;
     private String[] checkedItem;
+    private boolean deleteRequest;
 
     public FolderDTO getFolderDTO() {
         return new FolderDTO(super.getId(), super.getOwner(), super.getTitle(), super.getMemo(), super.getThumbnail(),
