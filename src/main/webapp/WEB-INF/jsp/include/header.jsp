@@ -53,7 +53,7 @@
           </a>
           <ul class="dropdown-menu text-small">
             <li><a class="dropdown-item" href="#">마이 페이지</a></li>
-            <li><a class="dropdown-item" href="#">개인정보 수정</a></li>
+            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/profile/update">개인정보 수정</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">로그아웃</a></li>
           </ul>

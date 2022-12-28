@@ -23,7 +23,6 @@
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <div class="container text-center">
     <form:form class="form-signin" action="${pageContext.request.contextPath}/login" method="post">
-        <img class="mb-4" src="" alt="" width="72" height="72">
         <h1 class="h3 mb-3 font-weight-normal">로그인</h1>
         <c:if test="${fail eq true}">
             <div class="alert alert-danger" role="alert">

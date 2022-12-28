@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.bookmarkboard.mapper.FolderItemMapper">
+    <insert id="insertFolderItem" parameterType="com.project.bookmarkboard.dto.FolderItemDTO">
+        INSERT INTO folder_item(`bookmark_id`, `parent_folder`)
+        VALUES
+        <foreach item="item" index="index" collection="folderItemDTOList" separator=",">
+            (#{item.bookmarkId}, #{item.parentFolder})
+        </foreach>
+    </insert>
+    
+    <select id="getAllByParentFolderOrderByIdDesc" resultType="com.project.bookmarkboard.dto.FolderItemDTO">
+        SELECT * FROM folder_item
+        WHERE parent_folder = #{id}
+        ORDER BY id DESC
+    </select>
+
+    <delete id="deleteByParentFolder">
+        DELETE FROM folder_item
+        WHERE parent_folder = #{parentFolderId}
+    </delete>
+</mapper>
