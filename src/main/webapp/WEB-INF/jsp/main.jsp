@@ -13,33 +13,28 @@
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <div class="container">
     <table class="table table-striped table-hover">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">제목</th>
-            <th scope="col">작성자</th>
-            <th scope="col">조회수</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>안녕하세요. 가입했습니다.</td>
-            <td>코코블루</td>
-            <td>3</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-        </tr>
-        </tbody>
+  	My Folder ★
+		<table width="500" cellpadding="0" cellspacing="0" border="1">
+		<tr>
+			<td>id</td>
+			<td>작성자</td>
+			<td>제목</td>
+			<td>메모</td>
+			<td>썸네일</td>
+			<td>공유 유무</td>
+			<td>즐겨찾기 유무</td>
+		</tr>
+		<c:forEach items="${is_stared}" var="mf">
+			<tr>
+				<td>${mf.id}</td>
+				<td>${mf.owner}</td>
+				<td>${mf.title}</td>
+				<td>${mf.memo}</td>
+				<td>${mf.thumbnail}</td>
+				<td>${mf.is_shared}</td>
+				<td>${mf.is_stared}</td>
+			</tr>
+		</c:forEach>
     </table>
 
     <sec:authorize access="isAuthenticated()">

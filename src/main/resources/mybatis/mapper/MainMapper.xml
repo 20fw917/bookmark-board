@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.project.bookmarkboard.mapper.MainMapper">
+    <select id="getAllFromMyFolderis_stared" resultType="com.project.bookmarkboard.dto.FolderDTO">
+        SELECT * FROM folder WHERE owner = #{owner} AND is_stared = 1
+    </select>
+    
+<!-- 	<select id="getAllFromOurFolderis_recommended" resultType="com.project.bookmarkboard.dto.FolderDTO">
+        SELECT * FROM folder WHERE is_shared = 1 ORDER BY id DESC limit 5
+    </select> -->
+</mapper>
+        
