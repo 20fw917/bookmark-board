@@ -1,12 +1,14 @@
 package com.project.bookmarkboard.controller;
 
 import com.project.bookmarkboard.dto.*;
+import com.project.bookmarkboard.dto.pagination.BookmarkBasicPagination;
 import com.project.bookmarkboard.dto.pagination.FolderViewBasicPagination;
 import com.project.bookmarkboard.dto.response.BasicResponse;
 import com.project.bookmarkboard.dto.response.CommonResponse;
 import com.project.bookmarkboard.mapper.BookmarkMapper;
 import com.project.bookmarkboard.mapper.FolderMapper;
 import com.project.bookmarkboard.mapper.FolderViewMapper;
+import com.project.bookmarkboard.service.BookmarkService;
 import com.project.bookmarkboard.service.FolderService;
 import com.project.bookmarkboard.service.FolderViewService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,7 @@ public class FolderController {
     private final FolderViewMapper folderViewMapper;
     private final BookmarkMapper bookmarkMapper;
     private final FolderService folderService;
+    private final BookmarkService bookmarkService;
 
     @GetMapping("")
     public String getFolderPage(@AuthenticationPrincipal CustomUserDetails customUserDetails,
@@ -65,7 +68,7 @@ public class FolderController {
                                 @ModelAttribute("isShared") String isShared,
                                 @ModelAttribute("isStared") String isStared) throws IOException {
         log.info("Folder Add Request Received");
-        log.info("folderRequestDTO: " + folderRequestDTO);
+        log.debug("folderRequestDTO: " + folderRequestDTO);
         folderRequestDTO.setOwner(customUserDetails.getUserInternalId());
         if(!isShared.equals("")) {
             folderRequestDTO.setShared(Boolean.parseBoolean(isShared));
@@ -95,7 +98,6 @@ public class FolderController {
         log.debug("Got from DB BookmarkDTOList: " + bookmarkDTOList);
         model.addAttribute("bookmarkList", bookmarkDTOList);
 
-
         List<BookmarkDTO> alreadyAddedBookmarkDTOList = new ArrayList<>();
         if(folderViewDTO.getItemCount() > 0) {
             alreadyAddedBookmarkDTOList = bookmarkMapper.getAllByIdListOrderByIsStaredDescAndIdDesc(folderService.getBookmarkIdListInFolderById(id));
@@ -107,7 +109,37 @@ public class FolderController {
         model.addAttribute("toModifyItem", folderViewDTO);
         log.debug("toModifyItem: " + folderViewDTO);
         model.addAttribute("isModify", true);
+
         return "folder/form";
+    }
+
+    @GetMapping("/detail/{id}")
+    public String getFolderDetails(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                   @RequestParam(name = "page", required = false, defaultValue = "1") int pageNum,
+                                   @PathVariable(name = "id") long folderId,
+                                   Model model) {
+        final FolderViewDTO folderViewDTO = folderViewMapper.getOneById(folderId);
+
+        // 없는 폴더의 정보를 요청한 경우
+        if(folderViewDTO == null) {
+            return "redirect:/";
+        }
+
+        // 권한이 없는 폴더의 정보를 요청한 경우
+        if(!folderViewDTO.isShared() && folderViewDTO.getOwner() != customUserDetails.getUserInternalId()) {
+            return "redirect:/";
+        }
+
+        if(folderViewDTO.getItemCount() > 0) {
+            BookmarkBasicPagination pagination = bookmarkService.getAllByIdListOrderByIsStaredDescAndIdDescLimitByFromAndTo
+                    (folderService.getBookmarkIdListInFolderById(folderId), pageNum, folderViewDTO.getItemCount());
+            model.addAttribute("bookmarkList", pagination.getBookmarkDTOList());
+            model.addAttribute("pagination", pagination.getPagination());
+        }
+
+        model.addAttribute("folder", folderViewDTO);
+
+        return "folder/detail";
     }
 
     @PostMapping("/update")
@@ -134,7 +166,7 @@ public class FolderController {
 
         folderService.updateFolder(folderRequestDTO);
 
-        return "redirect:/folder";
+        return "redirect:/folder/detail/" + folderRequestDTO.getId();
     }
 
     @DeleteMapping("/delete/{id}")

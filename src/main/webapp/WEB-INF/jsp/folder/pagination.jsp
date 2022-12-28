@@ -1,11 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <nav>
   <ul class="pagination justify-content-center">
     <c:if test="${param.previousPageExists}">
       <li class="page-item">
-        <c:url value="${pageContext.request.contextPath}/folder" var="url">
+        <c:url value="${param.baseUrl}" var="url">
           <c:param name="page" value="${param.startIndexNum - 10}" />
         </c:url>
 
@@ -24,7 +24,7 @@
         </c:when>
 
         <c:otherwise>
-          <c:url value="${pageContext.request.contextPath}/folder" var="url">
+          <c:url value="${param.baseUrl}" var="url">
             <c:param name="page" value="${status.current}" />
           </c:url>
 
@@ -34,7 +34,7 @@
     </c:forEach>
 
     <c:if test="${param.nextPageExists}">
-      <c:url value="${pageContext.request.contextPath}/folder" var="url">
+      <c:url value="${param.baseUrl}" var="url">
         <c:param name="page" value="${param.startIndexNum + 10}" />
       </c:url>
 

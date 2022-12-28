@@ -15,6 +15,7 @@ public class FolderRequestDTO extends FolderDTO {
 
     public FolderDTO getFolderDTO() {
         return new FolderDTO(super.getId(), super.getOwner(), super.getTitle(), super.getMemo(), super.getThumbnail(),
-                super.isShared(), super.isStared());
+                super.isShared(), super.isStared(), super.getCreatedAt());
     }
 }
+

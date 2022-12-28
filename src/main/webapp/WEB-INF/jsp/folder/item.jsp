@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!--카드-->
@@ -44,9 +44,9 @@
             </c:if>
 
             <!--자세히 보기 Button-->
-            <button type="button" class="btn btn-sm btn-primary" onclick="window.open('https://www.youtube.com/watch?v=8KDuTVZgR0Y')">
+            <a href="${pageContext.request.contextPath}/folder/detail/${param.id}" class="btn btn-sm btn-primary">
                 <i class="bi bi-search"></i>
-            </button>
+            </a>
 
             <!--Edit Button-->
             <c:url value="${pageContext.request.contextPath}/folder/update" var="url">

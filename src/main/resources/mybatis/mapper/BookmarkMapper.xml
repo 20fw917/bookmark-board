@@ -33,6 +33,15 @@
         </foreach>
     </select>
 
+    <select id="getAllByIdListOrderByIsStaredDescAndIdDescLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
+        SELECT * FROM bookmark
+        WHERE id in
+        <foreach item="item" index="index" collection="idList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        LIMIT #{from}, #{to}
+    </select>
+
     <select id="getAllByOwnerAndIsStaredOrderByIdDescLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
         SELECT * FROM bookmark
         WHERE owner = #{owner} AND is_stared = #{isStared}

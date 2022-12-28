@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -62,7 +62,7 @@
   <div class="content">
     <div class="row">
       <c:forEach items="${items}" var="item">
-        <jsp:include page="/WEB-INF/jsp/folder/item.jsp" flush="false">
+        <jsp:include page="/WEB-INF/jsp/folder/item.jsp">
           <jsp:param name="id" value="${item.id}"/>
           <jsp:param name="thumbnail" value="${item.thumbnail}"/>
           <jsp:param name="title" value="${item.title}"/>
@@ -78,12 +78,13 @@
 <br>
 <%-- paging --%>
 <div class="container">
-    <jsp:include page="/WEB-INF/jsp/folder/pagination.jsp" flush="false">
+    <jsp:include page="/WEB-INF/jsp/folder/pagination.jsp">
       <jsp:param name="previousPageExists" value="${pagination.previousPageExists}"/>
       <jsp:param name="nextPageExists" value="${pagination.nextPageExists}"/>
       <jsp:param name="startIndexNum" value="${pagination.startIndexNum}"/>
       <jsp:param name="endIndexNum" value="${pagination.endIndexNum}"/>
       <jsp:param name="currentPageNum" value="${pagination.currentPageNum}"/>
+      <jsp:param name="baseUrl" value="${pageContext.request.contextPath}/folder"/>
     </jsp:include>
 </div>
 </body>

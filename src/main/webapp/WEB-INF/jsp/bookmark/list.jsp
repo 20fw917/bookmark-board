@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
@@ -34,21 +34,24 @@
     <br>
         <div class="row">
             <c:forEach items="${staredBookmarkItems}" var="item">
-                <jsp:include page="/WEB-INF/jsp/bookmark/item.jsp" flush="false">
-                  <jsp:param name="id" value="${item.id}"/>
-                  <jsp:param name="title" value="${item.title}"/>
-                  <jsp:param name="memo" value="${item.memo}"/>
-                  <jsp:param name="url" value="${item.url}"/>
-                  <jsp:param name="shared" value="${item.shared}"/>
-                  <jsp:param name="stared" value="${item.stared}"/>
-                  <jsp:param name="createdAtFormatted" value="${item.createdAtFormatted}"/>
+                <div class="w-50">
+                <jsp:include page="/WEB-INF/jsp/bookmark/item.jsp">
+                    <jsp:param name="id" value="${item.id}"/>
+                    <jsp:param name="title" value="${item.title}"/>
+                    <jsp:param name="memo" value="${item.memo}"/>
+                    <jsp:param name="url" value="${item.url}"/>
+                    <jsp:param name="shared" value="${item.shared}"/>
+                    <jsp:param name="stared" value="${item.stared}"/>
+                    <jsp:param name="createdAtFormatted" value="${item.createdAtFormatted}"/>
+                    <jsp:param name="showToolbar" value="true"/>
                 </jsp:include>
+                </div>
             </c:forEach>
         </div>
     </div>
 <br>
     <div class="container">
-        <jsp:include page="/WEB-INF/jsp/bookmark/pagination.jsp" flush="false">
+        <jsp:include page="/WEB-INF/jsp/bookmark/pagination.jsp">
             <jsp:param name="currentPageParam" value="stared_page"/>
             <jsp:param name="anotherPageName" value="not_stared_page"/>
             <jsp:param name="anotherPageCurrentPage" value="${notStaredBookmarkPagination.currentPageNum}"/>
@@ -75,7 +78,8 @@
     <h3>일반 북마크</h3><br>
     <div class="row">
         <c:forEach items="${notStaredBookmarkItems}" var="item">
-            <jsp:include page="/WEB-INF/jsp/bookmark/item.jsp" flush="false">
+            <div class="w-50">
+            <jsp:include page="/WEB-INF/jsp/bookmark/item.jsp">
                 <jsp:param name="id" value="${item.id}"/>
                 <jsp:param name="title" value="${item.title}"/>
                 <jsp:param name="memo" value="${item.memo}"/>
@@ -83,13 +87,15 @@
                 <jsp:param name="shared" value="${item.shared}"/>
                 <jsp:param name="stared" value="${item.stared}"/>
                 <jsp:param name="createdAtFormatted" value="${item.createdAtFormatted}"/>
+                <jsp:param name="showToolbar" value="true"/>
             </jsp:include>
+        </div>
         </c:forEach>
     </div>
 
     <br>
     <div class="container">
-        <jsp:include page="/WEB-INF/jsp/bookmark/pagination.jsp" flush="false">
+        <jsp:include page="/WEB-INF/jsp/bookmark/pagination.jsp">
             <jsp:param name="currentPageParam" value="not_stared_page"/>
             <jsp:param name="anotherPageName" value="stared_page"/>
             <jsp:param name="anotherPageCurrentPage" value="${staredBookmarkPagination.currentPageNum}"/>
@@ -99,6 +105,7 @@
             <jsp:param name="startIndexNum" value="${notStaredBookmarkPagination.startIndexNum}"/>
             <jsp:param name="endIndexNum" value="${notStaredBookmarkPagination.endIndexNum}"/>
             <jsp:param name="currentPageNum" value="${notStaredBookmarkPagination.currentPageNum}"/>
+            <jsp:param name="showToolbar" value="true"/>
         </jsp:include>
     </div>
     </c:if>

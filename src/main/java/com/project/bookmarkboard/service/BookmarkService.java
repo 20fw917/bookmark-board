@@ -30,4 +30,15 @@ public class BookmarkService {
 
         return new BookmarkBasicPagination(itemsCount, pageNum, finalPageNum, bookmarkDTOList);
     }
+
+    public BookmarkBasicPagination getAllByIdListOrderByIsStaredDescAndIdDescLimitByFromAndTo(List<Long> idList, int pageNum, int itemsCount) {
+        final int startItemNum = (pageNum - 1) * itemsPerPage;
+        final int endPageItemNum = pageNum * itemsPerPage;
+
+        final List<BookmarkDTO> bookmarkDTOList = bookmarkMapper.getAllByIdListOrderByIsStaredDescAndIdDescLimitByFromAndTo(idList, startItemNum, endPageItemNum);
+
+        final int finalPageNum = ((itemsCount - 1) / itemsPerPage) + 1;
+
+        return new BookmarkBasicPagination(itemsCount, pageNum, finalPageNum, bookmarkDTOList);
+    }
 }

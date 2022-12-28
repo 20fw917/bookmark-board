@@ -33,7 +33,7 @@ public class AttachmentService {
         final String originalFileName = Objects.requireNonNull(multipartFile.getOriginalFilename());
         log.debug("originalFileName: " + originalFileName);
         // File 확장자
-        final String extension = originalFileName.substring(originalFileName.lastIndexOf("."), originalFileName.length());
+        final String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
         log.debug("extension: " + extension);
         final UUID uuid = UUID.randomUUID();
 
