@@ -38,4 +38,15 @@ public class UserService {
 
         return user.getInternalId();
     }
+
+    public void updateUser(User user) {
+        if(user.getPassword() != null) {
+            if(!user.getPassword().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+            }
+        }
+
+        user.setRole(UserRole.USER.name());
+        userMapper.updateUser(user);
+    }
 }

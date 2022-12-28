@@ -6,4 +6,31 @@
     <select id="getCountByOwner" resultType="int">
         SELECT count(*) FROM folder WHERE owner = #{owner}
     </select>
+
+    <delete id="deleteById">
+        DELETE FROM folder WHERE id = #{id};
+    </delete>
+
+    <select id="getOneById" resultType="com.project.bookmarkboard.dto.FolderDTO">
+        SELECT * FROM folder
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insertFolder" parameterType="com.project.bookmarkboard.dto.FolderDTO"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO folder(`owner`, `title`, `memo`, `thumbnail`, `is_stared`, `is_shared`)
+        VALUES(#{owner}, #{title}, #{memo}, #{thumbnail}, #{isShared}, #{isStared})
+    </insert>
+
+    <update id="updateIsStaredById">
+        UPDATE folder
+        SET is_stared = #{isStared}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateFolderById" parameterType="com.project.bookmarkboard.dto.FolderDTO">
+        UPDATE folder
+        SET title = #{title}, memo = #{memo}, thumbnail = #{thumbnail}, is_stared = #{isStared}, is_shared = #{isShared}
+        WHERE id = #{id}
+    </update>
 </mapper>

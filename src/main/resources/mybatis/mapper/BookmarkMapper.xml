@@ -11,11 +11,31 @@
         SELECT count(*) FROM bookmark WHERE owner = #{owner} AND is_stared = #{isStared}
     </select>
 
+    <select id="getAllByOwnerOrderByIdAndStaredDesc" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
+        SELECT * FROM bookmark
+        WHERE owner = #{owner}
+        ORDER BY is_stared DESC, id DESC
+    </select>
+
+    <select id="getAllByIdListOrderByIsStaredDescAndIdDesc" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
+        SELECT * FROM bookmark
+        WHERE id in
+        <foreach item="item" index="index" collection="idList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
     <select id="getAllByOwnerAndIsStaredOrderByIdDescLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
         SELECT * FROM bookmark
         WHERE owner = #{owner} AND is_stared = #{isStared}
         ORDER BY id DESC
         LIMIT #{from}, #{to}
+    </select>
+
+    <select id="getAllByOwnerAndKeywordOrderByIsStaredDescAndIdDesc" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
+        SELECT * FROM bookmark
+        WHERE owner = #{owner} AND (title LIKE CONCAT('%',#{keyword},'%') OR url LIKE CONCAT('%',#{keyword},'%') OR memo LIKE CONCAT('%',#{keyword},'%'))
+        ORDER BY is_stared DESC, id DESC
     </select>
 
     <insert id="insertBookmark" parameterType="com.project.bookmarkboard.dto.BookmarkDTO">

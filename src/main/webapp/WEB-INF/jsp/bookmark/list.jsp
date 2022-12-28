@@ -51,7 +51,7 @@
                                 <c:param name="id" value="${item.id}" />
                             </c:url>
                             <a href="${url}" class="btn btn-secondary">
-                                <i class="bi bi-pencil"></i>
+                                <i class="bi bi-pencil-square"></i>
                                 편집
                             </a>
                             <button onclick="deleteBookmark(${item.id})" class="btn btn-danger">
@@ -149,7 +149,7 @@
                             <c:param name="id" value="${item.id}" />
                         </c:url>
                         <a href="${url}" class="btn btn-secondary">
-                            <i class="bi bi-pencil"></i>
+                            <i class="bi bi-pencil-square"></i>
                             편집
                         </a>
                         <button onclick="deleteBookmark(${item.id})" class="btn btn-danger">

@@ -3,6 +3,11 @@
     {
       "name": "items-per-page",
       "type": "java.lang.Integer",
-      "description": "Description for items-per-page."
-  }
+      "description": "Items Per Page."
+  },
+    {
+      "name": "attachment.directory-path",
+      "type": "java.lang.String",
+      "description": "Save Location of Attachments. MUST Be end of '/'."
+    }
 ] }

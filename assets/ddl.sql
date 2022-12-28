@@ -37,7 +37,7 @@ CREATE TABLE `folder` (
   `owner` bigint(20) NOT NULL,
   `title` varchar(100) NOT NULL COMMENT '제목 100자 제한',
   `memo` TEXT DEFAULT NULL COMMENT '메모가 없을 수도 있으니 NULLABLE',
-  `thumbnail` varchar(36) DEFAULT NULL COMMENT 'UUID는 36글자로 구성',
+  `thumbnail` varchar(60) DEFAULT NULL COMMENT 'UUID는 36글자로 구성 + Type + extension',
   `created_at` datetime NOT NULL DEFAULT now(),
   `is_shared` tinyint(1) NOT NULL DEFAULT 0 COMMENT '공유가 켜졌는가',
   `is_stared` tinyint(1) NOT NULL DEFAULT 0 COMMENT '즐겨찾기로 등록되었는가',
@@ -48,7 +48,6 @@ CREATE TABLE `folder_item` (
    `id` bigint(20) PRIMARY KEY auto_increment,
    `bookmark_id` bigint(20) NOT NULL,
    `parent_folder` bigint(20) NOT NULL,
-   `created_at` datetime NOT NULL DEFAULT now(),
    FOREIGN KEY (`bookmark_id`) REFERENCES `bookmark` (`id`) ON DELETE CASCADE,
    FOREIGN KEY (`parent_folder`) REFERENCES `folder` (`id`) ON DELETE CASCADE
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -75,14 +74,6 @@ CREATE TABLE `comment` (
    `created_at` datetime NOT NULL DEFAULT now(),
    FOREIGN KEY (`author_id`) REFERENCES `user` (`internal_id`) ON DELETE CASCADE,
    FOREIGN KEY (`article_id`) REFERENCES `article` (`id`) ON DELETE CASCADE
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-CREATE TABLE `attachment_index` (
-    `id` bigint(20) NOT NULL PRIMARY KEY auto_increment,
-    `original_filename` varchar(256) NOT NULL COMMENT '파일 이름 최대 256자',
-    `renamed_filename` varchar(36) NOT NULL COMMENT 'UUID는 36글자로 구성',
-    `article_id` bigint(20) NOT NULL,
-    FOREIGN KEY (`article_id`) REFERENCES `article` (`id`) ON DELETE CASCADE
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE `article_like` (
@@ -112,6 +103,6 @@ CREATE VIEW `comment_view` AS (
 CREATE VIEW `folder_view` AS (
   SELECT f.id AS `id`, f.owner AS `owner`, f.title AS `title`, f.memo AS `memo`, f.thumbnail AS thumbnail,
          f.created_at AS `created_at`, f.is_shared as `is_shared`, f.is_stared as `is_stared`,
-         (SELECT COUNT(*) FROM folder_item fi WHERE fi.parent_folder = id) AS `count`
+         (SELECT COUNT(*) FROM folder_item fi WHERE fi.parent_folder = f.id) AS `item_count`
   FROM `folder` f
   );
