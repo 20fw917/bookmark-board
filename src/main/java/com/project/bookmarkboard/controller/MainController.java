@@ -30,7 +30,7 @@ public class MainController {
 	
     @GetMapping({"/"})
     public String getMain(Model model) {
-    	model.addAttribute("is_stared", mainMapper.getAllFromMyFolderis_stared());
+    	// model.addAttribute("is_stared", mainMapper.getAllFromMyFolderis_stared());
     	// model.addAttribute("recommended", mainMapper.getAllFromOurFolderis_recommended());
     	
         return "main";
@@ -54,9 +54,8 @@ public class MainController {
     
     @GetMapping({"/search"})
     public String search(Model model) {
-    	model.addAttribute("myFolder", searchMapper.getAllFromMyFolder());
-    	model.addAttribute("ourFolder", searchMapper.getAllFromOurFolder());
-
+    	// model.addAttribute("myFolder", searchMapper.getAllFromMyFolder());
+    	// model.addAttribute("ourFolder", searchMapper.getAllFromOurFolder());
 		
         return "search";
     }
