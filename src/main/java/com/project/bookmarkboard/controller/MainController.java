@@ -1,10 +1,13 @@
 package com.project.bookmarkboard.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -13,8 +16,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.project.bookmarkboard.mapper.MainMapper;
-import com.project.bookmarkboard.mapper.SearchMapper;
+import com.project.bookmarkboard.dto.CustomUserDetails;
+import com.project.bookmarkboard.dto.FolderDTO;
+import com.project.bookmarkboard.service.MainService;
+import com.project.bookmarkboard.service.SearchService;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -25,12 +30,14 @@ import lombok.extern.log4j.Log4j2;
 public class MainController {
 	
 	@Autowired
-	SearchMapper searchMapper;
-	MainMapper mainMapper;
+	SearchService sservice;
+	@Autowired
+	MainService mservice;
 	
     @GetMapping({"/"})
-    public String getMain(Model model) {
-    	// model.addAttribute("is_stared", mainMapper.getAllFromMyFolderis_stared());
+    public String getMain(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model) {
+    	List<FolderDTO> list =  mservice.getAllFromMyFolderis_stared(customUserDetails.getUserInternalId());
+    	model.addAttribute("is_stared", list); // 모델에 저장
     	// model.addAttribute("recommended", mainMapper.getAllFromOurFolderis_recommended());
     	
         return "main";
@@ -53,7 +60,12 @@ public class MainController {
     }
     
     @GetMapping({"/search"})
-    public String search(Model model) {
+    public String search(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model) {
+    	// List<FolderDTO> list2 = sservice.getAllFromMyFolder(searchkeyword, owner);
+   	 	// model.addAttribute("myFolder", list2); // 모델에 저장
+ 		// List<FolderDTO> list3 = sservice.getAllFromOurFolder(searchkeyword);
+	 	// model.addAttribute("ourFolder", list3); // 모델에 저장
+	 	
     	// model.addAttribute("myFolder", searchMapper.getAllFromMyFolder());
     	// model.addAttribute("ourFolder", searchMapper.getAllFromOurFolder());
 		

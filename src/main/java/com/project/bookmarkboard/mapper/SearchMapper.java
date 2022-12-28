@@ -10,5 +10,5 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface SearchMapper {
 	List<FolderDTO> getAllFromMyFolder(@Param("searchkeyword") String searchkeyword, @Param("owner") long owner);
-	List<FolderDTO> getAllFromOurFolder(@Param("searchkeyword") String searchkeyword, @Param("isShared") boolean isShared);
+	List<FolderDTO> getAllFromOurFolder(@Param("searchkeyword") String searchkeyword);
 }

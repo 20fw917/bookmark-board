@@ -15,26 +15,27 @@
     <table class="table table-striped table-hover">
   	My Folder ★
 		<table width="500" cellpadding="0" cellspacing="0" border="1">
-		<tr>
-			<td>id</td>
-			<td>작성자</td>
-			<td>제목</td>
-			<td>메모</td>
-			<td>썸네일</td>
-			<td>공유 유무</td>
-			<td>즐겨찾기 유무</td>
-		</tr>
-		<c:forEach items="${is_stared}" var="mf">
-			<tr>
-				<td>${mf.id}</td>
-				<td>${mf.owner}</td>
-				<td>${mf.title}</td>
-				<td>${mf.memo}</td>
-				<td>${mf.thumbnail}</td>
-				<td>${mf.is_shared}</td>
-				<td>${mf.is_stared}</td>
-			</tr>
-		</c:forEach>
+				<tr>
+					<td>id</td>
+					<td>작성자</td>
+					<td>제목</td>
+					<td>메모</td>
+					<td>썸네일</td>
+					<td>공유 유무</td>
+					<td>즐겨찾기 유무</td>
+				</tr>
+			<c:forEach items="${is_stared}" var="is">
+				<tr>
+					<td>${is.id}</td>
+					<td>${is.owner}</td>
+					<td>${is.title}</td>
+					<td>${is.memo}</td>
+					<td>${is.thumbnail}</td>
+					<td>${is.is_shared}</td>
+					<td>${is.is_stared}</td>
+				</tr>
+			</c:forEach>
+	    </table>
     </table>
 
     <sec:authorize access="isAuthenticated()">

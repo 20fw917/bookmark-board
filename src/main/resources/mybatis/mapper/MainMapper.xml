@@ -7,8 +7,8 @@
         SELECT * FROM folder WHERE owner = #{owner} AND is_stared = 1
     </select>
     
-<!-- 	<select id="getAllFromOurFolderis_recommended" resultType="com.project.bookmarkboard.dto.FolderDTO">
+	<select id="getAllFromOurFolderis_recommended" resultType="com.project.bookmarkboard.dto.FolderDTO">
         SELECT * FROM folder WHERE is_shared = 1 ORDER BY id DESC limit 5
-    </select> -->
+    </select>
 </mapper>
         
