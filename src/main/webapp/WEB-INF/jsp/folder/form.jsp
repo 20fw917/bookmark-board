@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -43,12 +43,13 @@
         </div>
 
         <c:if test="${isModify eq true}">
-            <div id="previewArea" style="display: <c:if test="${toModifyItem.thumbnail ne null}">block</c:if><c:if test="${toModifyItem.thumbnail eq null}">none</c:if>;">
-              <img id="preview" <c:if test="${toModifyItem.thumbnail ne null}">src="${pageContext.request.contextPath}/attachment/${toModifyItem.thumbnail}"</c:if> style="width: 300px; height: 300px"/>
+            <div id="previewArea" style="display: <c:if test="${toModifyItem.thumbnail ne null && toModifyItem.thumbnail ne ''}">block</c:if><c:if test="${toModifyItem.thumbnail eq null || toModifyItem.thumbnail eq ''}">none</c:if>;">
+              <img id="preview" <c:if test="${toModifyItem.thumbnail ne null && toModifyItem.thumbnail ne ''}">src="${pageContext.request.contextPath}/attachment/${toModifyItem.thumbnail}"</c:if>
+                   alt="" style="width: 300px; height: 300px"/>
         </c:if>
         <c:if test="${isModify eq false}">
           <div id="previewArea" style="display: none;">
-            <img id="preview" style="width: 300px; height: 300px"/>
+            <img id="preview" src="" alt="" style="width: 300px; height: 300px"/>
         </c:if>
             <br>
             <button type="button" onclick="deleteThumbnail()" class="btn btn-danger">
@@ -86,6 +87,7 @@
         <h4 class="h4">추가할 북마크</h4>
         <div class="form-label">
           <div class="border form-outline overflow-auto" style="height: 300px; padding: 10px">
+            <label for="itemSearch"></label>
             <input onkeyup="searchKeyword(this)" type="search" id="itemSearch" class="form-control" placeholder="북마크 검색"/>
             <p class="text-justify">추가할 북마크를 고르세요.</p>
             <div id="toAddBookmarkArea">

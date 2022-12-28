@@ -5,6 +5,8 @@ import com.project.bookmarkboard.dto.User;
 import com.project.bookmarkboard.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,5 +37,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         // AccountContext 생성자로 UserDetails 타입 생성
         return new CustomUserDetails(user, roles);
+    }
+
+    public Authentication createNewAuthentication(Authentication currentAuth, String username) {
+        UserDetails userDetails = loadUserByUsername(username);
+        UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(userDetails, currentAuth.getCredentials(), userDetails.getAuthorities());
+        newAuth.setDetails(currentAuth.getDetails());
+        return newAuth;
     }
 }

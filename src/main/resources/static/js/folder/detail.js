@@ -1,4 +1,4 @@
-const deleteFolder = (id) => {
+const deleteFolderAtDetail = (id) => {
     const token = $("meta[name='_csrf']").attr("content");
     const header = $("meta[name='_csrf_header']").attr("content");
 
@@ -13,7 +13,7 @@ const deleteFolder = (id) => {
             },
             success: function(result) {
                 if(result) {
-                    location.reload();
+                    window.location.href = "/folder";
                 } else {
                     alert("삭제에 실패하였습니다.");
                     console.log("DELETE Failed");

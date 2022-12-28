@@ -28,9 +28,19 @@
         WHERE id = #{id}
     </update>
 
+    <update id="updateIsSharedById">
+        UPDATE folder
+        SET is_shared = #{isShared}
+        WHERE id = #{id}
+    </update>
+
     <update id="updateFolderById" parameterType="com.project.bookmarkboard.dto.FolderDTO">
         UPDATE folder
         SET title = #{title}, memo = #{memo}, thumbnail = #{thumbnail}, is_stared = #{isStared}, is_shared = #{isShared}
         WHERE id = #{id}
     </update>
+
+    <select id="getCountByOwnerAndIsShared" resultType="int">
+        SELECT count(*) FROM folder WHERE owner = #{owner} AND is_shared = #{isShared}
+    </select>
 </mapper>

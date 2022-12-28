@@ -42,4 +42,10 @@
         </if>
         WHERE internal_id = #{internalId}
     </update>
+
+    <update id="updateProfileImageByInternalId" parameterType="com.project.bookmarkboard.dto.User">
+        UPDATE user
+        SET profile_image = #{profileImage}
+        WHERE internal_id = #{internalId}
+    </update>
 </mapper>

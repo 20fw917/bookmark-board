@@ -26,13 +26,14 @@ public class AttachmentService {
     private String directoryPath;
 
     public String saveFile(MultipartFile multipartFile, String type) throws IOException {
+        log.info("Attachment Save Process Start");
         Path directory = Paths.get(directoryPath).toAbsolutePath().normalize();
         Files.createDirectories(directory);
 
         final String originalFileName = Objects.requireNonNull(multipartFile.getOriginalFilename());
         log.debug("originalFileName: " + originalFileName);
         // File 확장자
-        final String extension = originalFileName.substring(originalFileName.lastIndexOf("."), originalFileName.length());
+        final String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
         log.debug("extension: " + extension);
         final UUID uuid = UUID.randomUUID();
 
