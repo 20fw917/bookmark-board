@@ -36,7 +36,7 @@ public class FolderService {
         folderMapper.insertFolder(folderDTO);
 
         if(folderRequestDTO.getCheckedItem() != null) {
-            insertFolderItemToDB(folderRequestDTO.getCheckedItem(), folderRequestDTO.getId());
+            insertFolderItemToDB(folderRequestDTO.getCheckedItem(), folderDTO.getId());
         }
     }
 
@@ -83,7 +83,7 @@ public class FolderService {
     }
 
     private void insertFolderItemToDB(String[] toInsertItem, long folderId) {
-        List<FolderItemDTO> toAddFolderItemDTOList = new ArrayList<FolderItemDTO>();
+        List<FolderItemDTO> toAddFolderItemDTOList = new ArrayList<>();
 
         for (String itemId : toInsertItem) {
             FolderItemDTO folderItemDTO = new FolderItemDTO(Long.parseLong(itemId), folderId);

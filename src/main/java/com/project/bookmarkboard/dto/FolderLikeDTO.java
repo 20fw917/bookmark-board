@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleLikeDTO {
+public class FolderLikeDTO {
     private long id;
     private long userId;
-    private long articleId;
+    private long folderId;
 }

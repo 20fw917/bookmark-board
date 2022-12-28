@@ -1,14 +1,14 @@
 package com.project.bookmarkboard.controller;
 
-import com.project.bookmarkboard.dto.BookmarkDTO;
-import com.project.bookmarkboard.dto.CustomUserDetails;
-import com.project.bookmarkboard.dto.FolderDTO;
-import com.project.bookmarkboard.dto.FolderRequestDTO;
+import com.project.bookmarkboard.dto.*;
+import com.project.bookmarkboard.dto.pagination.BookmarkBasicPagination;
 import com.project.bookmarkboard.dto.pagination.FolderViewBasicPagination;
 import com.project.bookmarkboard.dto.response.BasicResponse;
 import com.project.bookmarkboard.dto.response.CommonResponse;
 import com.project.bookmarkboard.mapper.BookmarkMapper;
 import com.project.bookmarkboard.mapper.FolderMapper;
+import com.project.bookmarkboard.mapper.FolderViewMapper;
+import com.project.bookmarkboard.service.BookmarkService;
 import com.project.bookmarkboard.service.FolderService;
 import com.project.bookmarkboard.service.FolderViewService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
@@ -29,8 +30,10 @@ import java.util.List;
 public class FolderController {
     private final FolderViewService folderViewService;
     private final FolderMapper folderMapper;
+    private final FolderViewMapper folderViewMapper;
     private final BookmarkMapper bookmarkMapper;
     private final FolderService folderService;
+    private final BookmarkService bookmarkService;
 
     @GetMapping("")
     public String getFolderPage(@AuthenticationPrincipal CustomUserDetails customUserDetails,
@@ -65,7 +68,7 @@ public class FolderController {
                                 @ModelAttribute("isShared") String isShared,
                                 @ModelAttribute("isStared") String isStared) throws IOException {
         log.info("Folder Add Request Received");
-        log.info("folderRequestDTO: " + folderRequestDTO);
+        log.debug("folderRequestDTO: " + folderRequestDTO);
         folderRequestDTO.setOwner(customUserDetails.getUserInternalId());
         if(!isShared.equals("")) {
             folderRequestDTO.setShared(Boolean.parseBoolean(isShared));
@@ -84,8 +87,8 @@ public class FolderController {
     public String getUpdateFolderPage(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                         @RequestParam("id") long id, Model model) {
         log.info("Folder Update Page Get Request Received");
-        final FolderDTO folderDTO = folderMapper.getOneById(id);
-        if(customUserDetails.getUserInternalId() != folderDTO.getOwner()) {
+        final FolderViewDTO folderViewDTO = folderViewMapper.getOneById(id);
+        if(customUserDetails.getUserInternalId() != folderViewDTO.getOwner()) {
             log.warn("Requested by not owner. returning the main page.");
             // 본인 것을 수정하는 것이 아니라면 메인으로 이동 처리.
             return "redirect:/";
@@ -95,14 +98,48 @@ public class FolderController {
         log.debug("Got from DB BookmarkDTOList: " + bookmarkDTOList);
         model.addAttribute("bookmarkList", bookmarkDTOList);
 
-        final List<BookmarkDTO> alreadyAddedBookmarkDTOList = bookmarkMapper.getAllByIdListOrderByIsStaredDescAndIdDesc(folderService.getBookmarkIdListInFolderById(id));
+        List<BookmarkDTO> alreadyAddedBookmarkDTOList = new ArrayList<>();
+        if(folderViewDTO.getItemCount() > 0) {
+            alreadyAddedBookmarkDTOList = bookmarkMapper.getAllByIdListOrderByIsStaredDescAndIdDesc(folderService.getBookmarkIdListInFolderById(id));
+        }
+
         log.debug("alreadyAddedBookmarkDTOList: " + alreadyAddedBookmarkDTOList);
         model.addAttribute("alreadyAddedBookmarkDTOList", alreadyAddedBookmarkDTOList);
 
-        model.addAttribute("toModifyItem", folderDTO);
-        log.debug("toModifyItem: " + folderDTO);
+        model.addAttribute("toModifyItem", folderViewDTO);
+        log.debug("toModifyItem: " + folderViewDTO);
         model.addAttribute("isModify", true);
+
         return "folder/form";
+    }
+
+    @GetMapping("/detail/{id}")
+    public String getFolderDetails(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                   @RequestParam(name = "page", required = false, defaultValue = "1") int pageNum,
+                                   @PathVariable(name = "id") long folderId,
+                                   Model model) {
+        final FolderViewDTO folderViewDTO = folderViewMapper.getOneById(folderId);
+
+        // 없는 폴더의 정보를 요청한 경우
+        if(folderViewDTO == null) {
+            return "redirect:/";
+        }
+
+        // 권한이 없는 폴더의 정보를 요청한 경우
+        if(!folderViewDTO.isShared() && folderViewDTO.getOwner() != customUserDetails.getUserInternalId()) {
+            return "redirect:/";
+        }
+
+        if(folderViewDTO.getItemCount() > 0) {
+            BookmarkBasicPagination pagination = bookmarkService.getAllByIdListOrderByIsStaredDescAndIdDescLimitByFromAndTo
+                    (folderService.getBookmarkIdListInFolderById(folderId), pageNum, folderViewDTO.getItemCount());
+            model.addAttribute("bookmarkList", pagination.getBookmarkDTOList());
+            model.addAttribute("pagination", pagination.getPagination());
+        }
+
+        model.addAttribute("folder", folderViewDTO);
+
+        return "folder/detail";
     }
 
     @PostMapping("/update")
@@ -129,7 +166,7 @@ public class FolderController {
 
         folderService.updateFolder(folderRequestDTO);
 
-        return "redirect:/folder";
+        return "redirect:/folder/detail/" + folderRequestDTO.getId();
     }
 
     @DeleteMapping("/delete/{id}")
@@ -172,6 +209,32 @@ public class FolderController {
         }
 
         if(folderMapper.updateIsStaredById(id, toModifyStaredStatus) == 1) {
+            // 정상적으로 변경이 된 경우
+            return ResponseEntity.ok().body(new CommonResponse<>("true"));
+        }
+
+        // 정상적으로 진행이 안 된 경우
+        return ResponseEntity.internalServerError().body(new CommonResponse<>("false"));
+    }
+
+    @PatchMapping("/update/shared/{id}")
+    public ResponseEntity<? extends BasicResponse> updateShared(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                                @PathVariable long id, @RequestParam("to_modify_shared_status") boolean toModifySharedStatus) {
+        log.info("Folder shared status update request received.");
+        final FolderDTO folderDTO = folderMapper.getOneById(id);
+        if(customUserDetails.getUserInternalId() != folderDTO.getOwner()) {
+            log.warn("It is different from the logged in user and the owner of the requested item. Therefore, the update does not proceed.");
+            // 권한이 없을 경우 에러 표출
+            return ResponseEntity.badRequest().body(new CommonResponse<>("false"));
+        }
+
+        if(folderDTO.isShared() == toModifySharedStatus) {
+            // 동일한 상태로 변경을 요청한 경우
+            log.warn("This request requested a change to the same status. so this is not processed.");
+            return ResponseEntity.badRequest().body(new CommonResponse<>("false"));
+        }
+
+        if(folderMapper.updateIsSharedById(id, toModifySharedStatus) == 1) {
             // 정상적으로 변경이 된 경우
             return ResponseEntity.ok().body(new CommonResponse<>("true"));
         }

@@ -55,3 +55,31 @@ const updateStared = (id, toModifyStaredStatus) => {
         }
     })
 }
+
+const updateShared = (id, toModifySharedStatus) => {
+    const token = $("meta[name='_csrf']").attr("content");
+    const header = $("meta[name='_csrf_header']").attr("content");
+
+    $.ajax({
+        url: "/bookmark/update/shared/" + id,
+        type: "PATCH",
+        data: {'to_modify_shared_status': toModifySharedStatus},
+        async: false,
+        cache: false,
+        beforeSend : function(xhr) {
+            xhr.setRequestHeader(header, token);
+        },
+        success: function(result) {
+            if(result) {
+                location.reload();
+            } else {
+                alert("공개 등록/해제 작업에 실패하였습니다.");
+                console.log("shared FATCH Failed");
+            }
+        },
+        error: function(err) {
+            alert("서버 문제로 인해 작업에 실패하였습니다.");
+            console.error(err);
+        }
+    })
+}
