@@ -11,6 +11,14 @@
         SELECT count(*) FROM bookmark WHERE owner = #{owner} AND is_stared = #{isStared}
     </select>
 
+    <select id="getCountByOwner" resultType="int">
+        SELECT count(*) FROM bookmark WHERE owner = #{owner}
+    </select>
+
+    <select id="getCountByOwnerAndIsShared" resultType="int">
+        SELECT count(*) FROM bookmark WHERE owner = #{owner} AND is_shared = #{isShared}
+    </select>
+
     <select id="getAllByOwnerOrderByIdAndStaredDesc" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
         SELECT * FROM bookmark
         WHERE owner = #{owner}

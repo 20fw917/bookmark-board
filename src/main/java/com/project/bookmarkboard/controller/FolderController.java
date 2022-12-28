@@ -1,14 +1,12 @@
 package com.project.bookmarkboard.controller;
 
-import com.project.bookmarkboard.dto.BookmarkDTO;
-import com.project.bookmarkboard.dto.CustomUserDetails;
-import com.project.bookmarkboard.dto.FolderDTO;
-import com.project.bookmarkboard.dto.FolderRequestDTO;
+import com.project.bookmarkboard.dto.*;
 import com.project.bookmarkboard.dto.pagination.FolderViewBasicPagination;
 import com.project.bookmarkboard.dto.response.BasicResponse;
 import com.project.bookmarkboard.dto.response.CommonResponse;
 import com.project.bookmarkboard.mapper.BookmarkMapper;
 import com.project.bookmarkboard.mapper.FolderMapper;
+import com.project.bookmarkboard.mapper.FolderViewMapper;
 import com.project.bookmarkboard.service.FolderService;
 import com.project.bookmarkboard.service.FolderViewService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
@@ -29,6 +28,7 @@ import java.util.List;
 public class FolderController {
     private final FolderViewService folderViewService;
     private final FolderMapper folderMapper;
+    private final FolderViewMapper folderViewMapper;
     private final BookmarkMapper bookmarkMapper;
     private final FolderService folderService;
 
@@ -84,8 +84,8 @@ public class FolderController {
     public String getUpdateFolderPage(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                         @RequestParam("id") long id, Model model) {
         log.info("Folder Update Page Get Request Received");
-        final FolderDTO folderDTO = folderMapper.getOneById(id);
-        if(customUserDetails.getUserInternalId() != folderDTO.getOwner()) {
+        final FolderViewDTO folderViewDTO = folderViewMapper.getOneById(id);
+        if(customUserDetails.getUserInternalId() != folderViewDTO.getOwner()) {
             log.warn("Requested by not owner. returning the main page.");
             // 본인 것을 수정하는 것이 아니라면 메인으로 이동 처리.
             return "redirect:/";
@@ -95,12 +95,17 @@ public class FolderController {
         log.debug("Got from DB BookmarkDTOList: " + bookmarkDTOList);
         model.addAttribute("bookmarkList", bookmarkDTOList);
 
-        final List<BookmarkDTO> alreadyAddedBookmarkDTOList = bookmarkMapper.getAllByIdListOrderByIsStaredDescAndIdDesc(folderService.getBookmarkIdListInFolderById(id));
+
+        List<BookmarkDTO> alreadyAddedBookmarkDTOList = new ArrayList<>();
+        if(folderViewDTO.getItemCount() > 0) {
+            alreadyAddedBookmarkDTOList = bookmarkMapper.getAllByIdListOrderByIsStaredDescAndIdDesc(folderService.getBookmarkIdListInFolderById(id));
+        }
+
         log.debug("alreadyAddedBookmarkDTOList: " + alreadyAddedBookmarkDTOList);
         model.addAttribute("alreadyAddedBookmarkDTOList", alreadyAddedBookmarkDTOList);
 
-        model.addAttribute("toModifyItem", folderDTO);
-        log.debug("toModifyItem: " + folderDTO);
+        model.addAttribute("toModifyItem", folderViewDTO);
+        log.debug("toModifyItem: " + folderViewDTO);
         model.addAttribute("isModify", true);
         return "folder/form";
     }
@@ -172,6 +177,32 @@ public class FolderController {
         }
 
         if(folderMapper.updateIsStaredById(id, toModifyStaredStatus) == 1) {
+            // 정상적으로 변경이 된 경우
+            return ResponseEntity.ok().body(new CommonResponse<>("true"));
+        }
+
+        // 정상적으로 진행이 안 된 경우
+        return ResponseEntity.internalServerError().body(new CommonResponse<>("false"));
+    }
+
+    @PatchMapping("/update/shared/{id}")
+    public ResponseEntity<? extends BasicResponse> updateShared(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                                @PathVariable long id, @RequestParam("to_modify_shared_status") boolean toModifySharedStatus) {
+        log.info("Folder shared status update request received.");
+        final FolderDTO folderDTO = folderMapper.getOneById(id);
+        if(customUserDetails.getUserInternalId() != folderDTO.getOwner()) {
+            log.warn("It is different from the logged in user and the owner of the requested item. Therefore, the update does not proceed.");
+            // 권한이 없을 경우 에러 표출
+            return ResponseEntity.badRequest().body(new CommonResponse<>("false"));
+        }
+
+        if(folderDTO.isShared() == toModifySharedStatus) {
+            // 동일한 상태로 변경을 요청한 경우
+            log.warn("This request requested a change to the same status. so this is not processed.");
+            return ResponseEntity.badRequest().body(new CommonResponse<>("false"));
+        }
+
+        if(folderMapper.updateIsSharedById(id, toModifySharedStatus) == 1) {
             // 정상적으로 변경이 된 경우
             return ResponseEntity.ok().body(new CommonResponse<>("true"));
         }

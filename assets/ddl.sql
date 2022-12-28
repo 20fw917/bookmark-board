@@ -3,7 +3,6 @@ DROP VIEW IF EXISTS `article_view`;
 DROP VIEW IF EXISTS `folder_view`;
 DROP TABLE IF EXISTS `comment`;
 DROP TABLE IF EXISTS `folder_item`;
-DROP TABLE IF EXISTS `attachment_index`;
 DROP TABLE IF EXISTS `article_like`;
 DROP TABLE IF EXISTS `article`;
 DROP TABLE IF EXISTS `folder`;
@@ -16,7 +15,7 @@ CREATE TABLE `user` (
     `password` varchar(256) NOT NULL COMMENT 'SHA1',
     `email` varchar(320) NOT NULL COMMENT '이메일 ID 부분은 최대 64자 + @ + 도메인은 255자까지 320자',
     `nickname` varchar(15) NOT NULL UNIQUE COMMENT '닉네임 15자 제한',
-    `profile_image` varchar(36) NULL DEFAULT NULL COMMENT 'UUID는 36글자로 구성',
+    `profile_image` varchar(60) NULL DEFAULT NULL COMMENT 'UUID는 36글자로 구성 + Type + extension',
     `role` varchar(15) NOT NULL COMMENT 'For Spring Security'
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

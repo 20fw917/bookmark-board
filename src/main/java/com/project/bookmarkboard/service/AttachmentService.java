@@ -26,6 +26,7 @@ public class AttachmentService {
     private String directoryPath;
 
     public String saveFile(MultipartFile multipartFile, String type) throws IOException {
+        log.info("Attachment Save Process Start");
         Path directory = Paths.get(directoryPath).toAbsolutePath().normalize();
         Files.createDirectories(directory);
 

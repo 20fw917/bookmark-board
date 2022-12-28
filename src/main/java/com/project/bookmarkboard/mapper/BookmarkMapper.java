@@ -16,6 +16,8 @@ public interface BookmarkMapper {
     List<BookmarkDTO> getAllByIdListOrderByIsStaredDescAndIdDesc(@Param("idList") List<Long> idList);
     int insertBookmark(BookmarkDTO bookmarkDTO);
     int getCountByOwnerAndIsStared(@Param("owner") long owner, @Param("isStared") boolean isStared);
+    int getCountByOwner(@Param("owner") long owner);
+    int getCountByOwnerAndIsShared(@Param("owner") long owner, @Param("isShared") boolean isShared);
     int deleteBookmarkById(@Param("id") long id);
     int updateIsStaredById(@Param("id") long id, @Param("isStared") boolean isStared);
     int updateIsSharedById(@Param("id") long id, @Param("isShared") boolean isShared);
