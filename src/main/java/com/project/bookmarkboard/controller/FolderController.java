@@ -1,8 +1,8 @@
 package com.project.bookmarkboard.controller;
 
 import com.project.bookmarkboard.dto.*;
-import com.project.bookmarkboard.dto.pagination.BookmarkBasicPagination;
-import com.project.bookmarkboard.dto.pagination.FolderViewBasicPagination;
+import com.project.bookmarkboard.dto.pagination.BookmarkPagination;
+import com.project.bookmarkboard.dto.pagination.FolderViewPagination;
 import com.project.bookmarkboard.dto.response.BasicResponse;
 import com.project.bookmarkboard.dto.response.CommonResponse;
 import com.project.bookmarkboard.mapper.BookmarkMapper;
@@ -40,7 +40,7 @@ public class FolderController {
                                 @RequestParam(value = "page", required = false, defaultValue = "1") int pageNum,
                                 @RequestParam(value = "care_stared", required = false, defaultValue = "true") boolean careStared,
                                 Model model) {
-        final FolderViewBasicPagination folderViewPagination = folderViewService.getAllByOwnerOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), pageNum, careStared);
+        final FolderViewPagination folderViewPagination = folderViewService.getAllByOwnerOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), pageNum, careStared);
 
         model.addAttribute("pagination", folderViewPagination.getPagination());
         model.addAttribute("items", folderViewPagination.getFolderViewDTOList());
@@ -131,7 +131,7 @@ public class FolderController {
         }
 
         if(folderViewDTO.getItemCount() > 0) {
-            BookmarkBasicPagination pagination = bookmarkService.getAllByIdListOrderByIsStaredDescAndIdDescLimitByFromAndTo
+            BookmarkPagination pagination = bookmarkService.getAllByIdListOrderByIsStaredDescAndIdDescLimitByFromAndTo
                     (folderService.getBookmarkIdListInFolderById(folderId), pageNum, folderViewDTO.getItemCount());
             model.addAttribute("bookmarkList", pagination.getBookmarkDTOList());
             model.addAttribute("pagination", pagination.getPagination());

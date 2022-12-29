@@ -85,6 +85,7 @@
       <jsp:param name="endIndexNum" value="${pagination.endIndexNum}"/>
       <jsp:param name="currentPageNum" value="${pagination.currentPageNum}"/>
       <jsp:param name="baseUrl" value="${pageContext.request.contextPath}/folder"/>
+      <jsp:param name="pageName" value="page"/>
     </jsp:include>
 </div>
 </body>

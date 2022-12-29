@@ -21,24 +21,24 @@
         <div class="text-end">
             <!--즐겨찾기 Button-->
             <c:if test="${param.stared eq true}">
-                <button type="button" onclick="updateStared(${param.id}, false)" class="btn btn-sm">
+                <button type="button" onclick="updateStaredFolder(${param.id}, false)" class="btn btn-sm">
                     <i class="bi-star-fill" style="font-size:20px; color: #FDD017; cursor: pointer;"></i>
                 </button>
             </c:if>
             <c:if test="${param.stared eq false}">
-                <button type="button" onclick="updateStared(${param.id}, true)" class="btn btn-sm">
+                <button type="button" onclick="updateStaredFolder(${param.id}, true)" class="btn btn-sm">
                     <i class="bi-star" style="font-size:20px; color: #FDD017; cursor: pointer;"></i>
                 </button>
             </c:if>
 
             <%-- 공개 버튼 --%>
             <c:if test="${param.shared eq true}">
-                <button type="button" class="btn btn-sm" onclick="updateShared(${param.id}, false)">
+                <button type="button" class="btn btn-sm" onclick="updateSharedFolder(${param.id}, false)">
                     <i class="bi bi-people-fill" style="font-size: 20px;"></i>
                 </button>
             </c:if>
             <c:if test="${param.shared eq false}">
-                <button type="button" class="btn btn-sm" onclick="updateShared(${param.id}, true)">
+                <button type="button" class="btn btn-sm" onclick="updateSharedFolder(${param.id}, true)">
                     <i class="bi bi-person" style="font-size: 20px;"></i>
                 </button>
             </c:if>

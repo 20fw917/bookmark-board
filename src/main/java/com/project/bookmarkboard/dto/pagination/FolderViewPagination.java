@@ -10,10 +10,10 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FolderViewBasicPagination extends BasicPagination {
+public class FolderViewPagination extends BasicPagination {
     private List<FolderViewDTO> folderViewDTOList;
 
-    public FolderViewBasicPagination(int totalCount, int currentPageNum, int finalPageNum, List<FolderViewDTO> folderViewDTOList) {
+    public FolderViewPagination(int totalCount, int currentPageNum, int finalPageNum, List<FolderViewDTO> folderViewDTOList) {
         super.totalCount = totalCount;
         super.currentPageNum = currentPageNum;
         super.finalPageNum = finalPageNum;

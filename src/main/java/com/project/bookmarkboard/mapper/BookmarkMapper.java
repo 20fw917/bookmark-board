@@ -12,6 +12,8 @@ public interface BookmarkMapper {
     List<BookmarkDTO> getAllByOwnerOrderByIdAndStaredDesc(@Param("owner") long owner);
     List<BookmarkDTO> getAllByOwnerAndIsStaredOrderByIdDescLimitByFromAndTo(@Param("owner") long owner, @Param("isStared") boolean isStared,
                                                                             @Param("from") int from, @Param("to") int to);
+    List<BookmarkDTO> getAllByOwnerOrderByIdDescLimitByFromAndTo(@Param("owner") long owner,
+                                                                            @Param("from") int from, @Param("to") int to);
     List<BookmarkDTO> getAllByOwnerAndKeywordOrderByIsStaredDescAndIdDesc(@Param("owner") long owner, @Param("keyword") String keyword);
     List<BookmarkDTO> getAllByIdListOrderByIsStaredDescAndIdDesc(@Param("idList") List<Long> idList);
     List<BookmarkDTO> getAllByIdListOrderByIsStaredDescAndIdDescLimitByFromAndTo(@Param("idList") List<Long> idList,

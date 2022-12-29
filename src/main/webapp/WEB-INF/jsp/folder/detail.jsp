@@ -125,6 +125,7 @@
                         <jsp:param name="stared" value="${item.stared}"/>
                         <jsp:param name="createdAtFormatted" value="${item.createdAtFormatted}"/>
                         <jsp:param name="showToolbar" value="false"/>
+                        <jsp:param name="pageName" value="page"/>
                     </jsp:include>
                 </c:forEach>
             </div>

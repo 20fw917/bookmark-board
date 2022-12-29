@@ -30,23 +30,23 @@
       <%-- 즐겨찾기 버튼 --%>
       <button type="button" class="btn btn-sm"
               <c:if test="${param.stared eq true}">
-                onclick="updateStared(${param.id}, false)">
+                onclick="updateStaredBookmark(${param.id}, false)">
                 <i class="bi bi-star-fill" style="font-size: 2rem; color: #FDD017"></i>
               </c:if>
         <c:if test="${param.stared eq false}">
-          onclick="updateStared(${param.id}, true)">
+          onclick="updateStaredBookmark(${param.id}, true)">
           <i class="bi bi-star" style="font-size: 2rem; color: #FDD017"></i>
         </c:if>
       </button>
 
       <%-- 공개 버튼 --%>
       <c:if test="${param.shared eq true}">
-        <button type="button" class="btn btn-sm" onclick="updateShared(${param.id}, false)">
+        <button type="button" class="btn btn-sm" onclick="updateSharedBookmark(${param.id}, false)">
           <i class="bi bi-people-fill" style="font-size: 2rem;"></i>
         </button>
       </c:if>
       <c:if test="${param.shared eq false}">
-        <button type="button" class="btn btn-sm" onclick="updateShared(${param.id}, true)">
+        <button type="button" class="btn btn-sm" onclick="updateSharedBookmark(${param.id}, true)">
           <i class="bi bi-person" style="font-size: 2rem;"></i>
         </button>
       </c:if>

@@ -49,6 +49,13 @@
         LIMIT #{from}, #{to}
     </select>
 
+    <select id="getAllByOwnerOrderByIdDescLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
+        SELECT * FROM bookmark
+        WHERE owner = #{owner}
+        ORDER BY id DESC
+        LIMIT #{from}, #{to}
+    </select>
+
     <select id="getAllByOwnerAndKeywordOrderByIsStaredDescAndIdDesc" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
         SELECT * FROM bookmark
         WHERE owner = #{owner} AND (title LIKE CONCAT('%',#{keyword},'%') OR url LIKE CONCAT('%',#{keyword},'%') OR memo LIKE CONCAT('%',#{keyword},'%'))
