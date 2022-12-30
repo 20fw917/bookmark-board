@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <div style="padding: 10px;">
   <div class="card">
@@ -17,16 +18,25 @@
             <i class="bi bi-globe"></i>
             방문
           </a>
+          <sec:authorize access="isAuthenticated()">
+            <sec:authentication property="principal" var="principal"/>
+            <c:if test="${principal.userInternalId ne param.owner && param.shared eq true}">
+              <button type="button" onclick="copyBookmark(${param.id})" class="btn btn-secondary">
+                <i class="bi bi-clipboard-plus"></i>
+                복사
+              </button>
+            </c:if>
+          </sec:authorize>
         </div>
       </c:if>
 
       <c:if test="${param.showToolbar eq true}">
-        <a href="${param.url}" class="btn btn-primary">
-          <i class="bi bi-globe"></i>
-          방문
-        </a>
+      <a href="${param.url}" class="btn btn-primary">
+        <i class="bi bi-globe"></i>
+        방문
+      </a>
 
-        <span style="float: right;">
+      <span style="float: right;">
       <%-- 즐겨찾기 버튼 --%>
       <button type="button" class="btn btn-sm"
               <c:if test="${param.stared eq true}">

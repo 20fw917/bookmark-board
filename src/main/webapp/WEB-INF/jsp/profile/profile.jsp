@@ -9,6 +9,7 @@
     <sec:csrfMetaTags/>
     <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/profile/profile.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/bookmark/list.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/bookmark/item.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/folder/list.js"></script>
 </head>
 
@@ -107,6 +108,7 @@
                     <jsp:param name="itemCount" value="${item.itemCount}"/>
                     <jsp:param name="stared" value="${item.stared}"/>
                     <jsp:param name="shared" value="${item.shared}"/>
+                    <jsp:param name="showToolbar" value="false"/>
                 </jsp:include>
             </c:forEach>
 

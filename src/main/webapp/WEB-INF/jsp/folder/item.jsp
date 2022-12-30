@@ -19,6 +19,7 @@
         <p class="card-text text-end">${param.itemCount}개의 북마크가 있습니다.</p>
 
         <div class="text-end">
+            <c:if test="${param.showToolbar eq true}">
             <!--즐겨찾기 Button-->
             <c:if test="${param.stared eq true}">
                 <button type="button" onclick="updateStaredFolder(${param.id}, false)" class="btn btn-sm">
@@ -42,12 +43,14 @@
                     <i class="bi bi-person" style="font-size: 20px;"></i>
                 </button>
             </c:if>
+            </c:if>
 
             <!--자세히 보기 Button-->
             <a href="${pageContext.request.contextPath}/folder/detail/${param.id}" class="btn btn-sm btn-primary">
                 <i class="bi bi-search"></i>
             </a>
 
+            <c:if test="${param.showToolbar eq true}">
             <!--Edit Button-->
             <c:url value="${pageContext.request.contextPath}/folder/update" var="url">
                 <c:param name="id" value="${param.id}" />
@@ -62,6 +65,7 @@
                 <i class="bi bi-trash"></i>
                 <!--공백란-->
             </button>
+            </c:if>
         </div>
     </div>
 </div>

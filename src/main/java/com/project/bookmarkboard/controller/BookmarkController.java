@@ -195,10 +195,45 @@ public class BookmarkController {
     public List<BookmarkDTO> getSearchBookmarkDTO(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                                   @RequestParam("keyword") String keyword) {
         log.info("Bookmark Search Request Received!");
-        log.debug("Received Keyword(Trim): " + keyword.trim());
+        log.info("Received Keyword(Trim): " + keyword.trim());
+
         final List<BookmarkDTO> result = bookmarkMapper.getAllByOwnerAndKeywordOrderByIsStaredDescAndIdDesc(customUserDetails.getUserInternalId(), keyword.trim());
         log.debug("Search Result: " + result);
 
         return result;
+    }
+
+    @PostMapping("/copy/{id}")
+    @ResponseBody
+    public ResponseEntity<? extends BasicResponse> postCopyBookmarkRequest(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                  @PathVariable("id") long id) {
+        log.info("Bookmark Copy Request Received");
+        log.info("From Item ID: " + id + " / To User ID: " + customUserDetails.getUserInternalId());
+        final BookmarkDTO bookmarkDTO = bookmarkMapper.getOneById(id);
+
+        // 없는 북마크를 요청한 경우
+        if(bookmarkDTO == null) {
+            return ResponseEntity.badRequest().body(new CommonResponse<>("NOT FOUND"));
+        }
+
+        // 본인의 북마크를 요청한 경우
+        if(customUserDetails.getUserInternalId() == bookmarkDTO.getOwner()) {
+            return ResponseEntity.badRequest().body(new CommonResponse<>("Requested Your Own Bookmark"));
+        }
+
+        // 공유하지 않은 북마크를 요청한 경우
+        if(!bookmarkDTO.isShared()) {
+            return ResponseEntity.badRequest().body(new CommonResponse<>("Requested Bookmark is not shared"));
+        }
+
+        final BookmarkDTO toInsertBookmark = BookmarkDTO.builder()
+                .owner(customUserDetails.getUserInternalId())
+                .title(bookmarkDTO.getTitle())
+                .url(bookmarkDTO.getUrl())
+                .memo(bookmarkDTO.getMemo())
+                .build();
+        bookmarkMapper.insertBookmark(toInsertBookmark);
+
+        return ResponseEntity.ok().body(new CommonResponse<>("true"));
     }
 }
