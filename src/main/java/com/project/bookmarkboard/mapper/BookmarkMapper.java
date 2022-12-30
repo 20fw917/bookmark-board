@@ -10,6 +10,8 @@ import java.util.List;
 public interface BookmarkMapper {
     BookmarkDTO getOneById(@Param("id") long id);
     List<BookmarkDTO> getAllByOwnerOrderByIdAndStaredDesc(@Param("owner") long owner);
+    List<BookmarkDTO> getAllByOwnerAndIsSharedOrderByIdDescLimitByFromAndTo(@Param("owner") long owner, @Param("isShared") boolean isShared,
+                                                                            @Param("from") int from, @Param("to") int to);
     List<BookmarkDTO> getAllByOwnerAndIsStaredOrderByIdDescLimitByFromAndTo(@Param("owner") long owner, @Param("isStared") boolean isStared,
                                                                             @Param("from") int from, @Param("to") int to);
     List<BookmarkDTO> getAllByOwnerOrderByIdDescLimitByFromAndTo(@Param("owner") long owner,

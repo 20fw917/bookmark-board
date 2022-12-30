@@ -55,5 +55,14 @@ public class BookmarkService {
         return new BookmarkPagination(itemsCount, pageNum, finalPageNum, bookmarkDTOList);
     }
 
+    public BookmarkPagination getAllByOwnerAndIsSharedOrderByIdDescLimitByFromAndTo(long owner, int pageNum, int itemsCount, boolean isShared) {
+        final int startItemNum = (pageNum - 1) * itemsPerPage;
+        final int endPageItemNum = pageNum * itemsPerPage;
 
+        final List<BookmarkDTO> bookmarkDTOList = bookmarkMapper.getAllByOwnerAndIsSharedOrderByIdDescLimitByFromAndTo(owner, isShared, startItemNum, endPageItemNum);
+
+        final int finalPageNum = ((itemsCount - 1) / itemsPerPage) + 1;
+
+        return new BookmarkPagination(itemsCount, pageNum, finalPageNum, bookmarkDTOList);
+    }
 }

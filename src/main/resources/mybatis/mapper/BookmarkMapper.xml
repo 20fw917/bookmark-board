@@ -25,6 +25,14 @@
         ORDER BY is_stared DESC, id DESC
     </select>
 
+    <select id="getAllByOwnerAndIsSharedOrderByIdDescLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
+        SELECT * FROM bookmark
+        WHERE owner = #{owner} AND is_shared = ${isShared}
+        ORDER BY id DESC
+        LIMIT #{from}, #{to}
+    </select>
+
+
     <select id="getAllByIdListOrderByIsStaredDescAndIdDesc" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
         SELECT * FROM bookmark
         WHERE id in

@@ -96,7 +96,7 @@
                                 <br>
                             </c:if>
                         </sec:authorize>
-                        <p class="fst-italic">${folder.createdAtFormatted}에 추가 됨</p>
+                        <p class="fst-italic">${folder.createdAtFormatted}에 생성 됨</p>
                     </div>
                 </div>
             </div>

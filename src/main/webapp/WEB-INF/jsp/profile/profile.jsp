@@ -18,20 +18,15 @@
     <div class="row">
         <div class="col-2">
             <div style="width: 128px; height: 128px">
+                <c:if test="${item.profileImage ne null && item.profileImage ne ''}">
+                <img class="rounded-circle" src="${pageContext.request.contextPath}/attachment/${item.profileImage}" width="128" height="128" alt="">
+                </c:if>
                 <c:if test="${item.profileImage eq null || item.profileImage eq ''}">
-                    <div class="rounded-circle">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-                        </svg>
-                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" fill="currentColor" class="bi bi-person-circle rounded-circle" viewBox="0 0 16 16">
+                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"></path>
+                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"></path>
+                    </svg>
                 </c:if>
-                <sec:authorize access="isAuthenticated()">
-                    <sec:authentication property="principal" var="principal"/>
-                    <c:if test="${principal.userInternalId eq item.internalId}">
-                    <img class="rounded-circle" src="${pageContext.request.contextPath}/attachment/${item.profileImage}" width="128" height="128" alt="">
-                </c:if>
-                </sec:authorize>
             </div>
             <div>
             <sec:authorize access="isAuthenticated()">
@@ -115,6 +110,7 @@
                 </jsp:include>
             </c:forEach>
 
+            <c:if test="${folderPagination.totalCount ne 0}">
             <jsp:include page="/WEB-INF/jsp/folder/pagination.jsp">
                 <jsp:param name="previousPageExists" value="${folderPagination.previousPageExists}"/>
                 <jsp:param name="nextPageExists" value="${folderPagination.nextPageExists}"/>
@@ -126,6 +122,7 @@
                 <jsp:param name="anotherPageName" value="bookmark_page"/>
                 <jsp:param name="anotherPageNum" value="${bookmarkPagination.currentPageNum}"/>
             </jsp:include>
+            </c:if>
         </div>
     </div>
 
@@ -144,6 +141,20 @@
             <sec:authorize access="isAnonymous()">
                 <h2 class="h2">공개된 북마크들</h2>
             </sec:authorize>
+            <c:if test="${bookmarkPagination.totalCount eq 0}">
+                <sec:authorize access="isAuthenticated()">
+                    <sec:authentication property="principal" var="principal"/>
+                    <c:if test="${principal.userInternalId eq item.internalId}">
+                        <h2 class="h2 text-center">등록된 북마크가 없습니다!</h2>
+                    </c:if>
+                    <c:if test="${principal.userInternalId ne item.internalId}">
+                        <h2 class="h2 text-center">공개된 북마크가 없습니다!</h2>
+                    </c:if>
+                </sec:authorize>
+                <sec:authorize access="isAnonymous()">
+                    <h2 class="h2 text-center">공개된 북마크가 없습니다!</h2>
+                </sec:authorize>
+            </c:if>
         </div>
         <div class="row">
             <c:forEach items="${bookmarkItem}" var="item">
@@ -162,6 +173,7 @@
             </c:forEach>
         </div>
         <div class="row">
+            <c:if test="${bookmarkPagination.totalCount ne 0}">
             <jsp:include page="/WEB-INF/jsp/bookmark/pagination.jsp">
                 <jsp:param name="currentPageParam" value="bookmark_page"/>
                 <jsp:param name="anotherPageName" value="folder_page"/>
@@ -174,6 +186,7 @@
                 <jsp:param name="currentPageNum" value="${bookmarkPagination.currentPageNum}"/>
                 <jsp:param name="showToolbar" value="true"/>
             </jsp:include>
+            </c:if>
         </div>
     </div>
 </div>

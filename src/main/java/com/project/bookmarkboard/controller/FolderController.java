@@ -40,7 +40,7 @@ public class FolderController {
                                 @RequestParam(value = "page", required = false, defaultValue = "1") int pageNum,
                                 @RequestParam(value = "care_stared", required = false, defaultValue = "true") boolean careStared,
                                 Model model) {
-        final FolderViewPagination folderViewPagination = folderViewService.getAllByOwnerOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), pageNum, careStared);
+        final FolderViewPagination folderViewPagination = folderViewService.getAllByOwnerOrderByIsStaredAndIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), pageNum, careStared);
 
         model.addAttribute("pagination", folderViewPagination.getPagination());
         model.addAttribute("items", folderViewPagination.getFolderViewDTOList());

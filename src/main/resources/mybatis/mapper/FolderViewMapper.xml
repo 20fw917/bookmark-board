@@ -7,7 +7,7 @@
         SELECT * FROM folder_view WHERE id = #{id}
     </select>
 
-    <select id="getAllByOwnerAndIsStaredOrderByIsStaredAndIdDescLimitByFromAndTo"
+    <select id="getAllByOwnerOrderByIsStaredAndIdDescLimitByFromAndTo"
             resultType="com.project.bookmarkboard.dto.FolderViewDTO">
         SELECT * FROM folder_view
         WHERE owner = #{owner}
@@ -18,5 +18,14 @@
         id DESC
         LIMIT #{from}, #{to}
     </select>
+
+    <select id="getAllByOwnerAndIsSharedOrderByIsStaredAndIdDescLimitByFromAndTo"
+            resultType="com.project.bookmarkboard.dto.FolderViewDTO">
+        SELECT * FROM folder_view
+        WHERE owner = #{owner} AND is_shared = #{isShared}
+        ORDER BY id DESC
+        LIMIT #{from}, #{to}
+    </select>
+
 
 </mapper>

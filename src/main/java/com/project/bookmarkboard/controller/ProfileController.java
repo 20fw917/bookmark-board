@@ -78,13 +78,14 @@ public class ProfileController {
         user.setPassword(null);
         user.setEmail(null);
         user.setRole(null);
+        log.debug("Received User: " + user);
 
         model.addAttribute("item", user);
 
         model.addAttribute("notSharedFolderCount", folderMapper.getCountByOwnerAndIsShared(customUserDetails.getUserInternalId(), false));
         model.addAttribute("sharedFolderCount", folderMapper.getCountByOwnerAndIsShared(customUserDetails.getUserInternalId(), true));
 
-        final FolderViewPagination folderViewPagination = folderViewService.getAllByOwnerOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), folderPageNum, true);
+        final FolderViewPagination folderViewPagination = folderViewService.getAllByOwnerOrderByIsStaredAndIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), folderPageNum, true);
         model.addAttribute("folderPagination", folderViewPagination.getPagination());
         model.addAttribute("folderItem", folderViewPagination.getFolderViewDTOList());
 
@@ -98,15 +99,38 @@ public class ProfileController {
     }
 
     @GetMapping("/{id}")
-    public String getProfile(@PathVariable("id") long id, Model model) {
+    public String getProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                             @PathVariable("id") long id, Model model,
+                             @RequestParam(value = "folder_page", required = false, defaultValue = "1") int folderPageNum,
+                             @RequestParam(value = "bookmark_page", required = false, defaultValue = "1") int bookmarkPageNum) {
+        if(customUserDetails.getUserInternalId() == id) {
+            // 본인 계정의 프로필을 요청할 경우 마이페이지로 리다이렉트
+            return "redirect:/profile/mypage";
+        }
+
         final User user = userMapper.findByInternalId(id);
         // 개인정보 필요 없으니 마스킹
         user.setUsername(null);
         user.setPassword(null);
         user.setEmail(null);
         user.setRole(null);
+        log.debug("Received User: " + user);
 
         model.addAttribute("item", user);
+
+        model.addAttribute("sharedFolderCount", folderMapper.getCountByOwnerAndIsShared(id, true));
+
+        final FolderViewPagination folderViewPagination = folderViewService.getAllByOwnerAndIsSharedOrderByIdDescLimitByFromAndTo(id, folderPageNum, true);
+        model.addAttribute("folderPagination", folderViewPagination.getPagination());
+        model.addAttribute("folderItem", folderViewPagination.getFolderViewDTOList());
+
+        final int sharedBookmarkCount = bookmarkMapper.getCountByOwnerAndIsShared(id, true);
+        model.addAttribute("sharedBookmarkCount", sharedBookmarkCount);
+
+        final BookmarkPagination bookmarkPagination = bookmarkService.getAllByOwnerAndIsSharedOrderByIdDescLimitByFromAndTo(id, bookmarkPageNum, sharedBookmarkCount, true);
+        model.addAttribute("bookmarkPagination", bookmarkPagination.getPagination());
+        model.addAttribute("bookmarkItem", bookmarkPagination.getBookmarkDTOList());
+
         return "profile/profile";
     }
 

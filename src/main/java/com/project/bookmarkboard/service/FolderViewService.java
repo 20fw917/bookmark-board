@@ -19,12 +19,24 @@ public class FolderViewService {
     @Value("${items-per-page}")
     private Integer itemsPerPage;
 
-    public FolderViewPagination getAllByOwnerOrderByIdDescLimitByFromAndTo(long owner, int pageNum, boolean careStared) {
+    public FolderViewPagination getAllByOwnerOrderByIsStaredAndIdDescLimitByFromAndTo(long owner, int pageNum, boolean careStared) {
         final int itemsCount = folderMapper.getCountByOwner(owner);
         final int startItemNum = (pageNum - 1) * itemsPerPage;
         final int endPageItemNum = pageNum * itemsPerPage;
 
-        final List<FolderViewDTO> folderViewDTOList = folderViewMapper.getAllByOwnerAndIsStaredOrderByIsStaredAndIdDescLimitByFromAndTo(owner, careStared, startItemNum, endPageItemNum);
+        final List<FolderViewDTO> folderViewDTOList = folderViewMapper.getAllByOwnerOrderByIsStaredAndIdDescLimitByFromAndTo(owner, careStared, startItemNum, endPageItemNum);
+
+        final int finalPageNum = ((itemsCount - 1) / itemsPerPage) + 1;
+
+        return new FolderViewPagination(itemsCount, pageNum, finalPageNum, folderViewDTOList);
+    }
+
+    public FolderViewPagination getAllByOwnerAndIsSharedOrderByIdDescLimitByFromAndTo(long owner, int pageNum, boolean isShared) {
+        final int itemsCount = folderMapper.getCountByOwnerAndIsShared(owner, isShared);
+        final int startItemNum = (pageNum - 1) * itemsPerPage;
+        final int endPageItemNum = pageNum * itemsPerPage;
+
+        final List<FolderViewDTO> folderViewDTOList = folderViewMapper.getAllByOwnerAndIsSharedOrderByIsStaredAndIdDescLimitByFromAndTo(owner, isShared, startItemNum, endPageItemNum);
 
         final int finalPageNum = ((itemsCount - 1) / itemsPerPage) + 1;
 
