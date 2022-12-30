@@ -11,15 +11,15 @@ public interface BookmarkMapper {
     BookmarkDTO getOneById(@Param("id") long id);
     List<BookmarkDTO> getAllByOwnerOrderByIdAndStaredDesc(@Param("owner") long owner);
     List<BookmarkDTO> getAllByOwnerAndIsSharedOrderByIdDescLimitByFromAndTo(@Param("owner") long owner, @Param("isShared") boolean isShared,
-                                                                            @Param("from") int from, @Param("to") int to);
+                                                                            @Param("from") int from, @Param("itemPerPage") int itemPerPage);
     List<BookmarkDTO> getAllByOwnerAndIsStaredOrderByIdDescLimitByFromAndTo(@Param("owner") long owner, @Param("isStared") boolean isStared,
-                                                                            @Param("from") int from, @Param("to") int to);
+                                                                            @Param("from") int from, @Param("itemPerPage") int itemPerPage);
     List<BookmarkDTO> getAllByOwnerOrderByIdDescLimitByFromAndTo(@Param("owner") long owner,
-                                                                            @Param("from") int from, @Param("to") int to);
+                                                                            @Param("from") int from, @Param("itemPerPage") int itemPerPage);
     List<BookmarkDTO> getAllByOwnerAndKeywordOrderByIsStaredDescAndIdDesc(@Param("owner") long owner, @Param("keyword") String keyword);
     List<BookmarkDTO> getAllByIdListOrderByIsStaredDescAndIdDesc(@Param("idList") List<Long> idList);
     List<BookmarkDTO> getAllByIdListOrderByIsStaredDescAndIdDescLimitByFromAndTo(@Param("idList") List<Long> idList,
-                                                                                 @Param("from") int from, @Param("to") int to);
+                                                                                 @Param("from") int from, @Param("itemPerPage") int itemPerPage);
     int insertBookmark(BookmarkDTO bookmarkDTO);
     int getCountByOwnerAndIsStared(@Param("owner") long owner, @Param("isStared") boolean isStared);
     int getCountByOwner(@Param("owner") long owner);

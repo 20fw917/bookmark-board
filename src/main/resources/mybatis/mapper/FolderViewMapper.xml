@@ -16,7 +16,7 @@
             is_stared DESC,
         </if>
         id DESC
-        LIMIT #{from}, #{to}
+        LIMIT #{from}, #{itemPerPage}
     </select>
 
     <select id="getAllByOwnerAndIsSharedOrderByIsStaredAndIdDescLimitByFromAndTo"
@@ -24,7 +24,7 @@
         SELECT * FROM folder_view
         WHERE owner = #{owner} AND is_shared = #{isShared}
         ORDER BY id DESC
-        LIMIT #{from}, #{to}
+        LIMIT #{from}, #{itemPerPage}
     </select>
 
 
