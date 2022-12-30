@@ -242,4 +242,32 @@ public class FolderController {
         // 정상적으로 진행이 안 된 경우
         return ResponseEntity.internalServerError().body(new CommonResponse<>("false"));
     }
+
+    @PostMapping("/copy/{id}")
+    @ResponseBody
+    public ResponseEntity<? extends BasicResponse> postFolderCopyRequest(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                                           @PathVariable("id") long id) {
+        log.info("Folder Copy Request Received");
+        log.info("From Item ID: " + id + " / To User ID: " + customUserDetails.getUserInternalId());
+        final FolderDTO folderDTO = folderMapper.getOneById(id);
+
+        // 없는 북마크를 요청한 경우
+        if(folderDTO == null) {
+            return ResponseEntity.badRequest().body(new CommonResponse<>("NOT FOUND"));
+        }
+
+        // 본인의 북마크를 요청한 경우
+        if(customUserDetails.getUserInternalId() == folderDTO.getOwner()) {
+            return ResponseEntity.badRequest().body(new CommonResponse<>("Requested Your Own Bookmark"));
+        }
+
+        // 공유하지 않은 북마크를 요청한 경우
+        if(!folderDTO.isShared()) {
+            return ResponseEntity.badRequest().body(new CommonResponse<>("Requested Bookmark is not shared"));
+        }
+
+        // TODO: INSERT
+
+        return ResponseEntity.ok().body(new CommonResponse<>("true"));
+    }
 }
