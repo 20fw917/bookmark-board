@@ -24,7 +24,7 @@ public class FolderService {
     private final FolderItemMapper folderItemMapper;
 
     @Transactional
-    public void insertFolder(FolderRequestDTO folderRequestDTO) throws IOException  {
+    public void insertFolder(FolderRequestDTO folderRequestDTO) throws IOException {
         if(folderRequestDTO.getFolderThumbnail().getSize() != 0) {
             final String renamedFileName = attachmentService.saveFile(folderRequestDTO.getFolderThumbnail(), "folder_thumbnail");
             folderRequestDTO.setThumbnail(renamedFileName);
@@ -38,6 +38,28 @@ public class FolderService {
         if(folderRequestDTO.getCheckedItem() != null) {
             insertFolderItemToDB(folderRequestDTO.getCheckedItem(), folderDTO.getId());
         }
+    }
+
+    @Transactional
+    public void copyFolder(long folderId, long newOwnerId) throws IOException {
+        final FolderDTO folderDTO = folderMapper.getOneById(folderId);
+
+        final FolderDTO toInsertFolderDTO = FolderDTO.builder()
+                .owner(newOwnerId)
+                .title(folderDTO.getTitle())
+                .memo(folderDTO.getMemo())
+                .build();
+        if(folderDTO.getThumbnail() != null && !folderDTO.getThumbnail().equals("")) {
+            final String newThumbnailImage = attachmentService.copyImage(folderDTO.getThumbnail(), "folder_thumbnail");
+            folderDTO.setThumbnail(newThumbnailImage);
+        }
+
+        // TODO: Item의 소유권은?
+        folderMapper.insertFolder(toInsertFolderDTO);
+        List<FolderItemDTO> toInsertfolderItemDTOList = folderItemMapper.getAllByParentFolderOrderByIdDesc(folderId)
+                        .stream().peek(folderItemDTO -> folderItemDTO.setParentFolder(toInsertFolderDTO.getId()))
+                .collect(Collectors.toList());
+        folderItemMapper.insertFolderItem(toInsertfolderItemDTOList);
     }
 
     @Transactional

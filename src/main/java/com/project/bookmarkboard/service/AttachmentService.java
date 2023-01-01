@@ -10,9 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -64,6 +62,35 @@ public class AttachmentService {
         } else{
             log.info("The File '" + file + "' is not exists.");
         }
+    }
+
+    public String copyImage(String imageName, String type) throws IOException {
+        log.info("Copy Image At AttachmentService");
+        log.info("Target is '" + imageName + "'");
+
+        // File 확장자
+        final String extension = imageName.substring(imageName.lastIndexOf("."));
+        log.debug("extension: " + extension);
+
+        File file = new File(directoryPath + imageName);
+
+        final String newFileName = directoryPath + type + "_" + UUID.randomUUID() + extension;
+        File newFile = new File(newFileName);
+
+        FileInputStream input = new FileInputStream(file);
+        FileOutputStream output = new FileOutputStream(newFile);
+
+        byte[] buf = new byte[1024];
+        int readData;
+        while ((readData = input.read(buf)) > 0) {
+            output.write(buf, 0, readData);
+        }
+
+        input.close();
+        output.close();
+
+        log.info("Copy finished return new file name");
+        return newFileName;
     }
 
     private BufferedImage resizeImage(MultipartFile multipartFile) throws IOException {

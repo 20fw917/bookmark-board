@@ -70,6 +70,7 @@
           <jsp:param name="itemCount" value="${item.itemCount}"/>
           <jsp:param name="stared" value="${item.stared}"/>
           <jsp:param name="shared" value="${item.shared}"/>
+          <jsp:param name="showToolbar" value="true"/>
         </jsp:include>
       </c:forEach>
   </div>
@@ -85,6 +86,7 @@
       <jsp:param name="endIndexNum" value="${pagination.endIndexNum}"/>
       <jsp:param name="currentPageNum" value="${pagination.currentPageNum}"/>
       <jsp:param name="baseUrl" value="${pageContext.request.contextPath}/folder"/>
+      <jsp:param name="pageName" value="page"/>
     </jsp:include>
 </div>
 </body>

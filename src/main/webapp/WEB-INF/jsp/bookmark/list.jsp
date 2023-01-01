@@ -54,7 +54,7 @@
         <jsp:include page="/WEB-INF/jsp/bookmark/pagination.jsp">
             <jsp:param name="currentPageParam" value="stared_page"/>
             <jsp:param name="anotherPageName" value="not_stared_page"/>
-            <jsp:param name="anotherPageCurrentPage" value="${notStaredBookmarkPagination.currentPageNum}"/>
+            <jsp:param name="anotherPageNum" value="${notStaredBookmarkPagination.currentPageNum}"/>
 
             <jsp:param name="previousPageExists" value="${staredBookmarkPagination.previousPageExists}"/>
             <jsp:param name="nextPageExists" value="${staredBookmarkPagination.nextPageExists}"/>
@@ -98,7 +98,7 @@
         <jsp:include page="/WEB-INF/jsp/bookmark/pagination.jsp">
             <jsp:param name="currentPageParam" value="not_stared_page"/>
             <jsp:param name="anotherPageName" value="stared_page"/>
-            <jsp:param name="anotherPageCurrentPage" value="${staredBookmarkPagination.currentPageNum}"/>
+            <jsp:param name="anotherPageNum" value="${staredBookmarkPagination.currentPageNum}"/>
 
             <jsp:param name="previousPageExists" value="${notStaredBookmarkPagination.previousPageExists}"/>
             <jsp:param name="nextPageExists" value="${notStaredBookmarkPagination.nextPageExists}"/>

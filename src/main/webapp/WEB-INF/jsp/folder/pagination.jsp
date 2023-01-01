@@ -6,7 +6,10 @@
     <c:if test="${param.previousPageExists}">
       <li class="page-item">
         <c:url value="${param.baseUrl}" var="url">
-          <c:param name="page" value="${param.startIndexNum - 10}" />
+          <c:param name="${param.pageName}" value="${param.startIndexNum - 10}" />
+          <c:if test="${param.anotherPageName ne null}">
+            <c:param name="${param.anotherPageName}" value="${param.anotherPageNum}" />
+          </c:if>
         </c:url>
 
         <a class="page-link" href="${url}" aria-label="Previous">
@@ -25,7 +28,7 @@
 
         <c:otherwise>
           <c:url value="${param.baseUrl}" var="url">
-            <c:param name="page" value="${status.current}" />
+            <c:param name="${param.pageName}" value="${status.current}" />
           </c:url>
 
           <li class="page-item"><a class="page-link" href="${url}">${status.current}</a></li>
@@ -35,7 +38,10 @@
 
     <c:if test="${param.nextPageExists}">
       <c:url value="${param.baseUrl}" var="url">
-        <c:param name="page" value="${param.startIndexNum + 10}" />
+        <c:param name="${param.pageName}" value="${param.startIndexNum + 10}" />
+        <c:if test="${param.anotherPageName ne null}">
+          <c:param name="${param.anotherPageName}" value="${param.anotherPageNum}" />
+        </c:if>
       </c:url>
 
       <li class="page-item">

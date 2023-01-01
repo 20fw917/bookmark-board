@@ -96,7 +96,7 @@
                                 <br>
                             </c:if>
                         </sec:authorize>
-                        <p class="fst-italic">${folder.createdAtFormatted}에 추가 됨</p>
+                        <p class="fst-italic">${folder.createdAtFormatted}에 생성 됨</p>
                     </div>
                 </div>
             </div>
@@ -125,6 +125,7 @@
                         <jsp:param name="stared" value="${item.stared}"/>
                         <jsp:param name="createdAtFormatted" value="${item.createdAtFormatted}"/>
                         <jsp:param name="showToolbar" value="false"/>
+                        <jsp:param name="pageName" value="page"/>
                     </jsp:include>
                 </c:forEach>
             </div>

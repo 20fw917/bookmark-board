@@ -3,14 +3,15 @@ package com.project.bookmarkboard.controller;
 import com.project.bookmarkboard.dto.CustomUserDetails;
 import com.project.bookmarkboard.dto.ProfileImageUpdateRequest;
 import com.project.bookmarkboard.dto.User;
+import com.project.bookmarkboard.dto.pagination.BookmarkPagination;
+import com.project.bookmarkboard.dto.pagination.FolderViewPagination;
 import com.project.bookmarkboard.dto.response.BasicResponse;
 import com.project.bookmarkboard.dto.response.CommonResponse;
 import com.project.bookmarkboard.mapper.BookmarkMapper;
+import com.project.bookmarkboard.mapper.FolderMapper;
 import com.project.bookmarkboard.mapper.FolderViewMapper;
 import com.project.bookmarkboard.mapper.UserMapper;
-import com.project.bookmarkboard.service.CustomUserDetailsService;
-import com.project.bookmarkboard.service.ProfileService;
-import com.project.bookmarkboard.service.UserService;
+import com.project.bookmarkboard.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +31,10 @@ import java.io.IOException;
 public class ProfileController {
     private final UserMapper userMapper;
     private final UserService userService;
-    private final FolderViewMapper folderViewMapper;
+    private final FolderMapper folderMapper;
+    private final FolderViewService folderViewService;
     private final BookmarkMapper bookmarkMapper;
+    private final BookmarkService bookmarkService;
     private final ProfileService profileService;
     private final CustomUserDetailsService customUserDetailsService;
 
@@ -66,29 +69,68 @@ public class ProfileController {
     }
 
     @GetMapping("/mypage")
-    public String getMyPage(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model) {
+    public String getMyPage(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model,
+                            @RequestParam(value = "folder_page", required = false, defaultValue = "1") int folderPageNum,
+                            @RequestParam(value = "bookmark_page", required = false, defaultValue = "1") int bookmarkPageNum) {
         final User user = userMapper.findByInternalId(customUserDetails.toUserDTO().getInternalId());
         // 개인정보 필요 없으니 마스킹
         user.setUsername(null);
         user.setPassword(null);
         user.setEmail(null);
         user.setRole(null);
+        log.debug("Received User: " + user);
 
         model.addAttribute("item", user);
-        model.addAttribute("currentUserInternalId", customUserDetails.getUserInternalId());
+
+        model.addAttribute("notSharedFolderCount", folderMapper.getCountByOwnerAndIsShared(customUserDetails.getUserInternalId(), false));
+        model.addAttribute("sharedFolderCount", folderMapper.getCountByOwnerAndIsShared(customUserDetails.getUserInternalId(), true));
+
+        final FolderViewPagination folderViewPagination = folderViewService.getAllByOwnerOrderByIsStaredAndIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), folderPageNum, true);
+        model.addAttribute("folderPagination", folderViewPagination.getPagination());
+        model.addAttribute("folderItem", folderViewPagination.getFolderViewDTOList());
+
+        model.addAttribute("notSharedBookmarkCount", bookmarkMapper.getCountByOwnerAndIsShared(customUserDetails.getUserInternalId(), false));
+        model.addAttribute("sharedBookmarkCount", bookmarkMapper.getCountByOwnerAndIsShared(customUserDetails.getUserInternalId(), true));
+
+        final BookmarkPagination bookmarkPagination = bookmarkService.getAllByOwnerOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), bookmarkPageNum);
+        model.addAttribute("bookmarkPagination", bookmarkPagination.getPagination());
+        model.addAttribute("bookmarkItem", bookmarkPagination.getBookmarkDTOList());
         return "profile/profile";
     }
 
     @GetMapping("/{id}")
-    public String getProfile(@PathVariable("id") long id, Model model) {
+    public String getProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                             @PathVariable("id") long id, Model model,
+                             @RequestParam(value = "folder_page", required = false, defaultValue = "1") int folderPageNum,
+                             @RequestParam(value = "bookmark_page", required = false, defaultValue = "1") int bookmarkPageNum) {
+        if(customUserDetails.getUserInternalId() == id) {
+            // 본인 계정의 프로필을 요청할 경우 마이페이지로 리다이렉트
+            return "redirect:/profile/mypage";
+        }
+
         final User user = userMapper.findByInternalId(id);
         // 개인정보 필요 없으니 마스킹
         user.setUsername(null);
         user.setPassword(null);
         user.setEmail(null);
         user.setRole(null);
+        log.debug("Received User: " + user);
 
         model.addAttribute("item", user);
+
+        model.addAttribute("sharedFolderCount", folderMapper.getCountByOwnerAndIsShared(id, true));
+
+        final FolderViewPagination folderViewPagination = folderViewService.getAllByOwnerAndIsSharedOrderByIdDescLimitByFromAndTo(id, folderPageNum, true);
+        model.addAttribute("folderPagination", folderViewPagination.getPagination());
+        model.addAttribute("folderItem", folderViewPagination.getFolderViewDTOList());
+
+        final int sharedBookmarkCount = bookmarkMapper.getCountByOwnerAndIsShared(id, true);
+        model.addAttribute("sharedBookmarkCount", sharedBookmarkCount);
+
+        final BookmarkPagination bookmarkPagination = bookmarkService.getAllByOwnerAndIsSharedOrderByIdDescLimitByFromAndTo(id, bookmarkPageNum, sharedBookmarkCount, true);
+        model.addAttribute("bookmarkPagination", bookmarkPagination.getPagination());
+        model.addAttribute("bookmarkItem", bookmarkPagination.getBookmarkDTOList());
+
         return "profile/profile";
     }
 

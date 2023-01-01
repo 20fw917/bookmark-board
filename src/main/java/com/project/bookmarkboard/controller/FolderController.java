@@ -1,8 +1,8 @@
 package com.project.bookmarkboard.controller;
 
 import com.project.bookmarkboard.dto.*;
-import com.project.bookmarkboard.dto.pagination.BookmarkBasicPagination;
-import com.project.bookmarkboard.dto.pagination.FolderViewBasicPagination;
+import com.project.bookmarkboard.dto.pagination.BookmarkPagination;
+import com.project.bookmarkboard.dto.pagination.FolderViewPagination;
 import com.project.bookmarkboard.dto.response.BasicResponse;
 import com.project.bookmarkboard.dto.response.CommonResponse;
 import com.project.bookmarkboard.mapper.BookmarkMapper;
@@ -40,7 +40,7 @@ public class FolderController {
                                 @RequestParam(value = "page", required = false, defaultValue = "1") int pageNum,
                                 @RequestParam(value = "care_stared", required = false, defaultValue = "true") boolean careStared,
                                 Model model) {
-        final FolderViewBasicPagination folderViewPagination = folderViewService.getAllByOwnerOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), pageNum, careStared);
+        final FolderViewPagination folderViewPagination = folderViewService.getAllByOwnerOrderByIsStaredAndIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), pageNum, careStared);
 
         model.addAttribute("pagination", folderViewPagination.getPagination());
         model.addAttribute("items", folderViewPagination.getFolderViewDTOList());
@@ -131,7 +131,7 @@ public class FolderController {
         }
 
         if(folderViewDTO.getItemCount() > 0) {
-            BookmarkBasicPagination pagination = bookmarkService.getAllByIdListOrderByIsStaredDescAndIdDescLimitByFromAndTo
+            BookmarkPagination pagination = bookmarkService.getAllByIdListOrderByIsStaredDescAndIdDescLimitByFromAndTo
                     (folderService.getBookmarkIdListInFolderById(folderId), pageNum, folderViewDTO.getItemCount());
             model.addAttribute("bookmarkList", pagination.getBookmarkDTOList());
             model.addAttribute("pagination", pagination.getPagination());
@@ -241,5 +241,33 @@ public class FolderController {
 
         // 정상적으로 진행이 안 된 경우
         return ResponseEntity.internalServerError().body(new CommonResponse<>("false"));
+    }
+
+    @PostMapping("/copy/{id}")
+    @ResponseBody
+    public ResponseEntity<? extends BasicResponse> postFolderCopyRequest(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                                           @PathVariable("id") long id) {
+        log.info("Folder Copy Request Received");
+        log.info("From Item ID: " + id + " / To User ID: " + customUserDetails.getUserInternalId());
+        final FolderDTO folderDTO = folderMapper.getOneById(id);
+
+        // 없는 북마크를 요청한 경우
+        if(folderDTO == null) {
+            return ResponseEntity.badRequest().body(new CommonResponse<>("NOT FOUND"));
+        }
+
+        // 본인의 북마크를 요청한 경우
+        if(customUserDetails.getUserInternalId() == folderDTO.getOwner()) {
+            return ResponseEntity.badRequest().body(new CommonResponse<>("Requested Your Own Bookmark"));
+        }
+
+        // 공유하지 않은 북마크를 요청한 경우
+        if(!folderDTO.isShared()) {
+            return ResponseEntity.badRequest().body(new CommonResponse<>("Requested Bookmark is not shared"));
+        }
+
+        // TODO: INSERT
+
+        return ResponseEntity.ok().body(new CommonResponse<>("true"));
     }
 }
