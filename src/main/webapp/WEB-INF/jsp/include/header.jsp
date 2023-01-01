@@ -38,7 +38,6 @@
       </c:choose>"> 폴더</a></li>
       </ul>
 
-
       <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
         <input type="search" class="form-control form-control-dark text-bg-dark" placeholder="검색" aria-label="Search">
       </form>

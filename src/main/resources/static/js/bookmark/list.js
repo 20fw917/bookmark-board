@@ -28,7 +28,7 @@ const deleteBookmark = (id) => {
     }
 }
 
-const updateStared = (id, toModifyStaredStatus) => {
+const updateStaredBookmark = (id, toModifyStaredStatus) => {
     const token = $("meta[name='_csrf']").attr("content");
     const header = $("meta[name='_csrf_header']").attr("content");
 
@@ -56,7 +56,7 @@ const updateStared = (id, toModifyStaredStatus) => {
     })
 }
 
-const updateShared = (id, toModifySharedStatus) => {
+const updateSharedBookmark = (id, toModifySharedStatus) => {
     const token = $("meta[name='_csrf']").attr("content");
     const header = $("meta[name='_csrf_header']").attr("content");
 

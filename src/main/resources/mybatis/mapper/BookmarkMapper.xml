@@ -25,6 +25,13 @@
         ORDER BY is_stared DESC, id DESC
     </select>
 
+    <select id="getAllByOwnerAndIsSharedOrderByIdDescLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
+        SELECT * FROM bookmark
+        WHERE owner = #{owner} AND is_shared = ${isShared}
+        ORDER BY id DESC
+        LIMIT #{from}, #{itemPerPage}
+    </select>
+
     <select id="getAllByIdListOrderByIsStaredDescAndIdDesc" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
         SELECT * FROM bookmark
         WHERE id in
@@ -39,14 +46,21 @@
         <foreach item="item" index="index" collection="idList" open="(" separator="," close=")">
             #{item}
         </foreach>
-        LIMIT #{from}, #{to}
+        LIMIT #{from}, #{itemPerPage}
     </select>
 
     <select id="getAllByOwnerAndIsStaredOrderByIdDescLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
         SELECT * FROM bookmark
         WHERE owner = #{owner} AND is_stared = #{isStared}
         ORDER BY id DESC
-        LIMIT #{from}, #{to}
+        LIMIT #{from}, #{itemPerPage}
+    </select>
+
+    <select id="getAllByOwnerOrderByIdDescLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
+        SELECT * FROM bookmark
+        WHERE owner = #{owner}
+        ORDER BY id DESC
+        LIMIT #{from}, #{itemPerPage}
     </select>
 
     <select id="getAllByOwnerAndKeywordOrderByIsStaredDescAndIdDesc" resultType="com.project.bookmarkboard.dto.BookmarkDTO">
