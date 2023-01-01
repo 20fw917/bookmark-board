@@ -17,4 +17,12 @@ public interface FolderViewMapper {
     List<FolderViewDTO> getAllByOwnerAndIsSharedOrderByIsStaredAndIdDescLimitByFromAndTo(@Param("owner") long owner,
                                                                                          @Param("isShared") boolean isShared,
                                                                                          @Param("from") int from, @Param("itemPerPage") int itemPerPage);
+    List<FolderViewDTO> getAllByOwnerAndIsStaredOrderById(@Param("owner") long owner, @Param("isStared") boolean isStared,
+                                                          @Param("from") int from, @Param("itemPerPage") int itemPerPage);
+
+    List<FolderViewDTO> getAllByNotOwnerAndIsSharedOrderByLikeCountLimitByFromAndTo(@Param("owner") long owner, @Param("isShared") boolean isShared,
+                                                                                    @Param("from") int from, @Param("itemPerPage") int itemPerPage);
+
+    List<FolderViewDTO> getAllByIsSharedOrderByLikeCountLimitByFromAndTo(@Param("isShared") boolean isShared,
+                                                         @Param("from") int from, @Param("itemPerPage") int itemPerPage);
 }

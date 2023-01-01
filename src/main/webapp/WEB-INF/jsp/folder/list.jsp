@@ -59,8 +59,7 @@
 </div>
 
 <div class="container">
-  <div class="content">
-
+  <div class="row">
       <c:forEach items="${items}" var="item">
         <jsp:include page="/WEB-INF/jsp/folder/item.jsp">
           <jsp:param name="id" value="${item.id}"/>
@@ -79,15 +78,15 @@
 <br>
 <%-- paging --%>
 <div class="container">
-    <jsp:include page="/WEB-INF/jsp/folder/pagination.jsp">
-      <jsp:param name="previousPageExists" value="${pagination.previousPageExists}"/>
-      <jsp:param name="nextPageExists" value="${pagination.nextPageExists}"/>
-      <jsp:param name="startIndexNum" value="${pagination.startIndexNum}"/>
-      <jsp:param name="endIndexNum" value="${pagination.endIndexNum}"/>
-      <jsp:param name="currentPageNum" value="${pagination.currentPageNum}"/>
-      <jsp:param name="baseUrl" value="${pageContext.request.contextPath}/folder"/>
-      <jsp:param name="pageName" value="page"/>
-    </jsp:include>
+  <jsp:include page="/WEB-INF/jsp/folder/pagination.jsp">
+    <jsp:param name="previousPageExists" value="${pagination.previousPageExists}"/>
+    <jsp:param name="nextPageExists" value="${pagination.nextPageExists}"/>
+    <jsp:param name="startIndexNum" value="${pagination.startIndexNum}"/>
+    <jsp:param name="endIndexNum" value="${pagination.endIndexNum}"/>
+    <jsp:param name="currentPageNum" value="${pagination.currentPageNum}"/>
+    <jsp:param name="baseUrl" value="${pageContext.request.contextPath}/folder"/>
+    <jsp:param name="pageName" value="page"/>
+  </jsp:include>
 </div>
 </body>
 </html>

@@ -40,4 +40,37 @@ public class FolderViewService {
 
         return new FolderViewPagination(itemsCount, pageNum, finalPageNum, folderViewDTOList);
     }
+
+    public FolderViewPagination getAllByOwnerAndIsStaredOrderById(long owner, int pageNum, boolean isStared) {
+        final int itemsCount = folderMapper.getCountByOwnerAndIsStared(owner, isStared);
+        final int startItemNum = (pageNum - 1) * itemPerPage;
+
+        final List<FolderViewDTO> folderViewDTOList = folderViewMapper.getAllByOwnerAndIsStaredOrderById(owner, isStared, startItemNum, itemPerPage);
+
+        final int finalPageNum = ((itemsCount - 1) / itemPerPage) + 1;
+
+        return new FolderViewPagination(itemsCount, pageNum, finalPageNum, folderViewDTOList);
+    }
+
+    public FolderViewPagination getAllByNotOwnerAndIsSharedOrderByLikeCount(long owner, int pageNum, boolean isShared) {
+        final int itemsCount = folderMapper.getCountByNotOwnerAndIsShared(owner, true);
+        final int startItemNum = (pageNum - 1) * itemPerPage;
+
+        final List<FolderViewDTO> folderViewDTOList = folderViewMapper.getAllByNotOwnerAndIsSharedOrderByLikeCountLimitByFromAndTo(owner, isShared, startItemNum, itemPerPage);
+
+        final int finalPageNum = ((itemsCount - 1) / itemPerPage) + 1;
+
+        return new FolderViewPagination(itemsCount, pageNum, finalPageNum, folderViewDTOList);
+    }
+
+    public FolderViewPagination getAllByIsSharedOrderByLikeCount(int pageNum, boolean isShared) {
+        final int itemsCount = folderMapper.getCountByIsShared(true);
+        final int startItemNum = (pageNum - 1) * itemPerPage;
+
+        final List<FolderViewDTO> folderViewDTOList = folderViewMapper.getAllByIsSharedOrderByLikeCountLimitByFromAndTo(isShared, startItemNum, itemPerPage);
+
+        final int finalPageNum = ((itemsCount - 1) / itemPerPage) + 1;
+
+        return new FolderViewPagination(itemsCount, pageNum, finalPageNum, folderViewDTOList);
+    }
 }
