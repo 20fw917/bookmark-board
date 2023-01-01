@@ -30,7 +30,7 @@
 <%-- 즐겨찾기한 북마크 Area --%>
 <div class="container" style="margin-top: 20px">
     <c:if test="${staredBookmarkPagination.totalCount ne 0}">
-    <h3>즐겨찾는 북마크</h3>
+    <h3 class="bi bi-bookmark-star"> 즐겨찾는 북마크</h3>
     <br>
         <div class="row">
             <c:forEach items="${staredBookmarkItems}" var="item">
@@ -75,7 +75,7 @@
     </c:if>
 
     <c:if test="${notStaredBookmarkPagination.totalCount ne 0}">
-    <h3>일반 북마크</h3><br>
+    <h3 class="bi bi-bookmark"> 일반 북마크</h3><br>
     <div class="row">
         <c:forEach items="${notStaredBookmarkItems}" var="item">
             <div class="w-50">

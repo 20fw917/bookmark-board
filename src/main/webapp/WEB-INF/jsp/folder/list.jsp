@@ -38,7 +38,7 @@
             <c:param name="care_stared" value="true" />
           </c:url>
           <a href="${url}" class="btn btn btn-outline-secondary">
-            <i class="bi bi-bookmark-heart"></i>
+            <i class="bi bi-star"></i>
             즐겨찾기 우선
           </a>
 
@@ -60,7 +60,7 @@
 
 <div class="container">
   <div class="content">
-    <div class="row">
+
       <c:forEach items="${items}" var="item">
         <jsp:include page="/WEB-INF/jsp/folder/item.jsp">
           <jsp:param name="id" value="${item.id}"/>
