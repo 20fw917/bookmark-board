@@ -6,12 +6,12 @@
 <header class="p-3 text-bg-dark" style="margin-bottom: 40px">
   <div class="container">
     <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-      <a style="margin-right: 10px" href="${pageContext.request.contextPath}/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-        북마크
+      <a style="margin-right: 13px; font-size: 22px;" href="${pageContext.request.contextPath}/" class="d-flex align-items-center mb-2 mb-lg-0  bi bi-journal-bookmark-fill text-white text-decoration-none">
+        &nbsp;북마크
       </a>
 
       <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="${pageContext.request.contextPath}/" class="nav-link px-2
+        <li><a href="${pageContext.request.contextPath}/" class="nav-link px-2 bi bi-house
         <c:choose>
           <c:when test="${URL eq '/WEB-INF/jsp/main.jsp'}">
                link-secondary
@@ -19,23 +19,23 @@
           <c:otherwise>
                text-white
           </c:otherwise>
-      </c:choose>">홈</a></li>
-        <li><a href="${pageContext.request.contextPath}/bookmark" class="nav-link px-2 <c:choose>
+      </c:choose>"> 홈</a></li>
+        <li><a href="${pageContext.request.contextPath}/bookmark" class="nav-link px-2 bi bi-bookmark <c:choose>
           <c:when test="${URL eq '/WEB-INF/jsp/bookmark/list.jsp'}">
                link-secondary
           </c:when>
           <c:otherwise>
                text-white
           </c:otherwise>
-      </c:choose>">내 북마크</a></li>
-        <li><a href="${pageContext.request.contextPath}/folder" class="nav-link px-2 <c:choose>
+      </c:choose>"> 내 북마크</a></li>
+        <li><a href="${pageContext.request.contextPath}/folder" class="nav-link px-2 bi bi-folder <c:choose>
           <c:when test="${URL eq '/WEB-INF/jsp/folder/list.jsp'}">
                link-secondary
           </c:when>
           <c:otherwise>
                text-white
           </c:otherwise>
-      </c:choose>">폴더</a></li>
+      </c:choose>"> 폴더</a></li>
       </ul>
 
       <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
