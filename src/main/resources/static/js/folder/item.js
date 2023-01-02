@@ -24,3 +24,5 @@ const copyFolder = (id) => {
         })
     }
 }
+
+// TODO: Like AJAX 요청 만들어야함.

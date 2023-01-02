@@ -6,6 +6,7 @@ import com.project.bookmarkboard.dto.pagination.FolderViewPagination;
 import com.project.bookmarkboard.dto.response.BasicResponse;
 import com.project.bookmarkboard.dto.response.CommonResponse;
 import com.project.bookmarkboard.mapper.BookmarkMapper;
+import com.project.bookmarkboard.mapper.FolderLikeMapper;
 import com.project.bookmarkboard.mapper.FolderMapper;
 import com.project.bookmarkboard.mapper.FolderViewMapper;
 import com.project.bookmarkboard.service.BookmarkService;
@@ -35,6 +36,7 @@ public class FolderController {
     private final BookmarkMapper bookmarkMapper;
     private final FolderService folderService;
     private final BookmarkService bookmarkService;
+    private final FolderLikeMapper folderLikeMapper;
 
     @GetMapping("")
     public String getFolderPage(@AuthenticationPrincipal CustomUserDetails customUserDetails,
@@ -268,6 +270,45 @@ public class FolderController {
         }
 
         folderService.copyFolder(id, customUserDetails.getUserInternalId());
+
+        return ResponseEntity.ok().body(new CommonResponse<>("true"));
+    }
+
+    @PatchMapping("/like/{id}")
+    @ResponseBody
+    public ResponseEntity<? extends BasicResponse> postLikeFolderRequest(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                                         @PathVariable("id") long id, @RequestParam("to_modify_stared_status") boolean toModifyStaredStatus) {
+        log.info("Folder Like Request Received");
+        log.info("Item ID: " + id + " / User ID: " + customUserDetails.getUserInternalId());
+        final FolderDTO folderDTO = folderMapper.getOneById(id);
+
+        // 없는 북마크에 요청한 경우
+        if(folderDTO == null) {
+            return ResponseEntity.badRequest().body(new CommonResponse<>("NOT FOUND"));
+        }
+
+        // 본인의 북마크를 요청한 경우
+        if(customUserDetails.getUserInternalId() == folderDTO.getOwner()) {
+            return ResponseEntity.badRequest().body(new CommonResponse<>("Requested Your Own Bookmark"));
+        }
+
+        final FolderLikeDTO requestedFolderLikeDTO = new FolderLikeDTO(customUserDetails.getUserInternalId(), id);
+
+        // 추천 요청인데 이미 추천한 경우
+        if(folderLikeMapper.getCountByFolderIdAndUserId(requestedFolderLikeDTO) == 1 && toModifyStaredStatus) {
+            return ResponseEntity.badRequest().body(new CommonResponse<>("Requested Already Do Like"));
+        }
+
+        // 추천 취소 요청인데 추천하지 않은 경우
+        if(folderLikeMapper.getCountByFolderIdAndUserId(requestedFolderLikeDTO) == 0 && !toModifyStaredStatus) {
+            return ResponseEntity.badRequest().body(new CommonResponse<>("Requested Already Dislike"));
+        }
+
+        if(toModifyStaredStatus) {
+            folderLikeMapper.insertFolderLike(requestedFolderLikeDTO);
+        } else {
+            folderLikeMapper.deleteFolderLikeById(requestedFolderLikeDTO);
+        }
 
         return ResponseEntity.ok().body(new CommonResponse<>("true"));
     }
