@@ -30,7 +30,7 @@
 
     <insert id="insertFolder" parameterType="com.project.bookmarkboard.dto.FolderDTO"
             useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO folder(`owner`, `title`, `memo`, `thumbnail`, `is_stared`, `is_shared`)
+        INSERT INTO folder(`owner`, `title`, `memo`, `thumbnail`, `is_shared`, `is_stared`)
         VALUES(#{owner}, #{title}, #{memo}, #{thumbnail}, #{isShared}, #{isStared})
     </insert>
 

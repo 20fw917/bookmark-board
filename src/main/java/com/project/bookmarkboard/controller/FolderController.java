@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.print.Book;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +69,6 @@ public class FolderController {
                                 @ModelAttribute("isShared") String isShared,
                                 @ModelAttribute("isStared") String isStared) throws IOException {
         log.info("Folder Add Request Received");
-        log.debug("folderRequestDTO: " + folderRequestDTO);
         folderRequestDTO.setOwner(customUserDetails.getUserInternalId());
         if(!isShared.equals("")) {
             folderRequestDTO.setShared(Boolean.parseBoolean(isShared));
@@ -78,6 +78,7 @@ public class FolderController {
             folderRequestDTO.setStared(Boolean.parseBoolean(isStared));
         }
 
+        log.debug("folderRequestDTO: " + folderRequestDTO);
         folderService.insertFolder(folderRequestDTO);
 
         return "redirect:/folder";
@@ -246,7 +247,7 @@ public class FolderController {
     @PostMapping("/copy/{id}")
     @ResponseBody
     public ResponseEntity<? extends BasicResponse> postFolderCopyRequest(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                                                           @PathVariable("id") long id) {
+                                                                           @PathVariable("id") long id) throws IOException {
         log.info("Folder Copy Request Received");
         log.info("From Item ID: " + id + " / To User ID: " + customUserDetails.getUserInternalId());
         final FolderDTO folderDTO = folderMapper.getOneById(id);
@@ -266,7 +267,7 @@ public class FolderController {
             return ResponseEntity.badRequest().body(new CommonResponse<>("Requested Bookmark is not shared"));
         }
 
-        // TODO: INSERT
+        folderService.copyFolder(id, customUserDetails.getUserInternalId());
 
         return ResponseEntity.ok().body(new CommonResponse<>("true"));
     }

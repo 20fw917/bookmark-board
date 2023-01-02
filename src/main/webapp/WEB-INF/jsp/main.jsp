@@ -8,6 +8,10 @@
     <title>북마크 시스템</title>
     <jsp:include page="/WEB-INF/jsp/include/bootstrap.jsp"/>
     <sec:csrfMetaTags/>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/bookmark/list.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/bookmark/item.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/folder/list.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/folder/item.js"></script>
 </head>
 
 <body>
@@ -59,7 +63,7 @@
         <h2 class="pb-3 bi bi-hand-thumbs-up border-bottom">추천 폴더</h2>
 
         <!--카드-->
-        <div class="row g-4 py-4 row-cols-1 row-cols-lg-4">
+        <div class="row g-4 py-4 row-cols-1">
             <div class="content">
                 <c:forEach items="${suggestFolderItems}" var="item">
                     <jsp:include page="/WEB-INF/jsp/folder/item.jsp">

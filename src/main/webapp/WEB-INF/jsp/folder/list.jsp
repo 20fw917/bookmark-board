@@ -78,15 +78,17 @@
 <br>
 <%-- paging --%>
 <div class="container">
-  <jsp:include page="/WEB-INF/jsp/folder/pagination.jsp">
-    <jsp:param name="previousPageExists" value="${pagination.previousPageExists}"/>
-    <jsp:param name="nextPageExists" value="${pagination.nextPageExists}"/>
-    <jsp:param name="startIndexNum" value="${pagination.startIndexNum}"/>
-    <jsp:param name="endIndexNum" value="${pagination.endIndexNum}"/>
-    <jsp:param name="currentPageNum" value="${pagination.currentPageNum}"/>
-    <jsp:param name="baseUrl" value="${pageContext.request.contextPath}/folder"/>
-    <jsp:param name="pageName" value="page"/>
-  </jsp:include>
+  <c:if test="${pagination.totalCount ne 0}">
+    <jsp:include page="/WEB-INF/jsp/folder/pagination.jsp">
+      <jsp:param name="previousPageExists" value="${pagination.previousPageExists}"/>
+      <jsp:param name="nextPageExists" value="${pagination.nextPageExists}"/>
+      <jsp:param name="startIndexNum" value="${pagination.startIndexNum}"/>
+      <jsp:param name="endIndexNum" value="${pagination.endIndexNum}"/>
+      <jsp:param name="currentPageNum" value="${pagination.currentPageNum}"/>
+      <jsp:param name="baseUrl" value="${pageContext.request.contextPath}/folder"/>
+      <jsp:param name="pageName" value="page"/>
+    </jsp:include>
+  </c:if>
 </div>
 </body>
 </html>

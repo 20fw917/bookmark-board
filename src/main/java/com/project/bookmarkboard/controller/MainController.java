@@ -38,7 +38,7 @@ public class MainController {
             log.debug("myFolderPagination: " + folderViewPagination.getPagination());
             log.debug("myFolderItems: " + folderViewPagination.getFolderViewDTOList());
 
-            final FolderViewPagination suggestFolderViewPagination = folderViewService.getAllByNotOwnerAndIsSharedOrderByLikeCount(customUserDetails.getUserInternalId(), suggestFolderPageNum, true);
+            final FolderViewPagination suggestFolderViewPagination = folderViewService.getAllByNotOwnerAndIsSharedOrderByLikeCountLimitByFromAndTo(customUserDetails.getUserInternalId(), suggestFolderPageNum, true);
 
             model.addAttribute("suggestFolderPagination", suggestFolderViewPagination.getPagination());
             model.addAttribute("suggestFolderItems", suggestFolderViewPagination.getFolderViewDTOList());

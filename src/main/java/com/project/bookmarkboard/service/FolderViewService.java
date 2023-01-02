@@ -52,7 +52,7 @@ public class FolderViewService {
         return new FolderViewPagination(itemsCount, pageNum, finalPageNum, folderViewDTOList);
     }
 
-    public FolderViewPagination getAllByNotOwnerAndIsSharedOrderByLikeCount(long owner, int pageNum, boolean isShared) {
+    public FolderViewPagination getAllByNotOwnerAndIsSharedOrderByLikeCountLimitByFromAndTo(long owner, int pageNum, boolean isShared) {
         final int itemsCount = folderMapper.getCountByNotOwnerAndIsShared(owner, true);
         final int startItemNum = (pageNum - 1) * itemPerPage;
 

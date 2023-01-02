@@ -1,14 +1,17 @@
 package com.project.bookmarkboard.service;
 
 import com.project.bookmarkboard.dto.BookmarkDTO;
+import com.project.bookmarkboard.dto.FolderItemDTO;
 import com.project.bookmarkboard.dto.pagination.BookmarkPagination;
 import com.project.bookmarkboard.mapper.BookmarkMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
@@ -60,5 +63,24 @@ public class BookmarkService {
         final int finalPageNum = ((itemsCount - 1) / itemPerPage) + 1;
 
         return new BookmarkPagination(itemsCount, pageNum, finalPageNum, bookmarkDTOList);
+    }
+
+    @Transactional
+    public List<BookmarkDTO> copyBookmark(List<Long> bookmarkIdList, long newOwner) {
+        final List<BookmarkDTO> bookmarkDTOList = bookmarkMapper.getAllByIdList(bookmarkIdList);
+
+        List<BookmarkDTO> toInsertFolderItemDTOList = bookmarkDTOList.stream()
+                .peek(bookmarkDTO -> {
+                    bookmarkDTO.setId(0);
+                    bookmarkDTO.setOwner(newOwner);
+                    bookmarkDTO.setStared(false);
+                    bookmarkDTO.setShared(false);
+                })
+                .collect(Collectors.toList());
+
+        bookmarkMapper.insertBookmarkList(toInsertFolderItemDTOList);
+        log.debug("After toInsertFolderItemDTOList: " + toInsertFolderItemDTOList);
+
+        return toInsertFolderItemDTOList;
     }
 }

@@ -40,9 +40,10 @@
         ORDER BY id DESC
     </select>
 
-    <select id="getAllByNotOwnerOrderByLikeCount" resultType="com.project.bookmarkboard.dto.FolderViewDTO">
+    <select id="getAllByNotOwnerAndIsSharedOrderByLikeCountLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.FolderViewDTO">
         SELECT * FROM folder_view
-        WHERE owner != #{owner}
+        WHERE owner != #{owner} AND is_shared = #{isShared}
         ORDER BY like_count DESC
+        LIMIT #{from}, #{itemPerPage}
     </select>
 </mapper>
