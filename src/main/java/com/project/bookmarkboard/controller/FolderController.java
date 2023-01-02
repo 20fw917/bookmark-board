@@ -295,12 +295,12 @@ public class FolderController {
         final FolderLikeDTO requestedFolderLikeDTO = new FolderLikeDTO(customUserDetails.getUserInternalId(), id);
 
         // 추천 요청인데 이미 추천한 경우
-        if(folderLikeMapper.getCountByFolderIdAndUserId(requestedFolderLikeDTO) == 1 && toModifyStaredStatus) {
+        if(folderLikeMapper.getCountByFolderIdAndUserId(requestedFolderLikeDTO) && toModifyStaredStatus) {
             return ResponseEntity.badRequest().body(new CommonResponse<>("Requested Already Do Like"));
         }
 
         // 추천 취소 요청인데 추천하지 않은 경우
-        if(folderLikeMapper.getCountByFolderIdAndUserId(requestedFolderLikeDTO) == 0 && !toModifyStaredStatus) {
+        if(!folderLikeMapper.getCountByFolderIdAndUserId(requestedFolderLikeDTO) && !toModifyStaredStatus) {
             return ResponseEntity.badRequest().body(new CommonResponse<>("Requested Already Dislike"));
         }
 

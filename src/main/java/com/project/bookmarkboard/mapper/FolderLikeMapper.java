@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper
 public interface FolderLikeMapper {
     List<FolderLikeDTO> getAllByUserId(@Param("userId") long userId);
-    int getCountByFolderIdAndUserId(FolderLikeDTO folderLikeDTO);
+    boolean getCountByFolderIdAndUserId(FolderLikeDTO folderLikeDTO);
     int insertFolderLike(FolderLikeDTO folderLikeDTO);
     int deleteFolderLikeById(FolderLikeDTO folderLikeDTO);
 }
