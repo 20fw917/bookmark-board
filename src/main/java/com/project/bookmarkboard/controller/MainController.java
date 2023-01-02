@@ -37,4 +37,6 @@ public class MainController {
         }
         return "redirect:/";
     }
+    @GetMapping("/search")
+    public String getSearch(){return "search";}
 }
