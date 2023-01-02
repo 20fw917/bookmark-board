@@ -7,54 +7,95 @@
 <head>
     <title>북마크 시스템</title>
     <jsp:include page="/WEB-INF/jsp/include/bootstrap.jsp"/>
+    <sec:csrfMetaTags/>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/bookmark/list.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/bookmark/item.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/folder/list.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/folder/item.js"></script>
 </head>
 
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <div class="container">
-    <table class="table table-striped table-hover">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">제목</th>
-            <th scope="col">작성자</th>
-            <th scope="col">조회수</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>안녕하세요. 가입했습니다.</td>
-            <td>코코블루</td>
-            <td>3</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-        </tr>
-        </tbody>
-    </table>
-
     <sec:authorize access="isAuthenticated()">
-    <div class="container text-end">
-        <a href="${pageContext.request.contextPath}/article/write">
-            <button type="button" class="btn btn-primary float-right">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>
-                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"></path>
-                </svg>
-            글 쓰기
-        </button>
-        </a>
-    </div>
+        <c:if test="${myFolderPagination.totalCount ne 0}">
+        <div class="container px-4 py-2" id="featured-1">
+            <h2 class="pb-3  bi bi-bookmark-star border-bottom"> 즐겨찾는 폴더</h2>
+
+            <!--카드-->
+            <div class="row g-4 py-4 row-cols-1 row-cols-lg-4">
+                <div class="content">
+                    <c:forEach items="${myFolderItems}" var="item">
+                        <jsp:include page="/WEB-INF/jsp/folder/item.jsp">
+                            <jsp:param name="id" value="${item.id}"/>
+                            <jsp:param name="thumbnail" value="${item.thumbnail}"/>
+                            <jsp:param name="title" value="${item.title}"/>
+                            <jsp:param name="memo" value="${item.memo}"/>
+                            <jsp:param name="itemCount" value="${item.itemCount}"/>
+                            <jsp:param name="stared" value="${item.stared}"/>
+                            <jsp:param name="shared" value="${item.shared}"/>
+                            <jsp:param name="showToolbar" value="true"/>
+                        </jsp:include>
+                    </c:forEach>
+                </div>
+            </div>
+
+            <%-- paging --%>
+            <div class="container">
+                <jsp:include page="/WEB-INF/jsp/folder/pagination.jsp">
+                    <jsp:param name="previousPageExists" value="${myFolderPagination.previousPageExists}"/>
+                    <jsp:param name="nextPageExists" value="${myFolderPagination.nextPageExists}"/>
+                    <jsp:param name="startIndexNum" value="${myFolderPagination.startIndexNum}"/>
+                    <jsp:param name="endIndexNum" value="${myFolderPagination.endIndexNum}"/>
+                    <jsp:param name="currentPageNum" value="${myFolderPagination.currentPageNum}"/>
+                    <jsp:param name="baseUrl" value="${pageContext.request.contextPath}/folder"/>
+                    <jsp:param name="pageName" value="page"/>
+                </jsp:include>
+            </div>
+        </div>
+        </c:if>
     </sec:authorize>
 </div>
+
+<div class="container">
+    <div class="container px-4 py-2" id="featured-2">
+        <c:if test="${suggestFolderPagination.totalCount ne 0}">
+        <h2 class="pb-3 bi bi-hand-thumbs-up border-bottom">추천 폴더</h2>
+
+        <!--카드-->
+        <div class="row g-4 py-4 row-cols-1">
+            <div class="content">
+                <c:forEach items="${suggestFolderItems}" var="item">
+                    <jsp:include page="/WEB-INF/jsp/folder/item.jsp">
+                        <jsp:param name="id" value="${item.id}"/>
+                        <jsp:param name="thumbnail" value="${item.thumbnail}"/>
+                        <jsp:param name="title" value="${item.title}"/>
+                        <jsp:param name="memo" value="${item.memo}"/>
+                        <jsp:param name="itemCount" value="${item.itemCount}"/>
+                        <jsp:param name="stared" value="${item.stared}"/>
+                        <jsp:param name="shared" value="${item.shared}"/>
+                        <jsp:param name="showToolbar" value="false"/>
+                    </jsp:include>
+                </c:forEach>
+            </div>
+        </div>
+
+        <%-- paging --%>
+        <div class="container">
+            <jsp:include page="/WEB-INF/jsp/folder/pagination.jsp">
+                <jsp:param name="previousPageExists" value="${suggestFolderPagination.previousPageExists}"/>
+                <jsp:param name="nextPageExists" value="${suggestFolderPagination.nextPageExists}"/>
+                <jsp:param name="startIndexNum" value="${suggestFolderPagination.startIndexNum}"/>
+                <jsp:param name="endIndexNum" value="${suggestFolderPagination.endIndexNum}"/>
+                <jsp:param name="currentPageNum" value="${suggestFolderPagination.currentPageNum}"/>
+                <jsp:param name="baseUrl" value="${pageContext.request.contextPath}/folder"/>
+                <jsp:param name="pageName" value="page"/>
+            </jsp:include>
+        </div>
+    </div>
+    </c:if>
+</div>
+<br>
+<br>
 </body>
 </html>

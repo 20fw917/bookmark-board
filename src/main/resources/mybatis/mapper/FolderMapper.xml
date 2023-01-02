@@ -7,6 +7,18 @@
         SELECT count(*) FROM folder WHERE owner = #{owner}
     </select>
 
+    <select id="getCountByOwnerAndIsStared" resultType="int">
+        SELECT count(*) FROM folder WHERE owner = #{owner} AND is_stared = #{isStared}
+    </select>
+
+    <select id="getCountByNotOwnerAndIsShared" resultType="int">
+        SELECT count(*) FROM folder WHERE owner != #{owner} AND is_shared = #{isShared}
+    </select>
+
+    <select id="getCountByIsShared" resultType="int">
+        SELECT count(*) FROM folder WHERE is_shared = #{isShared}
+    </select>
+
     <delete id="deleteById">
         DELETE FROM folder WHERE id = #{id};
     </delete>
@@ -18,7 +30,7 @@
 
     <insert id="insertFolder" parameterType="com.project.bookmarkboard.dto.FolderDTO"
             useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO folder(`owner`, `title`, `memo`, `thumbnail`, `is_stared`, `is_shared`)
+        INSERT INTO folder(`owner`, `title`, `memo`, `thumbnail`, `is_shared`, `is_stared`)
         VALUES(#{owner}, #{title}, #{memo}, #{thumbnail}, #{isShared}, #{isStared})
     </insert>
 

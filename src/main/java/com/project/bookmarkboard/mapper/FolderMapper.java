@@ -7,6 +7,9 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface FolderMapper {
     int getCountByOwner(@Param("owner") long owner);
+    int getCountByNotOwnerAndIsShared(@Param("owner") long owner, @Param("isShared") boolean isShared);
+    int getCountByIsShared(@Param("isShared") boolean isShared);
+    int getCountByOwnerAndIsStared(@Param("owner") long owner, @Param("isStared") boolean isStared);
     int getCountByOwnerAndIsShared(@Param("owner") long owner, @Param("isShared") boolean isShared);
     int deleteById(@Param("id") long id);
     FolderDTO getOneById(@Param("id") long id);

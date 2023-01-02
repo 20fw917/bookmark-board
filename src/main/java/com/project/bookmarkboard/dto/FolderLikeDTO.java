@@ -11,4 +11,9 @@ public class FolderLikeDTO {
     private long id;
     private long userId;
     private long folderId;
+
+    public FolderLikeDTO(long userId, long folderId) {
+        this.userId = userId;
+        this.folderId = folderId;
+    }
 }

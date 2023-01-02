@@ -38,7 +38,7 @@
             <c:param name="care_stared" value="true" />
           </c:url>
           <a href="${url}" class="btn btn btn-outline-secondary">
-            <i class="bi bi-bookmark-heart"></i>
+            <i class="bi bi-star"></i>
             즐겨찾기 우선
           </a>
 
@@ -59,8 +59,7 @@
 </div>
 
 <div class="container">
-  <div class="content">
-    <div class="row">
+  <div class="row">
       <c:forEach items="${items}" var="item">
         <jsp:include page="/WEB-INF/jsp/folder/item.jsp">
           <jsp:param name="id" value="${item.id}"/>
@@ -79,6 +78,7 @@
 <br>
 <%-- paging --%>
 <div class="container">
+  <c:if test="${pagination.totalCount ne 0}">
     <jsp:include page="/WEB-INF/jsp/folder/pagination.jsp">
       <jsp:param name="previousPageExists" value="${pagination.previousPageExists}"/>
       <jsp:param name="nextPageExists" value="${pagination.nextPageExists}"/>
@@ -88,6 +88,7 @@
       <jsp:param name="baseUrl" value="${pageContext.request.contextPath}/folder"/>
       <jsp:param name="pageName" value="page"/>
     </jsp:include>
+  </c:if>
 </div>
 </body>
 </html>

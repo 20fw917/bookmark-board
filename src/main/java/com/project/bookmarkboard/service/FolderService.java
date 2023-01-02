@@ -1,8 +1,10 @@
 package com.project.bookmarkboard.service;
 
+import com.project.bookmarkboard.dto.BookmarkDTO;
 import com.project.bookmarkboard.dto.FolderDTO;
 import com.project.bookmarkboard.dto.FolderItemDTO;
 import com.project.bookmarkboard.dto.FolderRequestDTO;
+import com.project.bookmarkboard.mapper.BookmarkMapper;
 import com.project.bookmarkboard.mapper.FolderItemMapper;
 import com.project.bookmarkboard.mapper.FolderMapper;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ public class FolderService {
     private final AttachmentService attachmentService;
     private final FolderMapper folderMapper;
     private final FolderItemMapper folderItemMapper;
+    private final BookmarkService bookmarkService;
 
     @Transactional
     public void insertFolder(FolderRequestDTO folderRequestDTO) throws IOException {
@@ -42,24 +45,38 @@ public class FolderService {
 
     @Transactional
     public void copyFolder(long folderId, long newOwnerId) throws IOException {
-        final FolderDTO folderDTO = folderMapper.getOneById(folderId);
+        final FolderDTO oldFolderDTO = folderMapper.getOneById(folderId);
 
         final FolderDTO toInsertFolderDTO = FolderDTO.builder()
                 .owner(newOwnerId)
-                .title(folderDTO.getTitle())
-                .memo(folderDTO.getMemo())
+                .title(oldFolderDTO.getTitle())
+                .memo(oldFolderDTO.getMemo())
                 .build();
-        if(folderDTO.getThumbnail() != null && !folderDTO.getThumbnail().equals("")) {
-            final String newThumbnailImage = attachmentService.copyImage(folderDTO.getThumbnail(), "folder_thumbnail");
-            folderDTO.setThumbnail(newThumbnailImage);
+        if(oldFolderDTO.getThumbnail() != null && !oldFolderDTO.getThumbnail().equals("")) {
+            final String newThumbnailImage = attachmentService.copyImage(oldFolderDTO.getThumbnail(), "folder_thumbnail");
+            oldFolderDTO.setThumbnail(newThumbnailImage);
         }
 
-        // TODO: Item의 소유권은?
+        // 새 폴더 info Insert
         folderMapper.insertFolder(toInsertFolderDTO);
-        List<FolderItemDTO> toInsertfolderItemDTOList = folderItemMapper.getAllByParentFolderOrderByIdDesc(folderId)
-                        .stream().peek(folderItemDTO -> folderItemDTO.setParentFolder(toInsertFolderDTO.getId()))
+        log.debug("New Folder Information: " + toInsertFolderDTO);
+
+        final List<Long> folderItemBookmarkIdList = folderItemMapper.getAllByParentFolderOrderByIdDesc(folderId).stream()
+                .map(FolderItemDTO::getBookmarkId)
                 .collect(Collectors.toList());
-        folderItemMapper.insertFolderItem(toInsertfolderItemDTOList);
+
+        if(folderItemBookmarkIdList.size() != 0) {
+            final List<BookmarkDTO> insertedBookmarkDTOList = bookmarkService.copyBookmark(folderItemBookmarkIdList, newOwnerId);
+            final List<FolderItemDTO> folderItemDTOList = insertedBookmarkDTOList.stream()
+                            .map(bookmarkDTO -> FolderItemDTO.builder()
+                                    .parentFolder(toInsertFolderDTO.getId())
+                                    .bookmarkId(bookmarkDTO.getId())
+                                    .build())
+                    .collect(Collectors.toList());
+
+            folderItemMapper.insertFolderItem(folderItemDTOList);
+            log.debug("insertFolderItem: " + folderItemDTOList);
+        }
     }
 
     @Transactional
