@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <!--카드-->
 <div class="card p-3" style="width: 17rem; float: left; margin: 20px;">
@@ -65,6 +66,19 @@
                 <i class="bi bi-trash"></i>
                 <!--공백란-->
             </button>
+            </c:if>
+            <c:if test="${param.showToolbar eq false}">
+            <sec:authorize access="isAuthenticated()">
+                <sec:authentication property="principal" var="principal"/>
+                <c:if test="${principal.userInternalId ne param.owner && param.shared eq true}">
+                    <button type="button" onclick="copyFolder(${param.id})" class="btn btn-sm btn-secondary">
+                        <i class="bi bi-clipboard-plus"></i>
+                    </button>
+                    <button type="button" onclick="likeFolder(${param.id})" class="btn btn-sm btn-secondary">
+                        <i class="bi bi-hand-thumbs-up"></i>
+                    </button>
+                </c:if>
+            </sec:authorize>
             </c:if>
         </div>
     </div>

@@ -27,5 +27,23 @@
         LIMIT #{from}, #{itemPerPage}
     </select>
 
+    <select id="getAllByIsSharedOrderByLikeCountLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.FolderViewDTO">
+        SELECT * FROM folder_view
+        WHERE is_shared = #{isShared}
+        ORDER BY id DESC
+        LIMIT #{from}, #{itemPerPage}
+    </select>
 
+    <select id="getAllByOwnerAndIsStaredOrderById" resultType="com.project.bookmarkboard.dto.FolderViewDTO">
+        SELECT * FROM folder_view
+        WHERE owner = #{owner} AND is_stared = #{isStared}
+        ORDER BY id DESC
+    </select>
+
+    <select id="getAllByNotOwnerAndIsSharedOrderByLikeCountLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.FolderViewDTO">
+        SELECT * FROM folder_view
+        WHERE owner != #{owner} AND is_shared = #{isShared}
+        ORDER BY like_count DESC
+        LIMIT #{from}, #{itemPerPage}
+    </select>
 </mapper>

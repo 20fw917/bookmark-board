@@ -45,7 +45,10 @@
                             <i class="bi bi-person" style="font-size: 20px;"></i>
                         </c:if></h5>
                     <c:if test="${folder.shared}">
-                        <p class="card-text detail-card">생성자: ${folder.authorNickname}님<br><i class="bi bi-hand-thumbs-up-fill"></i>: ${folder.likeCount}회</p>
+                        <a href="${pageContext.request.contextPath}/profile/${folder.owner}" style="text-decoration: none; color:black;">
+                            <p class="card-text detail-card">생성자: ${folder.authorNickname}님
+                        </a>
+                        <br><i class="bi bi-hand-thumbs-up-fill"></i>: ${folder.likeCount}회</p>
                     </c:if>
 
                     <p class="card-text detail-card">${folder.memo}</p>
@@ -94,6 +97,11 @@
                                     삭제
                                 </button>
                                 <br>
+                            </c:if>
+                            <c:if test="${principal.userInternalId ne folder.owner}">
+                                <button type="button" onclick="copyFolder(${param.id})" class="btn btn-sm btn-secondary">
+                                    <i class="bi bi-clipboard-plus"></i>
+                                </button>
                             </c:if>
                         </sec:authorize>
                         <p class="fst-italic">${folder.createdAtFormatted}에 생성 됨</p>

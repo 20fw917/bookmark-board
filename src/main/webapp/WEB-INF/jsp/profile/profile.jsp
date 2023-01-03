@@ -11,6 +11,7 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/bookmark/list.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/bookmark/item.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/folder/list.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/folder/item.js"></script>
 </head>
 
 <body>
