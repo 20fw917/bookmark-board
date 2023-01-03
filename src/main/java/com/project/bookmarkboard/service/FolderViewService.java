@@ -36,6 +36,16 @@ public class FolderViewService {
         return folderView;
     }
 
+//    public List<FolderView> getSearchResult(String keyword, Long currentUserId, boolean currentUserOnly) {
+//        /*
+//            구현 전략
+//            1. 자신의 폴더 중 키워드에 일치하는 것(공유 여부 무관)을 구해옴
+//            2. 자신의 것이 아닌 것 + 공유된 것 중 키워드에 일치하는 폴더를 가져옴
+//            3. 1+2
+//            * 만일, 로그인 중이 아닐 시 2번만
+//         */
+//    }
+
     public FolderViewPagination getAllByOwnerOrderByIsStaredAndIdDescLimitByFromAndTo(long owner, int pageNum, boolean careStared) {
         final int itemsCount = folderMapper.getCountByOwner(owner);
         final int startItemNum = (pageNum - 1) * itemPerPage;
@@ -98,11 +108,4 @@ public class FolderViewService {
 
         return new FolderViewPagination(itemsCount, pageNum, finalPageNum, folderViewList);
     }
-
-//    public List<FolderView> setIsLikedFromFolderViewList(List<FolderView> folderViewList, long userId) {
-//        return folderViewList.stream()
-//                .map(folderView -> {
-//
-//                })
-//    }
 }

@@ -46,4 +46,22 @@
         ORDER BY like_count DESC
         LIMIT #{from}, #{itemPerPage}
     </select>
+
+    <select id="getAllByOwnerAndKeywordOrderByIdDesc" resultType="com.project.bookmarkboard.dto.folder.FolderView">
+        SELECT * FROM folder_view
+        WHERE owner = #{owner} AND (title LIKE CONCAT('%',#{keyword},'%') OR memo LIKE CONCAT('%',#{keyword},'%'))
+        ORDER BY id DESC
+    </select>
+
+    <select id="getAllByNotOwnerAndIsSharedAndKeywordOrderByIdDesc" resultType="com.project.bookmarkboard.dto.folder.FolderView">
+        SELECT * FROM folder_view
+        WHERE owner != #{owner} AND is_shared = #{isShared} OR (title LIKE CONCAT('%',#{keyword},'%') OR memo LIKE CONCAT('%',#{keyword},'%'))
+        ORDER BY id DESC
+    </select>
+
+    <select id="getAllByIsSharedAndKeywordOrderByIdDesc" resultType="com.project.bookmarkboard.dto.folder.FolderView">
+        SELECT * FROM folder_view
+        WHERE is_shared = #{isShared} OR (title LIKE CONCAT('%',#{keyword},'%') OR memo LIKE CONCAT('%',#{keyword},'%'))
+        ORDER BY id DESC
+    </select>
 </mapper>
