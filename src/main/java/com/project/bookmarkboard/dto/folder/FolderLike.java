@@ -1,19 +1,18 @@
 package com.project.bookmarkboard.dto.folder;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.project.bookmarkboard.dto.basic.BasicLike;
+import lombok.*;
 
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FolderLike {
-    private long id;
-    private long userId;
+public class FolderLike extends BasicLike {
     private long folderId;
 
     public FolderLike(long userId, long folderId) {
-        this.userId = userId;
+        super(userId);
         this.folderId = folderId;
     }
 }

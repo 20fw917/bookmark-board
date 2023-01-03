@@ -11,16 +11,8 @@ public interface BookmarkMapper {
     Bookmark getOneById(@Param("id") long id);
     List<Bookmark> getAllByOwnerOrderByIdAndStaredDesc(@Param("owner") long owner);
     List<Bookmark> getAllByIdList(@Param("idList") List<Long> idList);
-    List<Bookmark> getAllByOwnerAndIsSharedOrderByIdDescLimitByFromAndTo(@Param("owner") long owner, @Param("isShared") boolean isShared,
-                                                                         @Param("from") int from, @Param("itemPerPage") int itemPerPage);
-    List<Bookmark> getAllByOwnerAndIsStaredOrderByIdDescLimitByFromAndTo(@Param("owner") long owner, @Param("isStared") boolean isStared,
-                                                                         @Param("from") int from, @Param("itemPerPage") int itemPerPage);
-    List<Bookmark> getAllByOwnerOrderByIdDescLimitByFromAndTo(@Param("owner") long owner,
-                                                              @Param("from") int from, @Param("itemPerPage") int itemPerPage);
     List<Bookmark> getAllByOwnerAndKeywordOrderByIsStaredDescAndIdDesc(@Param("owner") long owner, @Param("keyword") String keyword);
     List<Bookmark> getAllByIdListOrderByIsStaredDescAndIdDesc(@Param("idList") List<Long> idList);
-    List<Bookmark> getAllByIdListOrderByIsStaredDescAndIdDescLimitByFromAndTo(@Param("idList") List<Long> idList,
-                                                                              @Param("from") int from, @Param("itemPerPage") int itemPerPage);
     int insertBookmark(Bookmark bookmark);
     int insertBookmarkList(List<Bookmark> bookmarkList);
     int getCountByOwnerAndIsStared(@Param("owner") long owner, @Param("isStared") boolean isStared);

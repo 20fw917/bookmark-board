@@ -21,54 +21,8 @@ public class BookmarkService {
     private final BookmarkMapper bookmarkMapper;
     private final FolderItemMapper folderItemMapper;
 
-    @Value("${items-per-page}")
-    private Integer itemPerPage;
-
     public int getCountByOwnerAndIsShared(long ownerId, boolean isShared) {
         return bookmarkMapper.getCountByOwnerAndIsShared(ownerId, isShared);
-    }
-
-    public BookmarkPagination getAllByOwnerAndIsStaredOrderByIdDescLimitByFromAndTo(long owner, int pageNum, boolean isStared) {
-        final int itemsCount = bookmarkMapper.getCountByOwnerAndIsStared(owner, isStared);
-        final int startItemNum = (pageNum - 1) * itemPerPage;
-
-        final List<Bookmark> bookmarkList = bookmarkMapper.getAllByOwnerAndIsStaredOrderByIdDescLimitByFromAndTo(owner, isStared, startItemNum, itemPerPage);
-
-        final int finalPageNum = ((itemsCount - 1) / itemPerPage) + 1;
-
-        return new BookmarkPagination(itemsCount, pageNum, finalPageNum, bookmarkList);
-    }
-
-    public BookmarkPagination getAllByOwnerOrderByIdDescLimitByFromAndTo(long owner, int pageNum) {
-        final int itemsCount = bookmarkMapper.getCountByOwner(owner);
-        final int startItemNum = (pageNum - 1) * itemPerPage;
-
-        final List<Bookmark> bookmarkList = bookmarkMapper.getAllByOwnerOrderByIdDescLimitByFromAndTo(owner, startItemNum, itemPerPage);
-
-        final int finalPageNum = ((itemsCount - 1) / itemPerPage) + 1;
-
-        return new BookmarkPagination(itemsCount, pageNum, finalPageNum, bookmarkList);
-    }
-
-
-    public BookmarkPagination getAllByIdListOrderByIsStaredDescAndIdDescLimitByFromAndTo(List<Long> idList, int pageNum, int itemsCount) {
-        final int startItemNum = (pageNum - 1) * itemPerPage;
-
-        final List<Bookmark> bookmarkList = bookmarkMapper.getAllByIdListOrderByIsStaredDescAndIdDescLimitByFromAndTo(idList, startItemNum, itemPerPage);
-
-        final int finalPageNum = ((itemsCount - 1) / itemPerPage) + 1;
-
-        return new BookmarkPagination(itemsCount, pageNum, finalPageNum, bookmarkList);
-    }
-
-    public BookmarkPagination getAllByOwnerAndIsSharedOrderByIdDescLimitByFromAndTo(long owner, int pageNum, int itemsCount, boolean isShared) {
-        final int startItemNum = (pageNum - 1) * itemPerPage;
-
-        final List<Bookmark> bookmarkList = bookmarkMapper.getAllByOwnerAndIsSharedOrderByIdDescLimitByFromAndTo(owner, isShared, startItemNum, itemPerPage);
-
-        final int finalPageNum = ((itemsCount - 1) / itemPerPage) + 1;
-
-        return new BookmarkPagination(itemsCount, pageNum, finalPageNum, bookmarkList);
     }
 
     public Bookmark getOneById(long id) {
@@ -145,6 +99,6 @@ public class BookmarkService {
 
     @Transactional
     public boolean updateIsSharedById(long bookmarkId, boolean toModifySharedStatus) {
-        return bookmarkMapper.updateIsStaredById(bookmarkId, toModifySharedStatus) == 1;
+        return bookmarkMapper.updateIsSharedById(bookmarkId, toModifySharedStatus) == 1;
     }
 }

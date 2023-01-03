@@ -1,12 +1,13 @@
 package com.project.bookmarkboard.controller;
 
+import com.project.bookmarkboard.dto.bookmark.BookmarkView;
 import com.project.bookmarkboard.dto.folder.FolderView;
 import com.project.bookmarkboard.dto.user.CustomUserDetails;
 import com.project.bookmarkboard.dto.user.ProfileImageUpdateRequest;
 import com.project.bookmarkboard.dto.user.User;
 import com.project.bookmarkboard.dto.bookmark.BookmarkPagination;
 import com.project.bookmarkboard.dto.folder.FolderViewPagination;
-import com.project.bookmarkboard.dto.response.BasicResponse;
+import com.project.bookmarkboard.dto.basic.BasicResponse;
 import com.project.bookmarkboard.dto.response.CommonResponse;
 import com.project.bookmarkboard.service.*;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class ProfileController {
     private final FolderService folderService;
     private final FolderViewService folderViewService;
     private final BookmarkService bookmarkService;
+    private final BookmarkViewService bookmarkViewService;
     private final ProfileService profileService;
     private final CustomUserDetailsService customUserDetailsService;
 
@@ -76,7 +78,7 @@ public class ProfileController {
         user.setRole(null);
         log.debug("Received User: " + user);
 
-        model.addAttribute("item", user);
+        model.addAttribute("user", user);
 
         model.addAttribute("notSharedFolderCount", folderService.getCountByOwnerAndIsShared(customUserDetails.getUserInternalId(), false));
         model.addAttribute("sharedFolderCount", folderService.getCountByOwnerAndIsShared(customUserDetails.getUserInternalId(), true));
@@ -88,9 +90,10 @@ public class ProfileController {
         model.addAttribute("notSharedBookmarkCount", bookmarkService.getCountByOwnerAndIsShared(customUserDetails.getUserInternalId(), false));
         model.addAttribute("sharedBookmarkCount", bookmarkService.getCountByOwnerAndIsShared(customUserDetails.getUserInternalId(), true));
 
-        final BookmarkPagination bookmarkPagination = bookmarkService.getAllByOwnerOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), bookmarkPageNum);
+        final BookmarkPagination bookmarkPagination = bookmarkViewService.getAllByOwnerOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), bookmarkPageNum);
         model.addAttribute("bookmarkPagination", bookmarkPagination.getPagination());
-        model.addAttribute("bookmarkItem", bookmarkPagination.getBookmarkList());
+        model.addAttribute("bookmarkItem", bookmarkPagination.getBookmarkViewList());
+
         return "profile/profile";
     }
 
@@ -112,7 +115,7 @@ public class ProfileController {
         user.setRole(null);
         log.debug("Received User: " + user);
 
-        model.addAttribute("item", user);
+        model.addAttribute("user", user);
 
         model.addAttribute("sharedFolderCount", folderService.getCountByOwnerAndIsShared(id, true));
 
@@ -128,9 +131,15 @@ public class ProfileController {
         final int sharedBookmarkCount = bookmarkService.getCountByOwnerAndIsShared(id, true);
         model.addAttribute("sharedBookmarkCount", sharedBookmarkCount);
 
-        final BookmarkPagination bookmarkPagination = bookmarkService.getAllByOwnerAndIsSharedOrderByIdDescLimitByFromAndTo(id, bookmarkPageNum, sharedBookmarkCount, true);
+        final BookmarkPagination bookmarkPagination = bookmarkViewService.getAllByOwnerAndIsSharedOrderByIdDescLimitByFromAndTo(id, bookmarkPageNum, sharedBookmarkCount, true);
         model.addAttribute("bookmarkPagination", bookmarkPagination.getPagination());
-        model.addAttribute("bookmarkItem", bookmarkPagination.getBookmarkList());
+        if(customUserDetails != null) {
+            final List<BookmarkView> bookmarkViewList = bookmarkViewService.getLikeStatus(bookmarkPagination.getBookmarkViewList(), customUserDetails.getUserInternalId());
+            model.addAttribute("bookmarkItem", bookmarkViewList);
+        } else {
+            model.addAttribute("bookmarkItem", bookmarkPagination.getBookmarkViewList());
+        }
+        model.addAttribute("bookmarkItem", bookmarkPagination.getBookmarkViewList());
 
         return "profile/profile";
     }

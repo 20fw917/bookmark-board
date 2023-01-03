@@ -1,6 +1,6 @@
 package com.project.bookmarkboard.dto.folder;
 
-import com.project.bookmarkboard.dto.pagination.BasicPagination;
+import com.project.bookmarkboard.dto.basic.BasicPagination;
 import lombok.*;
 
 import java.util.List;

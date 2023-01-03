@@ -3,13 +3,11 @@ package com.project.bookmarkboard.controller;
 import com.project.bookmarkboard.dto.bookmark.Bookmark;
 import com.project.bookmarkboard.dto.bookmark.BookmarkPagination;
 import com.project.bookmarkboard.dto.folder.*;
-import com.project.bookmarkboard.dto.response.BasicResponse;
+import com.project.bookmarkboard.dto.folder.FolderViewPagination;
+import com.project.bookmarkboard.dto.basic.BasicResponse;
 import com.project.bookmarkboard.dto.response.CommonResponse;
 import com.project.bookmarkboard.dto.user.CustomUserDetails;
-import com.project.bookmarkboard.service.BookmarkService;
-import com.project.bookmarkboard.service.FolderLikeService;
-import com.project.bookmarkboard.service.FolderService;
-import com.project.bookmarkboard.service.FolderViewService;
+import com.project.bookmarkboard.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +28,7 @@ public class FolderController {
     private final FolderViewService folderViewService;
     private final FolderService folderService;
     private final FolderLikeService folderLikeService;
+    private final BookmarkViewService bookmarkViewService;
     private final BookmarkService bookmarkService;
 
     @GetMapping("")
@@ -41,8 +40,10 @@ public class FolderController {
 
         model.addAttribute("pagination", folderViewPagination.getPagination());
         model.addAttribute("items", folderViewPagination.getFolderViewList());
+        model.addAttribute("careStared", careStared);
         log.debug("pagination: " + folderViewPagination.getPagination());
         log.debug("items: " + folderViewPagination.getFolderViewList());
+        log.debug("careStared: " + careStared);
 
         return "folder/list";
     }
@@ -53,7 +54,7 @@ public class FolderController {
         model.addAttribute("isModify", false);
 
         final List<Bookmark> bookmarkList = bookmarkService.getAllByOwnerOrderByIdAndStaredDesc(customUserDetails.getUserInternalId());
-        log.debug("Got from DB BookmarkDTOList: " + bookmarkList);
+        log.debug("Got from DB BookmarkList: " + bookmarkList);
         model.addAttribute("bookmarkList", bookmarkList);
 
         return "folder/form";
@@ -128,9 +129,9 @@ public class FolderController {
         }
 
         if(folderViewDomain.getItemCount() > 0) {
-            BookmarkPagination pagination = bookmarkService.getAllByIdListOrderByIsStaredDescAndIdDescLimitByFromAndTo
+            BookmarkPagination pagination = bookmarkViewService.getAllByIdListOrderByIsStaredDescAndIdDescLimitByFromAndTo
                     (bookmarkService.getBookmarkIdListInFolderById(folderId), pageNum, folderViewDomain.getItemCount());
-            model.addAttribute("bookmarkList", pagination.getBookmarkList());
+            model.addAttribute("bookmarkList", pagination.getBookmarkViewList());
             model.addAttribute("pagination", pagination.getPagination());
         }
 
@@ -286,12 +287,12 @@ public class FolderController {
         log.info("Item ID: " + folderId + " / User ID: " + customUserDetails.getUserInternalId());
         final Folder folder = folderService.getOneById(folderId);
 
-        // 없는 북마크에 요청한 경우
+        // 없는 폴더에 요청한 경우
         if(folder == null) {
             return ResponseEntity.badRequest().body(new CommonResponse<>("NOT FOUND"));
         }
 
-        // 본인의 북마크를 요청한 경우
+        // 본인의 폴더에 요청한 경우
         if(customUserDetails.getUserInternalId() == folder.getOwner()) {
             return ResponseEntity.badRequest().body(new CommonResponse<>("Requested your own folder"));
         }

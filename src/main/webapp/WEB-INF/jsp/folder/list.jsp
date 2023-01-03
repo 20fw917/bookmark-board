@@ -21,10 +21,10 @@
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 
 <div class="container">
-    <%--  툴바 --%>
+    <%-- 툴바 --%>
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-      <!--중앙 위 타이틀-->
-      <h2 class="h2 bi bi-asterisk"> 내 폴더</h2>
+      <!-- 중앙 위 타이틀 -->
+      <h2 class="h2 bi bi-folder"> 내 폴더</h2>
       <div class="btn-toolbar mt-3 mb-2 mb-md-3"> <!--mb-md- 메인 멘트 간격조정-->
         <div class="btn-group me-3"> <!--me 버튼 간격-->
           <a href="${pageContext.request.contextPath}/folder/add" class="btn btn-outline-secondary">
@@ -37,19 +37,36 @@
           <c:url value="${pageContext.request.contextPath}/folder" var="url">
             <c:param name="care_stared" value="true" />
           </c:url>
-          <a href="${url}" class="btn btn btn-outline-secondary">
-            <i class="bi bi-star"></i>
-            즐겨찾기 우선
-          </a>
+          <c:if test="${careStared eq true}">
+            <a class="btn btn btn-secondary">
+              <i class="bi bi-star"></i>
+              즐겨찾기 우선
+            </a>
+          </c:if>
+          <c:if test="${careStared eq false}">
+            <a href="${url}" class="btn btn btn-outline-secondary">
+              <i class="bi bi-star"></i>
+              즐겨찾기 우선
+            </a>
+          </c:if>
 
           <c:url value="${pageContext.request.contextPath}/folder" var="url">
             <c:param name="care_stared" value="false" />
           </c:url>
           <!--최신순 버튼-->
-          <a href="${url}" class="btn btn btn-outline-secondary">
-            <i class="bi bi-clock"></i>
-            최신순
-          </a>
+          <c:if test="${careStared eq true}">
+            <a href="${url}" class="btn btn btn-outline-secondary">
+              <i class="bi bi-clock"></i>
+              최신순
+            </a>
+          </c:if>
+          <c:if test="${careStared eq false}">
+            <a class="btn btn btn-secondary">
+              <i class="bi bi-clock"></i>
+              최신순
+            </a>
+          </c:if>
+
         </div>
       </div>
     </div>

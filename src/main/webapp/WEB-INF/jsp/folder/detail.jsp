@@ -49,7 +49,7 @@
                         <a href="${pageContext.request.contextPath}/profile/${folder.owner}" style="text-decoration: none; color:black;">
                             <p class="card-text detail-card">생성자: ${folder.authorNickname}님
                         </a>
-                        <br><i class="bi bi-hand-thumbs-up-fill"></i>: ${folder.likeCount}회</p>
+                        <br><p class="card-text detail-card"><i class="bi bi-hand-thumbs-up-fill"></i>: ${folder.likeCount}회</p>
                     </c:if>
 
                     <p class="card-text detail-card">${folder.memo}</p>

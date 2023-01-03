@@ -76,7 +76,10 @@ public class MainController {
     }
 
     @GetMapping("/search")
-    public String getSearch() {
+    public String getSearch(@RequestParam(name = "keyword") String keyword,
+                            Model model) {
+        model.addAttribute("keyword", keyword.trim());
+
         return "search/list";
     }
 }

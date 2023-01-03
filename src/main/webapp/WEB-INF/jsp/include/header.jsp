@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <c:set var="URL" value="${pageContext.request.servletPath}"/>
 
 <header class="p-3 text-bg-dark" style="margin-bottom: 40px">
@@ -38,9 +39,9 @@
       </c:choose>"> 내 폴더</a></li>
       </ul>
 
-      <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-        <input type="search" class="form-control form-control-dark text-bg-dark" placeholder="검색" aria-label="Search">
-      </form>
+      <form:form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search" method="get" action="${pageContext.request.contextPath}/search">
+        <input type="search" name="keyword" class="form-control form-control-dark text-bg-dark" placeholder="검색" aria-label="Search">
+      </form:form>
     <sec:authorize access="isAuthenticated()">
         <div class="dropdown text-end">
           <a href="#" class="d-block text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
