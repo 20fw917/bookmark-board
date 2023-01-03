@@ -1,4 +1,4 @@
-package com.project.bookmarkboard.dto;
+package com.project.bookmarkboard.dto.folder;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FolderLikeDTO {
+public class FolderLike {
     private long id;
     private long userId;
     private long folderId;
 
-    public FolderLikeDTO(long userId, long folderId) {
+    public FolderLike(long userId, long folderId) {
         this.userId = userId;
         this.folderId = folderId;
     }

@@ -1,6 +1,6 @@
-package com.project.bookmarkboard.dto.pagination;
+package com.project.bookmarkboard.dto.folder;
 
-import com.project.bookmarkboard.dto.FolderViewDTO;
+import com.project.bookmarkboard.dto.pagination.BasicPagination;
 import lombok.*;
 
 import java.util.List;
@@ -11,13 +11,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FolderViewPagination extends BasicPagination {
-    private List<FolderViewDTO> folderViewDTOList;
+    private List<FolderView> folderViewList;
 
-    public FolderViewPagination(int totalCount, int currentPageNum, int finalPageNum, List<FolderViewDTO> folderViewDTOList) {
+    public FolderViewPagination(int totalCount, int currentPageNum, int finalPageNum, List<FolderView> folderViewList) {
         super.totalCount = totalCount;
         super.currentPageNum = currentPageNum;
         super.finalPageNum = finalPageNum;
-        this.folderViewDTOList = folderViewDTOList;
+        this.folderViewList = folderViewList;
     }
 
     public BasicPagination getPagination() {

@@ -69,6 +69,7 @@
           <jsp:param name="itemCount" value="${item.itemCount}"/>
           <jsp:param name="stared" value="${item.stared}"/>
           <jsp:param name="shared" value="${item.shared}"/>
+          <jsp:param name="likeCount" value="${item.likeCount}"/>
           <jsp:param name="showToolbar" value="true"/>
         </jsp:include>
       </c:forEach>

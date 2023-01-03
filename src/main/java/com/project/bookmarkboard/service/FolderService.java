@@ -1,10 +1,9 @@
 package com.project.bookmarkboard.service;
 
-import com.project.bookmarkboard.dto.BookmarkDTO;
-import com.project.bookmarkboard.dto.FolderDTO;
-import com.project.bookmarkboard.dto.FolderItemDTO;
-import com.project.bookmarkboard.dto.FolderRequestDTO;
-import com.project.bookmarkboard.mapper.BookmarkMapper;
+import com.project.bookmarkboard.dto.bookmark.Bookmark;
+import com.project.bookmarkboard.dto.folder.Folder;
+import com.project.bookmarkboard.dto.folder.FolderItem;
+import com.project.bookmarkboard.dto.folder.FolderRequest;
 import com.project.bookmarkboard.mapper.FolderItemMapper;
 import com.project.bookmarkboard.mapper.FolderMapper;
 import lombok.RequiredArgsConstructor;
@@ -26,110 +25,124 @@ public class FolderService {
     private final FolderItemMapper folderItemMapper;
     private final BookmarkService bookmarkService;
 
-    @Transactional
-    public void insertFolder(FolderRequestDTO folderRequestDTO) throws IOException {
-        if(folderRequestDTO.getFolderThumbnail().getSize() != 0) {
-            final String renamedFileName = attachmentService.saveFile(folderRequestDTO.getFolderThumbnail(), "folder_thumbnail");
-            folderRequestDTO.setThumbnail(renamedFileName);
+    public Folder getOneById(long folderId) {
+        return folderMapper.getOneById(folderId);
+    }
 
-            log.debug("RECEIVED folderRequestDTO: "  + folderRequestDTO);
+    public int getCountByOwnerAndIsShared(long ownerId, boolean isShared) {
+        return folderMapper.getCountByOwnerAndIsShared(ownerId, isShared);
+    }
+
+    @Transactional
+    public boolean updateIsStaredById(long folderId, boolean toModifyStaredStatus) {
+        return folderMapper.updateIsStaredById(folderId, toModifyStaredStatus) == 1;
+    }
+
+    @Transactional
+    public boolean updateIsSharedById(long folderId, boolean toModifySharedStatus) {
+        return folderMapper.updateIsSharedById(folderId, toModifySharedStatus) == 1;
+    }
+
+    @Transactional
+    public void insertFolder(FolderRequest folderRequest) throws IOException {
+        if(folderRequest.getFolderThumbnail().getSize() != 0) {
+            final String renamedFileName = attachmentService.saveFile(folderRequest.getFolderThumbnail(), "folder_thumbnail");
+            folderRequest.setThumbnail(renamedFileName);
+
+            log.debug("RECEIVED folderRequest: "  + folderRequest);
         }
 
-        final FolderDTO folderDTO = folderRequestDTO.getFolderDTO();
-        folderMapper.insertFolder(folderDTO);
+        final Folder folder = folderRequest.getFolderDTO();
+        folderMapper.insertFolder(folder);
 
-        if(folderRequestDTO.getCheckedItem() != null) {
-            insertFolderItemToDB(folderRequestDTO.getCheckedItem(), folderDTO.getId());
+        if(folderRequest.getCheckedItem() != null) {
+            insertFolderItemToDB(folderRequest.getCheckedItem(), folder.getId());
         }
     }
 
     @Transactional
     public void copyFolder(long folderId, long newOwnerId) throws IOException {
-        final FolderDTO oldFolderDTO = folderMapper.getOneById(folderId);
+        final Folder oldFolder = folderMapper.getOneById(folderId);
 
-        final FolderDTO toInsertFolderDTO = FolderDTO.builder()
+        final Folder toInsertFolder = Folder.builder()
                 .owner(newOwnerId)
-                .title(oldFolderDTO.getTitle())
-                .memo(oldFolderDTO.getMemo())
+                .title(oldFolder.getTitle())
+                .memo(oldFolder.getMemo())
                 .build();
-        if(oldFolderDTO.getThumbnail() != null && !oldFolderDTO.getThumbnail().equals("")) {
-            final String newThumbnailImage = attachmentService.copyImage(oldFolderDTO.getThumbnail(), "folder_thumbnail");
-            oldFolderDTO.setThumbnail(newThumbnailImage);
+
+        if(oldFolder.getThumbnail() != null && !oldFolder.getThumbnail().equals("")) {
+            final String newThumbnailImage = attachmentService.copyImage(oldFolder.getThumbnail(), "folder_thumbnail");
+            oldFolder.setThumbnail(newThumbnailImage);
         }
 
         // 새 폴더 info Insert
-        folderMapper.insertFolder(toInsertFolderDTO);
-        log.debug("New Folder Information: " + toInsertFolderDTO);
+        folderMapper.insertFolder(toInsertFolder);
+        log.debug("New Folder Information: " + toInsertFolder);
 
         final List<Long> folderItemBookmarkIdList = folderItemMapper.getAllByParentFolderOrderByIdDesc(folderId).stream()
-                .map(FolderItemDTO::getBookmarkId)
+                .map(FolderItem::getBookmarkId)
                 .collect(Collectors.toList());
 
         if(folderItemBookmarkIdList.size() != 0) {
-            final List<BookmarkDTO> insertedBookmarkDTOList = bookmarkService.copyBookmark(folderItemBookmarkIdList, newOwnerId);
-            final List<FolderItemDTO> folderItemDTOList = insertedBookmarkDTOList.stream()
-                            .map(bookmarkDTO -> FolderItemDTO.builder()
-                                    .parentFolder(toInsertFolderDTO.getId())
+            final List<Bookmark> insertedBookmarkList = bookmarkService.copyBookmark(folderItemBookmarkIdList, newOwnerId);
+            final List<FolderItem> folderItemList = insertedBookmarkList.stream()
+                            .map(bookmarkDTO -> FolderItem.builder()
+                                    .parentFolder(toInsertFolder.getId())
                                     .bookmarkId(bookmarkDTO.getId())
                                     .build())
                     .collect(Collectors.toList());
 
-            folderItemMapper.insertFolderItem(folderItemDTOList);
-            log.debug("insertFolderItem: " + folderItemDTOList);
+            folderItemMapper.insertFolderItem(folderItemList);
+            log.debug("insertFolderItem: " + folderItemList);
         }
     }
 
     @Transactional
-    public boolean deleteFolder(FolderDTO folderDTO) {
-        if(folderDTO.getThumbnail() != null) {
-            attachmentService.deleteImage(folderDTO.getThumbnail());
+    public boolean deleteFolder(Folder folder) {
+        if(folder.getThumbnail() != null) {
+            attachmentService.deleteImage(folder.getThumbnail());
         }
-        folderMapper.deleteById(folderDTO.getId());
+        folderMapper.deleteById(folder.getId());
 
         return true;
     }
 
-    public List<Long> getBookmarkIdListInFolderById(long folderId) {
-        final List<FolderItemDTO> folderItemDTOList = folderItemMapper.getAllByParentFolderOrderByIdDesc(folderId);
-        return folderItemDTOList.stream().map(FolderItemDTO::getBookmarkId).collect(Collectors.toList());
-    }
-
     @Transactional
-    public void updateFolder(FolderRequestDTO folderRequestDTO) throws IOException {
+    public void updateFolder(FolderRequest folderRequest) throws IOException {
         // 1. 섬네일이 기존에서 변경된 경우 (기존 섬네일을 지워야함.)
-        if(folderRequestDTO.getThumbnail() != null && folderRequestDTO.getFolderThumbnail().getSize() != 0) {
-            attachmentService.deleteImage(folderRequestDTO.getThumbnail());
-            folderRequestDTO.setThumbnail(null);
+        if(folderRequest.getThumbnail() != null && folderRequest.getFolderThumbnail().getSize() != 0) {
+            attachmentService.deleteImage(folderRequest.getThumbnail());
+            folderRequest.setThumbnail(null);
         }
 
         // 2. 섬네일 삭제를 요구한 경우
-        if(folderRequestDTO.getThumbnail() != null && folderRequestDTO.isDeleteRequest()) {
-            attachmentService.deleteImage(folderRequestDTO.getThumbnail());
-            folderRequestDTO.setThumbnail(null);
+        if(folderRequest.getThumbnail() != null && folderRequest.isDeleteRequest()) {
+            attachmentService.deleteImage(folderRequest.getThumbnail());
+            folderRequest.setThumbnail(null);
         }
 
-        if(folderRequestDTO.getFolderThumbnail().getSize() != 0) {
-            final String renamedFileName = attachmentService.saveFile(folderRequestDTO.getFolderThumbnail(), "folder_thumbnail");
-            folderRequestDTO.setThumbnail(renamedFileName);
+        if(folderRequest.getFolderThumbnail().getSize() != 0) {
+            final String renamedFileName = attachmentService.saveFile(folderRequest.getFolderThumbnail(), "folder_thumbnail");
+            folderRequest.setThumbnail(renamedFileName);
         }
 
-        folderMapper.updateFolderById(folderRequestDTO.getFolderDTO());
-        folderItemMapper.deleteByParentFolder(folderRequestDTO.getId());
+        folderMapper.updateFolderById(folderRequest.getFolderDTO());
+        folderItemMapper.deleteByParentFolder(folderRequest.getId());
 
-        if(folderRequestDTO.getCheckedItem() != null) {
-            insertFolderItemToDB(folderRequestDTO.getCheckedItem(), folderRequestDTO.getId());
+        if(folderRequest.getCheckedItem() != null) {
+            insertFolderItemToDB(folderRequest.getCheckedItem(), folderRequest.getId());
         }
     }
 
     private void insertFolderItemToDB(String[] toInsertItem, long folderId) {
-        List<FolderItemDTO> toAddFolderItemDTOList = new ArrayList<>();
+        List<FolderItem> toAddFolderItemList = new ArrayList<>();
 
         for (String itemId : toInsertItem) {
-            FolderItemDTO folderItemDTO = new FolderItemDTO(Long.parseLong(itemId), folderId);
-            toAddFolderItemDTOList.add(folderItemDTO);
+            FolderItem folderItem = new FolderItem(Long.parseLong(itemId), folderId);
+            toAddFolderItemList.add(folderItem);
         }
 
-        log.debug("toAddFolderItemDTOList: " + toAddFolderItemDTOList);
-        folderItemMapper.insertFolderItem(toAddFolderItemDTOList);
+        log.debug("toAddFolderItemList: " + toAddFolderItemList);
+        folderItemMapper.insertFolderItem(toAddFolderItemList);
     }
 }

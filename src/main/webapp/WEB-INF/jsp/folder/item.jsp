@@ -17,6 +17,9 @@
     <div class="card-body">
         <h5 class="card-title">${param.title}</h5>
         <p class="card-text">${param.memo}</p>
+        <c:if test="${param.shared eq true}">
+            <p class="card-text"><i class="bi bi-hand-thumbs-up-fill"></i>: ${param.likeCount}회</p>
+        </c:if>
         <p class="card-text text-end">${param.itemCount}개의 북마크가 있습니다.</p>
 
         <div class="text-end">
@@ -74,9 +77,19 @@
                     <button type="button" onclick="copyFolder(${param.id})" class="btn btn-sm btn-secondary">
                         <i class="bi bi-clipboard-plus"></i>
                     </button>
-                    <button type="button" onclick="likeFolder(${param.id})" class="btn btn-sm btn-secondary">
-                        <i class="bi bi-hand-thumbs-up"></i>
-                    </button>
+
+                    <c:if test="${param.isLiked ne null}">
+                    <c:if test="${param.isLiked eq false}">
+                        <button type="button" onclick="likeFolder(${param.id}, true)" class="btn btn-sm btn-secondary">
+                            <i class="bi bi-hand-thumbs-up"></i>
+                        </button>
+                    </c:if>
+                    <c:if test="${param.isLiked eq true}">
+                        <button type="button" onclick="likeFolder(${param.id}, false)" class="btn btn-sm btn-secondary">
+                            <i class="bi bi-hand-thumbs-up-fill"></i>
+                        </button>
+                    </c:if>
+                    </c:if>
                 </c:if>
             </sec:authorize>
             </c:if>

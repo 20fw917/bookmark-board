@@ -1,22 +1,20 @@
-package com.project.bookmarkboard.dto;
+package com.project.bookmarkboard.dto.folder;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FolderItemDTO {
+public class FolderItem {
     private long id;
     private long bookmarkId;
     private long parentFolder;
 
-    public FolderItemDTO(long bookmarkId, long parentFolder) {
+    public FolderItem(long bookmarkId, long parentFolder) {
         this.bookmarkId = bookmarkId;
         this.parentFolder = parentFolder;
     }

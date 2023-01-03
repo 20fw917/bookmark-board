@@ -1,5 +1,4 @@
-package com.project.bookmarkboard.dto;
-
+package com.project.bookmarkboard.dto.folder;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,15 +12,15 @@ import java.time.format.DateTimeFormatter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookmarkDTO {
+public class Folder {
     private long id;
     private long owner;
     private String title;
     private String memo;
-    private String url;
-    private LocalDateTime createdAt;
+    private String thumbnail;
     private boolean isShared;
     private boolean isStared;
+    private LocalDateTime createdAt;
 
     public String getCreatedAtFormatted() {
         return createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));

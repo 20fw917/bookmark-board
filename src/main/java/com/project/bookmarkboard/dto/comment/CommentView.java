@@ -1,4 +1,4 @@
-package com.project.bookmarkboard.dto;
+package com.project.bookmarkboard.dto.comment;
 
 import lombok.*;
 
@@ -7,6 +7,6 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentViewDTO extends CommentDTO {
+public class CommentView extends Comment {
     private String authorNickname;
 }

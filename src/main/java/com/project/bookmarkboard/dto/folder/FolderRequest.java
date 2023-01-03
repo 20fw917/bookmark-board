@@ -1,4 +1,4 @@
-package com.project.bookmarkboard.dto;
+package com.project.bookmarkboard.dto.folder;
 
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -8,13 +8,13 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FolderRequestDTO extends FolderDTO {
+public class FolderRequest extends Folder {
     private MultipartFile folderThumbnail;
     private String[] checkedItem;
     private boolean deleteRequest;
 
-    public FolderDTO getFolderDTO() {
-        return new FolderDTO(super.getId(), super.getOwner(), super.getTitle(), super.getMemo(), super.getThumbnail(),
+    public Folder getFolderDTO() {
+        return new Folder(super.getId(), super.getOwner(), super.getTitle(), super.getMemo(), super.getThumbnail(),
                 super.isShared(), super.isStared(), super.getCreatedAt());
     }
 }

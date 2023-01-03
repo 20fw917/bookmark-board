@@ -23,12 +23,12 @@
         DELETE FROM folder WHERE id = #{id};
     </delete>
 
-    <select id="getOneById" resultType="com.project.bookmarkboard.dto.FolderDTO">
+    <select id="getOneById" resultType="com.project.bookmarkboard.dto.folder.Folder">
         SELECT * FROM folder
         WHERE id = #{id}
     </select>
 
-    <insert id="insertFolder" parameterType="com.project.bookmarkboard.dto.FolderDTO"
+    <insert id="insertFolder" parameterType="com.project.bookmarkboard.dto.folder.Folder"
             useGeneratedKeys="true" keyProperty="id">
         INSERT INTO folder(`owner`, `title`, `memo`, `thumbnail`, `is_shared`, `is_stared`)
         VALUES(#{owner}, #{title}, #{memo}, #{thumbnail}, #{isShared}, #{isStared})
@@ -46,7 +46,7 @@
         WHERE id = #{id}
     </update>
 
-    <update id="updateFolderById" parameterType="com.project.bookmarkboard.dto.FolderDTO">
+    <update id="updateFolderById" parameterType="com.project.bookmarkboard.dto.folder.Folder">
         UPDATE folder
         SET title = #{title}, memo = #{memo}, thumbnail = #{thumbnail}, is_stared = #{isStared}, is_shared = #{isShared}
         WHERE id = #{id}

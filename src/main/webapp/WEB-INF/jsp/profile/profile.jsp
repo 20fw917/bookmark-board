@@ -103,12 +103,15 @@
             <c:forEach items="${folderItem}" var="item">
                 <jsp:include page="/WEB-INF/jsp/folder/item.jsp">
                     <jsp:param name="id" value="${item.id}"/>
+                    <jsp:param name="owner" value="${item.owner}"/>
                     <jsp:param name="thumbnail" value="${item.thumbnail}"/>
                     <jsp:param name="title" value="${item.title}"/>
                     <jsp:param name="memo" value="${item.memo}"/>
                     <jsp:param name="itemCount" value="${item.itemCount}"/>
                     <jsp:param name="stared" value="${item.stared}"/>
                     <jsp:param name="shared" value="${item.shared}"/>
+                    <jsp:param name="isLiked" value="${item.isLiked}"/>
+                    <jsp:param name="likeCount" value="${item.likeCount}"/>
                     <jsp:param name="showToolbar" value="false"/>
                 </jsp:include>
             </c:forEach>

@@ -117,7 +117,7 @@
           <div class="border form-outline overflow-auto" id="addedBookmarkArea" style="height: 300px; padding: 10px">
               <%-- 추가 버튼 누르면 여기로 들어감 --%>
                 <c:if test="${isModify eq true}">
-                <c:forEach items="${alreadyAddedBookmarkDTOList}" var="item">
+                <c:forEach items="${alreadyAddedBookmarkList}" var="item">
                 <div class="card w-100" id="checkedItemCard_${item.id}" style="margin-bottom: 10px">
                 <div class="card-body" style="padding: 5px;"></div>
                   <input name="checkedItem" type="hidden" value="${item.id}">

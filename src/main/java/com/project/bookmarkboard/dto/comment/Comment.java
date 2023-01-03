@@ -1,4 +1,4 @@
-package com.project.bookmarkboard.dto;
+package com.project.bookmarkboard.dto.comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentDTO {
+public class Comment {
     private long id;
     private long authorId;
     private long folderId;
