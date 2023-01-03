@@ -35,7 +35,7 @@
           <c:otherwise>
                text-white
           </c:otherwise>
-      </c:choose>"> 폴더</a></li>
+      </c:choose>"> 내 폴더</a></li>
       </ul>
 
       <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
