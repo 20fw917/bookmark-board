@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -18,9 +18,7 @@
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <div class="container">
     <c:url value="${pageContext.request.contextPath}/search" var="baseUrl">
-        <c:param name="keyword" value="${keyword}" />
-        <c:param name="folder_current_user_only" value="${folderCurrentUserOnly}" />
-        <c:param name="bookmark_current_user_only" value="${bookmarkCurrentUserOnly}" />
+        <c:param name="keyword" value="${keyword}"/>
     </c:url>
     <h2 class="pb-3 bi bi-search"> '${keyword}'에 대한 검색 결과입니다.</h2>
     <div class="container px-4 py-2" id="featured-1">
@@ -30,13 +28,14 @@
             <h2 class="h2 bi bi-bookmark"> 북마크 검색 결과</h2>
             <div class="btn-toolbar mt-3 mb-2 mb-md-3"> <!--mb-md- 메인 멘트 간격조정-->
                 <div class="btn-group me-2"> <!--me 버튼 간격-->
+                    <c:if test="${bookmarkPagination.totalCount ne 0}">
                     <sec:authorize access="isAuthenticated()">
                         <c:if test="${bookmarkCurrentUserOnly eq true}">
                             <c:url value="${baseUrl}" var="url">
-                                <c:param name="folder_page" value="${folderPageNum}" />
-                                <c:param name="folder_current_user_only" value="${folderCurrentUserOnly}" />
-                                <c:param name="bookmark_page" value="${bookmarkPageNum}" />
-                                <c:param name="bookmark_current_user_only" value="false" />
+                                <c:param name="folder_page" value="${folderPageNum}"/>
+                                <c:param name="folder_current_user_only" value="${folderCurrentUserOnly}"/>
+                                <c:param name="bookmark_page" value="1"/>
+                                <c:param name="bookmark_current_user_only" value="false"/>
                             </c:url>
                             <a href="${url}" class="btn btn-secondary">
                                 <i class="bi bi-person"></i>
@@ -45,10 +44,10 @@
                         </c:if>
                         <c:if test="${bookmarkCurrentUserOnly eq false}">
                             <c:url value="${baseUrl}" var="url">
-                                <c:param name="folder_page" value="${folderPageNum}" />
-                                <c:param name="folder_current_user_only" value="${folderCurrentUserOnly}" />
-                                <c:param name="bookmark_page" value="${bookmarkPageNum}" />
-                                <c:param name="bookmark_current_user_only" value="true" />
+                                <c:param name="folder_page" value="${folderPageNum}"/>
+                                <c:param name="folder_current_user_only" value="${folderCurrentUserOnly}"/>
+                                <c:param name="bookmark_page" value="1"/>
+                                <c:param name="bookmark_current_user_only" value="true"/>
                             </c:url>
                             <a href="${url}" class="btn btn-outline-secondary">
                                 <i class="bi bi-person"></i>
@@ -56,10 +55,14 @@
                             </a>
                         </c:if>
                     </sec:authorize>
+                    </c:if>
                 </div>
             </div>
         </div>
 
+        <c:if test="${bookmarkPagination.totalCount eq 0}">
+            <h2 class="h2 text-center">북마크 검색 결과가 없습니다.</h2>
+        </c:if>
         <!--카드-->
         <div class="row g-4 py-4 row-cols-1 row-cols-lg-4">
             <c:forEach items="${bookmarkItems}" var="bookmarkItem">
@@ -81,23 +84,27 @@
                 </div>
             </c:forEach>
         </div>
-            <div class="row">
-                <c:if test="${bookmarkPagination.totalCount ne 0}">
-                    <jsp:include page="/WEB-INF/jsp/bookmark/pagination.jsp">
-                        <jsp:param name="currentPageParam" value="bookmark_page"/>
-                        <jsp:param name="anotherPageName" value="folder_page"/>
-                        <jsp:param name="anotherPageNum" value="${folderPagination.currentPageNum}"/>
-                        <jsp:param name="baseUrl" value="${baseUrl}"/>
+        <div class="row">
+            <c:if test="${bookmarkPagination.totalCount ne 0}">
+                <c:url value="${baseUrl}" var="url">
+                    <c:param name="folder_current_user_only" value="${folderCurrentUserOnly}"/>
+                    <c:param name="bookmark_current_user_only" value="${bookmarkCurrentUserOnly}"/>
+                </c:url>
 
-                        <jsp:param name="previousPageExists" value="${bookmarkPagination.previousPageExists}"/>
-                        <jsp:param name="nextPageExists" value="${bookmarkPagination.nextPageExists}"/>
-                        <jsp:param name="startIndexNum" value="${bookmarkPagination.startIndexNum}"/>
-                        <jsp:param name="endIndexNum" value="${bookmarkPagination.endIndexNum}"/>
-                        <jsp:param name="currentPageNum" value="${bookmarkPagination.currentPageNum}"/>
-                        <jsp:param name="showToolbar" value="true"/>
-                    </jsp:include>
-                </c:if>
-            </div>
+                <jsp:include page="/WEB-INF/jsp/bookmark/pagination.jsp">
+                    <jsp:param name="currentPageParam" value="bookmark_page"/>
+                    <jsp:param name="anotherPageName" value="folder_page"/>
+                    <jsp:param name="anotherPageNum" value="${folderPagination.currentPageNum}"/>
+                    <jsp:param name="baseUrl" value="${url}"/>
+
+                    <jsp:param name="previousPageExists" value="${bookmarkPagination.previousPageExists}"/>
+                    <jsp:param name="nextPageExists" value="${bookmarkPagination.nextPageExists}"/>
+                    <jsp:param name="startIndexNum" value="${bookmarkPagination.startIndexNum}"/>
+                    <jsp:param name="endIndexNum" value="${bookmarkPagination.endIndexNum}"/>
+                    <jsp:param name="currentPageNum" value="${bookmarkPagination.currentPageNum}"/>
+                    <jsp:param name="showToolbar" value="true"/>
+                </jsp:include>
+            </c:if>
         </div>
     </div>
 </div>
@@ -113,10 +120,10 @@
                     <sec:authorize access="isAuthenticated()">
                         <c:if test="${folderCurrentUserOnly eq true}">
                             <c:url value="${baseUrl}" var="url">
-                                <c:param name="folder_page" value="${folderPageNum}" />
-                                <c:param name="folder_current_user_only" value="false" />
-                                <c:param name="bookmark_page" value="${bookmarkPageNum}" />
-                                <c:param name="bookmark_current_user_only" value="${bookmarkCurrentUserOnly}" />
+                                <c:param name="folder_page" value="1"/>
+                                <c:param name="folder_current_user_only" value="false"/>
+                                <c:param name="bookmark_page" value="${bookmarkPageNum}"/>
+                                <c:param name="bookmark_current_user_only" value="${bookmarkCurrentUserOnly}"/>
                             </c:url>
                             <a href="${url}" class="btn btn-secondary">
                                 <i class="bi bi-person"></i>
@@ -125,10 +132,10 @@
                         </c:if>
                         <c:if test="${folderCurrentUserOnly eq false}">
                             <c:url value="${baseUrl}" var="url">
-                                <c:param name="folder_page" value="${folderPageNum}" />
-                                <c:param name="folder_current_user_only" value="true" />
-                                <c:param name="bookmark_page" value="${bookmarkPageNum}" />
-                                <c:param name="bookmark_current_user_only" value="${bookmarkCurrentUserOnly}" />
+                                <c:param name="folder_page" value="1"/>
+                                <c:param name="folder_current_user_only" value="true"/>
+                                <c:param name="bookmark_page" value="${bookmarkPageNum}"/>
+                                <c:param name="bookmark_current_user_only" value="${bookmarkCurrentUserOnly}"/>
                             </c:url>
                             <a href="${url}" class="btn btn-outline-secondary">
                                 <i class="bi bi-person"></i>

@@ -11,5 +11,5 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProfileImageUpdateRequest {
-    MultipartFile image;
+    private MultipartFile image;
 }

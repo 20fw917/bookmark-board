@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -28,11 +28,13 @@
         <div class="col-5">
             <div class="card p-4" style="width: 30rem; height: 46rem; float: right; margin-right: 1rem;">
                 <c:if test="${folder.thumbnail ne null && folder.thumbnail ne ''}">
-                    <img src="${pageContext.request.contextPath}/attachment/${folder.thumbnail}" class="card-img-top detail-pic" alt="">
+                    <img src="${pageContext.request.contextPath}/attachment/${folder.thumbnail}"
+                         class="card-img-top detail-pic" alt="">
                 </c:if>
                 <c:if test="${folder.thumbnail eq null || folder.thumbnail eq ''}">
                     <div class="card-img-top detail-pic">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="238" height="238" fill="currentColor" class="bi bi-archive" viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="238" height="238" fill="currentColor"
+                             class="bi bi-archive" viewBox="0 0 16 16">
                             <path d="M0 2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1v7.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 12.5V5a1 1 0 0 1-1-1V2zm2 3v7.5A1.5 1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 0 1.5-1.5V5H2zm13-3H1v2h14V2zM5 7.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"></path>
                         </svg>
                     </div>
@@ -46,10 +48,13 @@
                             <i class="bi bi-person" style="font-size: 20px;"></i>
                         </c:if></h5>
                     <c:if test="${folder.shared}">
-                        <a href="${pageContext.request.contextPath}/profile/${folder.owner}" style="text-decoration: none; color:black;">
+                        <a href="${pageContext.request.contextPath}/profile/${folder.owner}"
+                           style="text-decoration: none; color:black;">
                             <p class="card-text detail-card">생성자: ${folder.authorNickname}님
                         </a>
-                        <br><p class="card-text detail-card"><i class="bi bi-hand-thumbs-up-fill"></i>: ${folder.likeCount}회</p>
+                        <br>
+                        <p class="card-text detail-card"><i class="bi bi-hand-thumbs-up-fill"></i>: ${folder.likeCount}회
+                        </p>
                     </c:if>
 
                     <p class="card-text detail-card">${folder.memo}</p>
@@ -62,8 +67,10 @@
                             <c:if test="${principal.userInternalId eq folder.owner}">
                                 <!--즐겨찾기 Button-->
                                 <c:if test="${folder.stared eq true}">
-                                    <button type="button" onclick="updateStared(${folder.id}, false)" class="btn btn-sm">
-                                        <i class="bi-star-fill" style="font-size:20px; color: #FDD017; cursor: pointer;"></i>
+                                    <button type="button" onclick="updateStared(${folder.id}, false)"
+                                            class="btn btn-sm">
+                                        <i class="bi-star-fill"
+                                           style="font-size:20px; color: #FDD017; cursor: pointer;"></i>
                                     </button>
                                 </c:if>
                                 <c:if test="${folder.stared eq false}">
@@ -73,25 +80,27 @@
                                 </c:if>
 
                                 <c:if test="${folder.shared eq true}">
-                                    <button type="button" class="btn btn-sm card-title detail-card" onclick="updateShared(${folder.id}, false)">
+                                    <button type="button" class="btn btn-sm card-title detail-card"
+                                            onclick="updateShared(${folder.id}, false)">
                                         <i class="bi bi-people-fill" style="font-size: 20px;"></i>
                                     </button>
                                 </c:if>
                                 <c:if test="${folder.shared eq false}">
-                                    <button type="button" class="btn btn-sm card-title detail-card" onclick="updateShared(${folder.id}, true)">
+                                    <button type="button" class="btn btn-sm card-title detail-card"
+                                            onclick="updateShared(${folder.id}, true)">
                                         <i class="bi bi-person" style="font-size: 20px;"></i>
                                     </button>
                                 </c:if>
 
                                 <c:url value="${pageContext.request.contextPath}/folder/update" var="url">
-                                    <c:param name="id" value="${folder.id}" />
+                                    <c:param name="id" value="${folder.id}"/>
                                 </c:url>
                                 <a href="${url}" class="btn btn-secondary">
                                     <i class="bi bi-pencil"></i>
                                     편집
                                 </a>
                                 <c:url value="${pageContext.request.contextPath}/folder/update" var="url">
-                                    <c:param name="id" value="${folder.id}" />
+                                    <c:param name="id" value="${folder.id}"/>
                                 </c:url>
                                 <button onclick="deleteFolderAtDetail(${folder.id})" class="btn btn-danger text-end">
                                     <i class="bi bi-trash"></i>
@@ -100,16 +109,19 @@
                                 <br>
                             </c:if>
                             <c:if test="${principal.userInternalId ne folder.owner}">
-                                <button type="button" onclick="copyFolder(${folder.id})" class="btn btn-sm btn-secondary">
+                                <button type="button" onclick="copyFolder(${folder.id})"
+                                        class="btn btn-sm btn-secondary">
                                     <i class="bi bi-clipboard-plus"></i>
                                 </button>
                                 <c:if test="${folder.isLiked eq false}">
-                                    <button type="button" onclick="likeFolder(${folder.id}, true)" class="btn btn-sm btn-secondary">
+                                    <button type="button" onclick="likeFolder(${folder.id}, true)"
+                                            class="btn btn-sm btn-secondary">
                                         <i class="bi bi-hand-thumbs-up"></i>
                                     </button>
                                 </c:if>
                                 <c:if test="${folder.isLiked eq true}">
-                                    <button type="button" onclick="likeFolder(${folder.id}, false)" class="btn btn-sm btn-secondary">
+                                    <button type="button" onclick="likeFolder(${folder.id}, false)"
+                                            class="btn btn-sm btn-secondary">
                                         <i class="bi bi-hand-thumbs-up-fill"></i>
                                     </button>
                                 </c:if>
@@ -128,7 +140,8 @@
                 <sec:authorize access="isAuthenticated()">
                     <sec:authentication property="principal" var="principal"/>
                     <c:if test="${principal.userInternalId eq folder.owner}">
-                        <br><p class="text-md-center">편집 버튼을 눌러서 북마크를 등록하세요!</p>
+                        <br>
+                        <p class="text-md-center">편집 버튼을 눌러서 북마크를 등록하세요!</p>
                     </c:if>
                 </sec:authorize>
             </c:if>

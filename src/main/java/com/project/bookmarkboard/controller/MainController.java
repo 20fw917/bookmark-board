@@ -105,9 +105,9 @@ public class MainController {
 
         BookmarkViewPagination bookmarkViewPagination;
         if(customUserDetails != null) {
-            bookmarkViewPagination = bookmarkViewService.getSearchResult(keyword, customUserDetails.getUserInternalId(), folderCurrentUserOnly, folderPageNum);
+            bookmarkViewPagination = bookmarkViewService.getSearchResult(keyword, customUserDetails.getUserInternalId(), bookmarkCurrentUserOnly, bookmarkPageNum);
         } else {
-            bookmarkViewPagination = bookmarkViewService.getSearchResult(keyword, null, folderCurrentUserOnly, folderPageNum);
+            bookmarkViewPagination = bookmarkViewService.getSearchResult(keyword, null, bookmarkCurrentUserOnly, bookmarkPageNum);
         }
         model.addAttribute("bookmarkPagination", bookmarkViewPagination.getPagination());
         model.addAttribute("bookmarkItems", bookmarkViewPagination.getBookmarkViewList());

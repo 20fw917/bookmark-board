@@ -51,7 +51,7 @@ public class ProfileController {
         log.info("User Update Request Received");
         log.debug("Received User: " + user);
 
-        if(customUserDetails.getUserInternalId() != user.getInternalId()) {
+        if (customUserDetails.getUserInternalId() != user.getInternalId()) {
             log.warn("This Request isn't valid.");
             return "redirect:/";
         }
@@ -102,7 +102,7 @@ public class ProfileController {
                              @PathVariable("id") long id, Model model,
                              @RequestParam(value = "folder_page", required = false, defaultValue = "1") int folderPageNum,
                              @RequestParam(value = "bookmark_page", required = false, defaultValue = "1") int bookmarkPageNum) {
-        if(customUserDetails != null && customUserDetails.getUserInternalId() == id) {
+        if (customUserDetails != null && customUserDetails.getUserInternalId() == id) {
             // 본인 계정의 프로필을 요청할 경우 마이페이지로 리다이렉트
             return "redirect:/profile/mypage";
         }
@@ -121,7 +121,7 @@ public class ProfileController {
 
         final FolderViewPagination folderViewPagination = folderViewService.getAllByOwnerAndIsSharedOrderByIdDescLimitByFromAndTo(id, folderPageNum, true);
         model.addAttribute("folderPagination", folderViewPagination.getPagination());
-        if(customUserDetails != null) {
+        if (customUserDetails != null) {
             final List<FolderView> folderViewList = folderViewService.getLikeStatus(folderViewPagination.getFolderViewList(), customUserDetails.getUserInternalId());
             model.addAttribute("folderItem", folderViewList);
         } else {
@@ -133,7 +133,7 @@ public class ProfileController {
 
         final BookmarkViewPagination bookmarkViewPagination = bookmarkViewService.getAllByOwnerAndIsSharedOrderByIdDescLimitByFromAndTo(id, bookmarkPageNum, sharedBookmarkCount, true);
         model.addAttribute("bookmarkPagination", bookmarkViewPagination.getPagination());
-        if(customUserDetails != null) {
+        if (customUserDetails != null) {
             final List<BookmarkView> bookmarkViewList = bookmarkViewService.getLikeStatus(bookmarkViewPagination.getBookmarkViewList(), customUserDetails.getUserInternalId());
             model.addAttribute("bookmarkItem", bookmarkViewList);
         } else {

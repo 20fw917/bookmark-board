@@ -140,7 +140,7 @@
                 <jsp:param name="baseUrl" value="${baseUrl}"/>
                 <jsp:param name="pageName" value="folder_page"/>
                 <jsp:param name="anotherPageName" value="bookmark_page"/>
-                <jsp:param name="anotherPageNum" value="${bookmarkViewPagination.currentPageNum}"/>
+                <jsp:param name="anotherPageNum" value="${bookmarkPagination.currentPageNum}"/>
             </jsp:include>
             </c:if>
         </div>
@@ -161,7 +161,7 @@
             <sec:authorize access="isAnonymous()">
                 <h2 class="h2">공개된 북마크들</h2>
             </sec:authorize>
-            <c:if test="${bookmarkViewPagination.totalCount eq 0}">
+            <c:if test="${bookmarkPagination.totalCount eq 0}">
                 <sec:authorize access="isAuthenticated()">
                     <sec:authentication property="principal" var="principal"/>
                     <c:if test="${principal.userInternalId eq user.internalId}">
@@ -197,18 +197,18 @@
             </c:forEach>
         </div>
         <div class="row">
-            <c:if test="${bookmarkViewPagination.totalCount ne 0}">
+            <c:if test="${bookmarkPagination.totalCount ne 0}">
             <jsp:include page="/WEB-INF/jsp/bookmark/pagination.jsp">
                 <jsp:param name="currentPageParam" value="bookmark_page"/>
                 <jsp:param name="anotherPageName" value="folder_page"/>
                 <jsp:param name="anotherPageNum" value="${folderPagination.currentPageNum}"/>
                 <jsp:param name="baseUrl" value="${baseUrl}"/>
 
-                <jsp:param name="previousPageExists" value="${bookmarkViewPagination.previousPageExists}"/>
-                <jsp:param name="nextPageExists" value="${bookmarkViewPagination.nextPageExists}"/>
-                <jsp:param name="startIndexNum" value="${bookmarkViewPagination.startIndexNum}"/>
-                <jsp:param name="endIndexNum" value="${bookmarkViewPagination.endIndexNum}"/>
-                <jsp:param name="currentPageNum" value="${bookmarkViewPagination.currentPageNum}"/>
+                <jsp:param name="previousPageExists" value="${bookmarkPagination.previousPageExists}"/>
+                <jsp:param name="nextPageExists" value="${bookmarkPagination.nextPageExists}"/>
+                <jsp:param name="startIndexNum" value="${bookmarkPagination.startIndexNum}"/>
+                <jsp:param name="endIndexNum" value="${bookmarkPagination.endIndexNum}"/>
+                <jsp:param name="currentPageNum" value="${bookmarkPagination.currentPageNum}"/>
                 <jsp:param name="showToolbar" value="true"/>
             </jsp:include>
             </c:if>
