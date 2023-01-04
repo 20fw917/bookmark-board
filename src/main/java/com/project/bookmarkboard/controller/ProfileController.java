@@ -5,7 +5,7 @@ import com.project.bookmarkboard.dto.folder.FolderView;
 import com.project.bookmarkboard.dto.user.CustomUserDetails;
 import com.project.bookmarkboard.dto.user.ProfileImageUpdateRequest;
 import com.project.bookmarkboard.dto.user.User;
-import com.project.bookmarkboard.dto.bookmark.BookmarkPagination;
+import com.project.bookmarkboard.dto.bookmark.BookmarkViewPagination;
 import com.project.bookmarkboard.dto.folder.FolderViewPagination;
 import com.project.bookmarkboard.dto.basic.BasicResponse;
 import com.project.bookmarkboard.dto.response.CommonResponse;
@@ -51,7 +51,7 @@ public class ProfileController {
         log.info("User Update Request Received");
         log.debug("Received User: " + user);
 
-        if(customUserDetails.getUserInternalId() != user.getInternalId()) {
+        if (customUserDetails.getUserInternalId() != user.getInternalId()) {
             log.warn("This Request isn't valid.");
             return "redirect:/";
         }
@@ -90,9 +90,9 @@ public class ProfileController {
         model.addAttribute("notSharedBookmarkCount", bookmarkService.getCountByOwnerAndIsShared(customUserDetails.getUserInternalId(), false));
         model.addAttribute("sharedBookmarkCount", bookmarkService.getCountByOwnerAndIsShared(customUserDetails.getUserInternalId(), true));
 
-        final BookmarkPagination bookmarkPagination = bookmarkViewService.getAllByOwnerOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), bookmarkPageNum);
-        model.addAttribute("bookmarkPagination", bookmarkPagination.getPagination());
-        model.addAttribute("bookmarkItem", bookmarkPagination.getBookmarkViewList());
+        final BookmarkViewPagination bookmarkViewPagination = bookmarkViewService.getAllByOwnerOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), bookmarkPageNum);
+        model.addAttribute("bookmarkPagination", bookmarkViewPagination.getPagination());
+        model.addAttribute("bookmarkItem", bookmarkViewPagination.getBookmarkViewList());
 
         return "profile/profile";
     }
@@ -102,7 +102,7 @@ public class ProfileController {
                              @PathVariable("id") long id, Model model,
                              @RequestParam(value = "folder_page", required = false, defaultValue = "1") int folderPageNum,
                              @RequestParam(value = "bookmark_page", required = false, defaultValue = "1") int bookmarkPageNum) {
-        if(customUserDetails != null && customUserDetails.getUserInternalId() == id) {
+        if (customUserDetails != null && customUserDetails.getUserInternalId() == id) {
             // 본인 계정의 프로필을 요청할 경우 마이페이지로 리다이렉트
             return "redirect:/profile/mypage";
         }
@@ -121,7 +121,7 @@ public class ProfileController {
 
         final FolderViewPagination folderViewPagination = folderViewService.getAllByOwnerAndIsSharedOrderByIdDescLimitByFromAndTo(id, folderPageNum, true);
         model.addAttribute("folderPagination", folderViewPagination.getPagination());
-        if(customUserDetails != null) {
+        if (customUserDetails != null) {
             final List<FolderView> folderViewList = folderViewService.getLikeStatus(folderViewPagination.getFolderViewList(), customUserDetails.getUserInternalId());
             model.addAttribute("folderItem", folderViewList);
         } else {
@@ -131,15 +131,15 @@ public class ProfileController {
         final int sharedBookmarkCount = bookmarkService.getCountByOwnerAndIsShared(id, true);
         model.addAttribute("sharedBookmarkCount", sharedBookmarkCount);
 
-        final BookmarkPagination bookmarkPagination = bookmarkViewService.getAllByOwnerAndIsSharedOrderByIdDescLimitByFromAndTo(id, bookmarkPageNum, sharedBookmarkCount, true);
-        model.addAttribute("bookmarkPagination", bookmarkPagination.getPagination());
-        if(customUserDetails != null) {
-            final List<BookmarkView> bookmarkViewList = bookmarkViewService.getLikeStatus(bookmarkPagination.getBookmarkViewList(), customUserDetails.getUserInternalId());
+        final BookmarkViewPagination bookmarkViewPagination = bookmarkViewService.getAllByOwnerAndIsSharedOrderByIdDescLimitByFromAndTo(id, bookmarkPageNum, sharedBookmarkCount, true);
+        model.addAttribute("bookmarkPagination", bookmarkViewPagination.getPagination());
+        if (customUserDetails != null) {
+            final List<BookmarkView> bookmarkViewList = bookmarkViewService.getLikeStatus(bookmarkViewPagination.getBookmarkViewList(), customUserDetails.getUserInternalId());
             model.addAttribute("bookmarkItem", bookmarkViewList);
         } else {
-            model.addAttribute("bookmarkItem", bookmarkPagination.getBookmarkViewList());
+            model.addAttribute("bookmarkItem", bookmarkViewPagination.getBookmarkViewList());
         }
-        model.addAttribute("bookmarkItem", bookmarkPagination.getBookmarkViewList());
+        model.addAttribute("bookmarkItem", bookmarkViewPagination.getBookmarkViewList());
 
         return "profile/profile";
     }

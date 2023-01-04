@@ -19,4 +19,14 @@ public interface BookmarkViewMapper {
     List<BookmarkView> getAllByIdListOrderByIsStaredDescAndIdDescLimitByFromAndTo(@Param("idList") List<Long> idList,
                                                                               @Param("from") int from, @Param("itemPerPage") int itemPerPage);
 
+    List<BookmarkView> getAllByIsSharedAndKeywordOrderByIdDescLimitByFromAndTo(@Param("isShared") boolean isShared, @Param("keyword") String keyword,
+                                                                             @Param("from") int from, @Param("itemPerPage") int itemPerPage);
+
+    List<BookmarkView> getAllByOwnerAndKeywordOrderByIdDescLimitByFromAndTo(@Param("owner") long owner, @Param("keyword") String keyword,
+                                                                          @Param("from") int from, @Param("itemPerPage") int itemPerPage);
+
+    List<BookmarkView> getAllByNotOwnerAndIsSharedAndKeywordOrderByIdDesc(@Param("owner") long owner, @Param("keyword") String keyword,
+                                                                        @Param("isShared") boolean isShared,
+                                                                        @Param("from") int from, @Param("itemPerPage") int itemPerPage);
+
 }

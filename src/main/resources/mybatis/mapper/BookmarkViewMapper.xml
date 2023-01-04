@@ -32,4 +32,25 @@
         </foreach>
         LIMIT #{from}, #{itemPerPage}
     </select>
+
+    <select id="getAllByOwnerAndKeywordOrderByIdDescLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.bookmark.BookmarkView">
+        SELECT * FROM bookmark_view
+        WHERE owner = #{owner} AND (title LIKE CONCAT('%',#{keyword},'%') OR url LIKE CONCAT('%',#{keyword},'%') OR memo LIKE CONCAT('%',#{keyword},'%'))
+        ORDER BY id DESC
+        LIMIT #{from}, #{itemPerPage}
+    </select>
+
+    <select id="getAllByNotOwnerAndIsSharedAndKeywordOrderByIdDesc" resultType="com.project.bookmarkboard.dto.bookmark.BookmarkView">
+        SELECT * FROM bookmark_view
+        WHERE owner != #{owner} AND is_shared = #{isShared} AND (title LIKE CONCAT('%',#{keyword},'%') OR url LIKE CONCAT('%',#{keyword},'%') OR memo LIKE CONCAT('%',#{keyword},'%'))
+        ORDER BY id DESC
+        LIMIT #{from}, #{itemPerPage}
+    </select>
+
+    <select id="getAllByIsSharedAndKeywordOrderByIdDescLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.bookmark.BookmarkView">
+        SELECT * FROM bookmark_view
+        WHERE is_shared = #{isShared} AND (title LIKE CONCAT('%',#{keyword},'%') OR url LIKE CONCAT('%',#{keyword},'%') OR memo LIKE CONCAT('%',#{keyword},'%'))
+        ORDER BY id DESC
+        LIMIT #{from}, #{itemPerPage}
+    </select>
 </mapper>

@@ -36,15 +36,31 @@ public class FolderViewService {
         return folderView;
     }
 
-//    public List<FolderView> getSearchResult(String keyword, Long currentUserId, boolean currentUserOnly) {
-//        /*
-//            구현 전략
-//            1. 자신의 폴더 중 키워드에 일치하는 것(공유 여부 무관)을 구해옴
-//            2. 자신의 것이 아닌 것 + 공유된 것 중 키워드에 일치하는 폴더를 가져옴
-//            3. 1+2
-//            * 만일, 로그인 중이 아닐 시 2번만
-//         */
-//    }
+    public FolderViewPagination getSearchResult(String keyword, Long currentUserId, boolean currentUserOnly, int pageNum) {
+        final int startItemNum = (pageNum - 1) * itemPerPage;
+
+        // 비로그인 시
+        if(currentUserId == null) {
+            final int itemsCount = folderMapper.getCountByIsSharedAndKeyword(true, keyword);
+            final int finalPageNum = ((itemsCount - 1) / itemPerPage) + 1;
+
+            final List<FolderView> folderViewList = folderViewMapper.getAllByIsSharedAndKeywordOrderByIdDescLimitByFromAndTo(true, keyword, startItemNum, itemPerPage);
+            return new FolderViewPagination(itemsCount, pageNum, finalPageNum, folderViewList);
+        }
+
+        // 로그인 시
+        int itemsCount = folderMapper.getCountByOwnerAndKeyword(currentUserId, keyword);
+        List<FolderView> folderViewList = folderViewMapper.getAllByOwnerAndKeywordOrderByIdDescLimitByFromAndTo(currentUserId, keyword, startItemNum, itemPerPage);
+
+        // 현재 유저 필터가 적용되어 있지 않은 경우
+        if(!currentUserOnly) {
+            itemsCount += folderMapper.getCountByNotOwnerAndIsSharedAndKeyword(currentUserId, true, keyword);
+            folderViewList.addAll(folderViewMapper.getAllByNotOwnerAndIsSharedAndKeywordOrderByIdDesc(currentUserId, keyword, true, startItemNum, itemPerPage));
+        }
+
+        final int finalPageNum = ((itemsCount - 1) / itemPerPage) + 1;
+        return new FolderViewPagination(itemsCount, pageNum, finalPageNum, folderViewList);
+    }
 
     public FolderViewPagination getAllByOwnerOrderByIsStaredAndIdDescLimitByFromAndTo(long owner, int pageNum, boolean careStared) {
         final int itemsCount = folderMapper.getCountByOwner(owner);

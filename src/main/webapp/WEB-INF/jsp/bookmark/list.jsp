@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
@@ -24,7 +24,8 @@
     <br>
 </div>
 <div class="container border-bottom">
-    <p class="text-justify">총 ${staredBookmarkPagination.totalCount + notStaredBookmarkPagination.totalCount} 개의 저장된 북마크가 있습니다.</p>
+    <p class="text-justify">총 ${staredBookmarkPagination.totalCount + notStaredBookmarkPagination.totalCount} 개의 저장된
+        북마크가 있습니다.</p>
 </div>
 
 <%-- 즐겨찾기한 북마크 Area --%>
@@ -32,40 +33,44 @@
     <c:if test="${staredBookmarkPagination.totalCount ne 0}">
     <h3 class="bi bi-bookmark-star"> 즐겨찾는 북마크</h3>
     <br>
-        <div class="row">
-            <c:forEach items="${staredBookmarkItems}" var="item">
-                <div class="w-50">
+    <div class="row">
+        <c:forEach items="${staredBookmarkItems}" var="item">
+            <div class="w-50">
                 <jsp:include page="/WEB-INF/jsp/bookmark/item.jsp">
                     <jsp:param name="id" value="${item.id}"/>
+                    <jsp:param name="owner" value="${item.owner}"/>
                     <jsp:param name="title" value="${item.title}"/>
                     <jsp:param name="memo" value="${item.memo}"/>
                     <jsp:param name="url" value="${item.url}"/>
                     <jsp:param name="shared" value="${item.shared}"/>
                     <jsp:param name="stared" value="${item.stared}"/>
                     <jsp:param name="createdAtFormatted" value="${item.createdAtFormatted}"/>
+                    <jsp:param name="likeCount" value="${item.likeCount}"/>
+                    <jsp:param name="isLiked" value="${item.isLiked}"/>
+                    <jsp:param name="authorNickname" value="${item.authorNickname}"/>
                     <jsp:param name="showToolbar" value="true"/>
                     <jsp:param name="baseUrl" value="${pageContext.request.contextPath}/bookmark"/>
                 </jsp:include>
-                </div>
-            </c:forEach>
-        </div>
+            </div>
+        </c:forEach>
     </div>
+</div>
 <br>
-    <div class="container">
-        <jsp:include page="/WEB-INF/jsp/bookmark/pagination.jsp">
-            <jsp:param name="currentPageParam" value="stared_page"/>
-            <jsp:param name="anotherPageName" value="not_stared_page"/>
-            <jsp:param name="anotherPageNum" value="${notStaredBookmarkPagination.currentPageNum}"/>
+<div class="container">
+    <jsp:include page="/WEB-INF/jsp/bookmark/pagination.jsp">
+        <jsp:param name="currentPageParam" value="stared_page"/>
+        <jsp:param name="anotherPageName" value="not_stared_page"/>
+        <jsp:param name="anotherPageNum" value="${notStaredBookmarkPagination.currentPageNum}"/>
 
-            <jsp:param name="previousPageExists" value="${staredBookmarkPagination.previousPageExists}"/>
-            <jsp:param name="nextPageExists" value="${staredBookmarkPagination.nextPageExists}"/>
-            <jsp:param name="startIndexNum" value="${staredBookmarkPagination.startIndexNum}"/>
-            <jsp:param name="endIndexNum" value="${staredBookmarkPagination.endIndexNum}"/>
-            <jsp:param name="currentPageNum" value="${staredBookmarkPagination.currentPageNum}"/>
-        </jsp:include>
-    </div>
+        <jsp:param name="previousPageExists" value="${staredBookmarkPagination.previousPageExists}"/>
+        <jsp:param name="nextPageExists" value="${staredBookmarkPagination.nextPageExists}"/>
+        <jsp:param name="startIndexNum" value="${staredBookmarkPagination.startIndexNum}"/>
+        <jsp:param name="endIndexNum" value="${staredBookmarkPagination.endIndexNum}"/>
+        <jsp:param name="currentPageNum" value="${staredBookmarkPagination.currentPageNum}"/>
+    </jsp:include>
+</div>
 <br>
-    </c:if>
+</c:if>
 
 
 <%-- 일반 북마크 Area --%>
@@ -76,39 +81,44 @@
     </c:if>
 
     <c:if test="${notStaredBookmarkPagination.totalCount ne 0}">
-    <h3 class="bi bi-bookmark"> 일반 북마크</h3><br>
-    <div class="row">
-        <c:forEach items="${notStaredBookmarkItems}" var="item">
-            <div class="w-50">
-            <jsp:include page="/WEB-INF/jsp/bookmark/item.jsp">
-                <jsp:param name="id" value="${item.id}"/>
-                <jsp:param name="title" value="${item.title}"/>
-                <jsp:param name="memo" value="${item.memo}"/>
-                <jsp:param name="url" value="${item.url}"/>
-                <jsp:param name="shared" value="${item.shared}"/>
-                <jsp:param name="stared" value="${item.stared}"/>
-                <jsp:param name="createdAtFormatted" value="${item.createdAtFormatted}"/>
+        <h3 class="bi bi-bookmark"> 일반 북마크</h3><br>
+        <div class="row">
+            <c:forEach items="${notStaredBookmarkItems}" var="item">
+                <div class="w-50">
+                    <jsp:include page="/WEB-INF/jsp/bookmark/item.jsp">
+                        <jsp:param name="id" value="${item.id}"/>
+                        <jsp:param name="owner" value="${item.owner}"/>
+                        <jsp:param name="title" value="${item.title}"/>
+                        <jsp:param name="memo" value="${item.memo}"/>
+                        <jsp:param name="url" value="${item.url}"/>
+                        <jsp:param name="shared" value="${item.shared}"/>
+                        <jsp:param name="stared" value="${item.stared}"/>
+                        <jsp:param name="createdAtFormatted" value="${item.createdAtFormatted}"/>
+                        <jsp:param name="likeCount" value="${item.likeCount}"/>
+                        <jsp:param name="isLiked" value="${item.isLiked}"/>
+                        <jsp:param name="authorNickname" value="${item.authorNickname}"/>
+                        <jsp:param name="createdAtFormatted" value="${item.createdAtFormatted}"/>
+                        <jsp:param name="showToolbar" value="true"/>
+                    </jsp:include>
+                </div>
+            </c:forEach>
+        </div>
+
+        <br>
+        <div class="container">
+            <jsp:include page="/WEB-INF/jsp/bookmark/pagination.jsp">
+                <jsp:param name="currentPageParam" value="not_stared_page"/>
+                <jsp:param name="anotherPageName" value="stared_page"/>
+                <jsp:param name="anotherPageNum" value="${staredBookmarkPagination.currentPageNum}"/>
+
+                <jsp:param name="previousPageExists" value="${notStaredBookmarkPagination.previousPageExists}"/>
+                <jsp:param name="nextPageExists" value="${notStaredBookmarkPagination.nextPageExists}"/>
+                <jsp:param name="startIndexNum" value="${notStaredBookmarkPagination.startIndexNum}"/>
+                <jsp:param name="endIndexNum" value="${notStaredBookmarkPagination.endIndexNum}"/>
+                <jsp:param name="currentPageNum" value="${notStaredBookmarkPagination.currentPageNum}"/>
                 <jsp:param name="showToolbar" value="true"/>
             </jsp:include>
         </div>
-        </c:forEach>
-    </div>
-
-    <br>
-    <div class="container">
-        <jsp:include page="/WEB-INF/jsp/bookmark/pagination.jsp">
-            <jsp:param name="currentPageParam" value="not_stared_page"/>
-            <jsp:param name="anotherPageName" value="stared_page"/>
-            <jsp:param name="anotherPageNum" value="${staredBookmarkPagination.currentPageNum}"/>
-
-            <jsp:param name="previousPageExists" value="${notStaredBookmarkPagination.previousPageExists}"/>
-            <jsp:param name="nextPageExists" value="${notStaredBookmarkPagination.nextPageExists}"/>
-            <jsp:param name="startIndexNum" value="${notStaredBookmarkPagination.startIndexNum}"/>
-            <jsp:param name="endIndexNum" value="${notStaredBookmarkPagination.endIndexNum}"/>
-            <jsp:param name="currentPageNum" value="${notStaredBookmarkPagination.currentPageNum}"/>
-            <jsp:param name="showToolbar" value="true"/>
-        </jsp:include>
-    </div>
     </c:if>
 </div>
 <br>

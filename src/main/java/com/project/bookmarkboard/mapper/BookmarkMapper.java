@@ -18,6 +18,9 @@ public interface BookmarkMapper {
     int getCountByOwnerAndIsStared(@Param("owner") long owner, @Param("isStared") boolean isStared);
     int getCountByOwner(@Param("owner") long owner);
     int getCountByOwnerAndIsShared(@Param("owner") long owner, @Param("isShared") boolean isShared);
+    int getCountByIsSharedAndKeyword(@Param("isShared") boolean isShared, @Param("keyword") String keyword);
+    int getCountByOwnerAndKeyword(@Param("owner") long owner, @Param("keyword") String keyword);
+    int getCountByNotOwnerAndIsSharedAndKeyword(@Param("owner") long owner, @Param("isShared") boolean isShared, @Param("keyword") String keyword);
     int deleteBookmarkById(@Param("id") long id);
     int updateIsStaredById(@Param("id") long id, @Param("isStared") boolean isStared);
     int updateIsSharedById(@Param("id") long id, @Param("isShared") boolean isShared);

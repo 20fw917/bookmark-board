@@ -47,21 +47,24 @@
         LIMIT #{from}, #{itemPerPage}
     </select>
 
-    <select id="getAllByOwnerAndKeywordOrderByIdDesc" resultType="com.project.bookmarkboard.dto.folder.FolderView">
+    <select id="getAllByOwnerAndKeywordOrderByIdDescLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.folder.FolderView">
         SELECT * FROM folder_view
         WHERE owner = #{owner} AND (title LIKE CONCAT('%',#{keyword},'%') OR memo LIKE CONCAT('%',#{keyword},'%'))
         ORDER BY id DESC
+        LIMIT #{from}, #{itemPerPage}
     </select>
 
     <select id="getAllByNotOwnerAndIsSharedAndKeywordOrderByIdDesc" resultType="com.project.bookmarkboard.dto.folder.FolderView">
         SELECT * FROM folder_view
-        WHERE owner != #{owner} AND is_shared = #{isShared} OR (title LIKE CONCAT('%',#{keyword},'%') OR memo LIKE CONCAT('%',#{keyword},'%'))
+        WHERE owner != #{owner} AND is_shared = #{isShared} AND (title LIKE CONCAT('%',#{keyword},'%') OR memo LIKE CONCAT('%',#{keyword},'%'))
         ORDER BY id DESC
+        LIMIT #{from}, #{itemPerPage}
     </select>
 
-    <select id="getAllByIsSharedAndKeywordOrderByIdDesc" resultType="com.project.bookmarkboard.dto.folder.FolderView">
+    <select id="getAllByIsSharedAndKeywordOrderByIdDescLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.folder.FolderView">
         SELECT * FROM folder_view
-        WHERE is_shared = #{isShared} OR (title LIKE CONCAT('%',#{keyword},'%') OR memo LIKE CONCAT('%',#{keyword},'%'))
+        WHERE is_shared = #{isShared} AND (title LIKE CONCAT('%',#{keyword},'%') OR memo LIKE CONCAT('%',#{keyword},'%'))
         ORDER BY id DESC
+        LIMIT #{from}, #{itemPerPage}
     </select>
 </mapper>

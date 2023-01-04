@@ -1,7 +1,7 @@
 package com.project.bookmarkboard.controller;
 
 import com.project.bookmarkboard.dto.bookmark.Bookmark;
-import com.project.bookmarkboard.dto.bookmark.BookmarkPagination;
+import com.project.bookmarkboard.dto.bookmark.BookmarkViewPagination;
 import com.project.bookmarkboard.dto.folder.*;
 import com.project.bookmarkboard.dto.folder.FolderViewPagination;
 import com.project.bookmarkboard.dto.basic.BasicResponse;
@@ -67,11 +67,11 @@ public class FolderController {
                                 @ModelAttribute("isStared") String isStared) throws IOException {
         log.info("Folder Add Request Received");
         folderRequest.setOwner(customUserDetails.getUserInternalId());
-        if(!isShared.equals("")) {
+        if (!isShared.equals("")) {
             folderRequest.setShared(Boolean.parseBoolean(isShared));
         }
 
-        if(!isStared.equals("")) {
+        if (!isStared.equals("")) {
             folderRequest.setStared(Boolean.parseBoolean(isStared));
         }
 
@@ -83,10 +83,10 @@ public class FolderController {
 
     @GetMapping("/update")
     public String getUpdateFolderPage(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                        @RequestParam("id") long id, Model model) {
+                                      @RequestParam("id") long id, Model model) {
         log.info("Folder Update Page Get Request Received");
         final FolderView folderView = folderViewService.getOneById(id);
-        if(customUserDetails.getUserInternalId() != folderView.getOwner()) {
+        if (customUserDetails.getUserInternalId() != folderView.getOwner()) {
             log.warn("Requested by not owner. returning the main page.");
             // 본인 것을 수정하는 것이 아니라면 메인으로 이동 처리.
             return "redirect:/";
@@ -97,7 +97,7 @@ public class FolderController {
         model.addAttribute("bookmarkList", bookmarkList);
 
         List<Bookmark> alreadyAddedBookmarkList = new ArrayList<>();
-        if(folderView.getItemCount() > 0) {
+        if (folderView.getItemCount() > 0) {
             alreadyAddedBookmarkList = bookmarkService.getAllByIdListOrderByIsStaredDescAndIdDesc(bookmarkService.getBookmarkIdListInFolderById(id));
         }
 
@@ -116,34 +116,34 @@ public class FolderController {
                                    @RequestParam(name = "page", required = false, defaultValue = "1") int pageNum,
                                    @PathVariable(name = "id") long folderId,
                                    Model model) {
-        final FolderView folderViewDomain = folderViewService.getOneById(folderId);
+        FolderView folderView = folderViewService.getOneById(folderId);
 
         // 없는 폴더의 정보를 요청한 경우
-        if(folderViewDomain == null) {
+        if (folderView == null) {
             return "redirect:/";
         }
 
         // 권한이 없는 폴더의 정보를 요청한 경우
-        if(!folderViewDomain.isShared() && folderViewDomain.getOwner() != customUserDetails.getUserInternalId()) {
+        if (!folderView.isShared() && folderView.getOwner() != customUserDetails.getUserInternalId()) {
             return "redirect:/";
         }
 
-        if(folderViewDomain.getItemCount() > 0) {
-            BookmarkPagination pagination = bookmarkViewService.getAllByIdListOrderByIsStaredDescAndIdDescLimitByFromAndTo
-                    (bookmarkService.getBookmarkIdListInFolderById(folderId), pageNum, folderViewDomain.getItemCount());
+        if (folderView.getItemCount() > 0) {
+            BookmarkViewPagination pagination = bookmarkViewService.getAllByIdListOrderByIsStaredDescAndIdDescLimitByFromAndTo
+                    (bookmarkService.getBookmarkIdListInFolderById(folderId), pageNum, folderView.getItemCount());
             model.addAttribute("bookmarkList", pagination.getBookmarkViewList());
             model.addAttribute("pagination", pagination.getPagination());
         }
 
-        if(customUserDetails != null) {
-            if(folderViewDomain.getOwner() != customUserDetails.getUserInternalId()) {
-                final FolderView folderView = folderViewService.getLikeStatus(folderViewDomain, customUserDetails.getUserInternalId());
+        if (customUserDetails != null) {
+            if (folderView.getOwner() != customUserDetails.getUserInternalId()) {
+                folderView = folderViewService.getLikeStatus(folderView, customUserDetails.getUserInternalId());
                 model.addAttribute("folder", folderView);
             } else {
-                model.addAttribute("folder", folderViewDomain);
+                model.addAttribute("folder", folderView);
             }
         } else {
-            model.addAttribute("folder", folderViewDomain);
+            model.addAttribute("folder", folderView);
         }
 
         return "folder/detail";
@@ -151,23 +151,23 @@ public class FolderController {
 
     @PostMapping("/update")
     public String postUpdateFolder(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                FolderRequest folderRequest,
-                                @ModelAttribute("isShared") String isShared,
-                                @ModelAttribute("isStared") String isStared,
-                               @ModelAttribute("deleteRequest") String deleteRequest) throws IOException {
+                                   FolderRequest folderRequest,
+                                   @ModelAttribute("isShared") String isShared,
+                                   @ModelAttribute("isStared") String isStared,
+                                   @ModelAttribute("deleteRequest") String deleteRequest) throws IOException {
         log.info("Folder Update Post Request Received");
         log.info("Received folderRequest: " + folderRequest);
 
         folderRequest.setOwner(customUserDetails.getUserInternalId());
-        if(!isShared.equals("")) {
+        if (!isShared.equals("")) {
             folderRequest.setShared(Boolean.parseBoolean(isShared));
         }
 
-        if(!isStared.equals("")) {
+        if (!isStared.equals("")) {
             folderRequest.setStared(Boolean.parseBoolean(isStared));
         }
 
-        if(!deleteRequest.equals("")) {
+        if (!deleteRequest.equals("")) {
             folderRequest.setDeleteRequest(Boolean.parseBoolean(deleteRequest));
         }
 
@@ -179,16 +179,16 @@ public class FolderController {
     @DeleteMapping("/delete/{id}")
     @ResponseBody
     public ResponseEntity<? extends BasicResponse> deleteFolder(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                                                  @PathVariable long id) {
+                                                                @PathVariable long id) {
         log.info("Folder Delete Request Received");
         final Folder folder = folderService.getOneById(id);
-        if(customUserDetails.getUserInternalId() != folder.getOwner()) {
+        if (customUserDetails.getUserInternalId() != folder.getOwner()) {
             log.warn("It is different from the logged in user and the owner of the requested item. Therefore, the update does not proceed.");
             // 권한이 없을 경우 에러 표출
             return ResponseEntity.badRequest().body(new CommonResponse<>("false"));
         }
 
-        if(folderService.deleteFolder(folder)) {
+        if (folderService.deleteFolder(folder)) {
             log.info("This request is valid and the deletion is successfully.");
             // 정상적으로 삭제가 된 경우
             return ResponseEntity.ok().body(new CommonResponse<>("true"));
@@ -203,19 +203,19 @@ public class FolderController {
                                                                 @PathVariable long id, @RequestParam("to_modify_stared_status") boolean toModifyStaredStatus) {
         log.info("Folder stared status update request received.");
         final Folder folder = folderService.getOneById(id);
-        if(customUserDetails.getUserInternalId() != folder.getOwner()) {
+        if (customUserDetails.getUserInternalId() != folder.getOwner()) {
             log.warn("It is different from the logged in user and the owner of the requested item. Therefore, the update does not proceed.");
             // 권한이 없을 경우 에러 표출
             return ResponseEntity.badRequest().body(new CommonResponse<>("false"));
         }
 
-        if(folder.isStared() == toModifyStaredStatus) {
+        if (folder.isStared() == toModifyStaredStatus) {
             // 동일한 상태로 변경을 요청한 경우
             log.warn("This request requested a change to the same status. so this is not processed.");
             return ResponseEntity.badRequest().body(new CommonResponse<>("false"));
         }
 
-        if(folderService.updateIsStaredById(id, toModifyStaredStatus)) {
+        if (folderService.updateIsStaredById(id, toModifyStaredStatus)) {
             // 정상적으로 변경이 된 경우
             return ResponseEntity.ok().body(new CommonResponse<>("true"));
         }
@@ -230,19 +230,19 @@ public class FolderController {
         log.info("Folder shared status update request received.");
         final Folder folder = folderService.getOneById(id);
 
-        if(customUserDetails.getUserInternalId() != folder.getOwner()) {
+        if (customUserDetails.getUserInternalId() != folder.getOwner()) {
             log.warn("It is different from the logged in user and the owner of the requested item. Therefore, the update does not proceed.");
             // 권한이 없을 경우 에러 표출
             return ResponseEntity.badRequest().body(new CommonResponse<>("false"));
         }
 
-        if(folder.isShared() == toModifySharedStatus) {
+        if (folder.isShared() == toModifySharedStatus) {
             // 동일한 상태로 변경을 요청한 경우
             log.warn("This request requested a change to the same status. so this is not processed.");
             return ResponseEntity.badRequest().body(new CommonResponse<>("false"));
         }
 
-        if(folderService.updateIsSharedById(id, toModifySharedStatus)) {
+        if (folderService.updateIsSharedById(id, toModifySharedStatus)) {
             // 정상적으로 변경이 된 경우
             return ResponseEntity.ok().body(new CommonResponse<>("true"));
         }
@@ -254,23 +254,23 @@ public class FolderController {
     @PostMapping("/copy/{id}")
     @ResponseBody
     public ResponseEntity<? extends BasicResponse> postFolderCopyRequest(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                                                           @PathVariable("id") long id) throws IOException {
+                                                                         @PathVariable("id") long id) throws IOException {
         log.info("Folder Copy Request Received");
         log.info("From Item ID: " + id + " / To User ID: " + customUserDetails.getUserInternalId());
         final Folder folder = folderService.getOneById(id);
 
         // 없는 북마크를 요청한 경우
-        if(folder == null) {
+        if (folder == null) {
             return ResponseEntity.badRequest().body(new CommonResponse<>("NOT FOUND"));
         }
 
         // 본인의 북마크를 요청한 경우
-        if(customUserDetails.getUserInternalId() == folder.getOwner()) {
+        if (customUserDetails.getUserInternalId() == folder.getOwner()) {
             return ResponseEntity.badRequest().body(new CommonResponse<>("Requested your own folder"));
         }
 
         // 공유하지 않은 북마크를 요청한 경우
-        if(!folder.isShared()) {
+        if (!folder.isShared()) {
             return ResponseEntity.badRequest().body(new CommonResponse<>("Requested folder is not shared"));
         }
 
@@ -288,26 +288,26 @@ public class FolderController {
         final Folder folder = folderService.getOneById(folderId);
 
         // 없는 폴더에 요청한 경우
-        if(folder == null) {
+        if (folder == null) {
             return ResponseEntity.badRequest().body(new CommonResponse<>("NOT FOUND"));
         }
 
         // 본인의 폴더에 요청한 경우
-        if(customUserDetails.getUserInternalId() == folder.getOwner()) {
+        if (customUserDetails.getUserInternalId() == folder.getOwner()) {
             return ResponseEntity.badRequest().body(new CommonResponse<>("Requested your own folder"));
         }
 
         // 추천 요청인데 이미 추천한 경우
-        if(folderLikeService.getCountByFolderIdAndUserId(customUserDetails.getUserInternalId(), folderId) && toModifyLikedStatus) {
+        if (folderLikeService.getCountByFolderIdAndUserId(customUserDetails.getUserInternalId(), folderId) && toModifyLikedStatus) {
             return ResponseEntity.badRequest().body(new CommonResponse<>("Requested Already Do Like"));
         }
 
         // 추천 취소 요청인데 추천하지 않은 경우
-        if(!folderLikeService.getCountByFolderIdAndUserId(customUserDetails.getUserInternalId(), folderId) && !toModifyLikedStatus) {
+        if (!folderLikeService.getCountByFolderIdAndUserId(customUserDetails.getUserInternalId(), folderId) && !toModifyLikedStatus) {
             return ResponseEntity.badRequest().body(new CommonResponse<>("Requested Already Dislike"));
         }
 
-        if(toModifyLikedStatus) {
+        if (toModifyLikedStatus) {
             folderLikeService.insertFolderLike(customUserDetails.getUserInternalId(), folderId);
         } else {
             folderLikeService.deleteFolderLikeByUserIdAndFolderId(customUserDetails.getUserInternalId(), folderId);

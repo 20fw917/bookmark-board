@@ -25,4 +25,14 @@ public interface FolderViewMapper {
 
     List<FolderView> getAllByIsSharedOrderByLikeCountLimitByFromAndTo(@Param("isShared") boolean isShared,
                                                                       @Param("from") int from, @Param("itemPerPage") int itemPerPage);
+
+    List<FolderView> getAllByIsSharedAndKeywordOrderByIdDescLimitByFromAndTo(@Param("isShared") boolean isShared, @Param("keyword") String keyword,
+                                                                      @Param("from") int from, @Param("itemPerPage") int itemPerPage);
+
+    List<FolderView> getAllByOwnerAndKeywordOrderByIdDescLimitByFromAndTo(@Param("owner") long owner, @Param("keyword") String keyword,
+                                                                          @Param("from") int from, @Param("itemPerPage") int itemPerPage);
+
+    List<FolderView> getAllByNotOwnerAndIsSharedAndKeywordOrderByIdDesc(@Param("owner") long owner, @Param("keyword") String keyword,
+                                                                        @Param("isShared") boolean isShared,
+                                                                          @Param("from") int from, @Param("itemPerPage") int itemPerPage);
 }

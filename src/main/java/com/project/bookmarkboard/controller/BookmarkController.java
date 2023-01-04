@@ -1,8 +1,7 @@
 package com.project.bookmarkboard.controller;
 
 import com.project.bookmarkboard.dto.bookmark.Bookmark;
-import com.project.bookmarkboard.dto.bookmark.BookmarkPagination;
-import com.project.bookmarkboard.dto.folder.Folder;
+import com.project.bookmarkboard.dto.bookmark.BookmarkViewPagination;
 import com.project.bookmarkboard.dto.user.CustomUserDetails;
 import com.project.bookmarkboard.dto.basic.BasicResponse;
 import com.project.bookmarkboard.dto.response.CommonResponse;
@@ -33,18 +32,18 @@ public class BookmarkController {
                                     @RequestParam(value = "not_stared_page", required = false, defaultValue = "1") int notStaredPageNum,
                                     @RequestParam(value = "stared_page", required = false, defaultValue = "1") int staredPageNum,
                                     Model model) {
-        final BookmarkPagination staredBookmarkPagination = bookmarkViewService.getAllByOwnerAndIsStaredOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), staredPageNum, true);
-        final BookmarkPagination notStaredBookmarkPagination = bookmarkViewService.getAllByOwnerAndIsStaredOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), notStaredPageNum, false);
+        final BookmarkViewPagination staredBookmarkViewPagination = bookmarkViewService.getAllByOwnerAndIsStaredOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), staredPageNum, true);
+        final BookmarkViewPagination notStaredBookmarkViewPagination = bookmarkViewService.getAllByOwnerAndIsStaredOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), notStaredPageNum, false);
 
-        model.addAttribute("staredBookmarkPagination", staredBookmarkPagination.getPagination());
-        model.addAttribute("staredBookmarkItems", staredBookmarkPagination.getBookmarkViewList());
-        log.debug("staredBookmarkPagination: " + staredBookmarkPagination.getPagination());
-        log.debug("staredBookmarkItems: " + staredBookmarkPagination.getBookmarkViewList());
+        model.addAttribute("staredBookmarkPagination", staredBookmarkViewPagination.getPagination());
+        model.addAttribute("staredBookmarkItems", staredBookmarkViewPagination.getBookmarkViewList());
+        log.debug("staredBookmarkViewPagination: " + staredBookmarkViewPagination.getPagination());
+        log.debug("staredBookmarkItems: " + staredBookmarkViewPagination.getBookmarkViewList());
 
-        model.addAttribute("notStaredBookmarkPagination", notStaredBookmarkPagination.getPagination());
-        model.addAttribute("notStaredBookmarkItems", notStaredBookmarkPagination.getBookmarkViewList());
-        log.debug("notStaredBookmarkPagination: " + notStaredBookmarkPagination.getPagination());
-        log.debug("notStaredBookmarkItems: " + notStaredBookmarkPagination.getBookmarkViewList());
+        model.addAttribute("notStaredBookmarkPagination", notStaredBookmarkViewPagination.getPagination());
+        model.addAttribute("notStaredBookmarkItems", notStaredBookmarkViewPagination.getBookmarkViewList());
+        log.debug("notStaredBookmarkViewPagination: " + notStaredBookmarkViewPagination.getPagination());
+        log.debug("notStaredBookmarkItems: " + notStaredBookmarkViewPagination.getBookmarkViewList());
 
         return "bookmark/list";
     }
@@ -64,16 +63,16 @@ public class BookmarkController {
         log.info("Bookmark Add Request Received");
 
         bookmark.setOwner(customUserDetails.getUserInternalId());
-        if(!isShared.equals("")) {
+        if (!isShared.equals("")) {
             bookmark.setShared(Boolean.parseBoolean(isShared));
         }
 
-        if(!isStared.equals("")) {
+        if (!isStared.equals("")) {
             bookmark.setStared(Boolean.parseBoolean(isStared));
         }
         log.debug("Received bookmark: " + bookmark);
 
-        if(bookmarkService.insertBookmark(bookmark)) {
+        if (bookmarkService.insertBookmark(bookmark)) {
             log.info("Bookmark Insert Successfully");
         }
         return "redirect:/bookmark";
@@ -81,10 +80,10 @@ public class BookmarkController {
 
     @GetMapping("/update")
     public String getUpdateBookmarkPage(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                  @RequestParam("id") long id, Model model) {
+                                        @RequestParam("id") long id, Model model) {
         log.info("Bookmark Update Page Get Request Received");
         final Bookmark bookmark = bookmarkService.getOneById(id);
-        if(customUserDetails.getUserInternalId() != bookmark.getOwner()) {
+        if (customUserDetails.getUserInternalId() != bookmark.getOwner()) {
             log.warn("Requested by not owner. returning the main page.");
             // 본인 것을 수정하는 것이 아니라면 메인으로 이동 처리.
             return "redirect:/";
@@ -103,15 +102,15 @@ public class BookmarkController {
         log.info("Bookmark Update Post Request Received");
         log.debug("Received bookmark: " + bookmark);
         bookmark.setOwner(customUserDetails.getUserInternalId());
-        if(!isShared.equals("")) {
+        if (!isShared.equals("")) {
             bookmark.setShared(Boolean.parseBoolean(isShared));
         }
 
-        if(!isStared.equals("")) {
+        if (!isStared.equals("")) {
             bookmark.setStared(Boolean.parseBoolean(isStared));
         }
 
-        if(bookmarkService.updateBookmarkById(bookmark)) {
+        if (bookmarkService.updateBookmarkById(bookmark)) {
             log.info("Bookmark Update Successfully.");
         }
 
@@ -124,13 +123,13 @@ public class BookmarkController {
                                                                   @PathVariable long id) {
         log.info("Bookmark Delete Request Received");
         final Bookmark bookmark = bookmarkService.getOneById(id);
-        if(customUserDetails.getUserInternalId() != bookmark.getOwner()) {
+        if (customUserDetails.getUserInternalId() != bookmark.getOwner()) {
             log.warn("It is different from the logged in user and the owner of the requested item. Therefore, the deletion does not proceed.");
             // 권한이 없을 경우 에러 표출
             return ResponseEntity.badRequest().body(new CommonResponse<>("false"));
         }
 
-        if(bookmarkService.deleteBookmarkById(id)) {
+        if (bookmarkService.deleteBookmarkById(id)) {
             log.info("This request is valid and the deletion is successfully.");
             // 정상적으로 삭제가 된 경우
             return ResponseEntity.ok().body(new CommonResponse<>("true"));
@@ -142,22 +141,22 @@ public class BookmarkController {
 
     @PatchMapping("/update/stared/{id}")
     public ResponseEntity<? extends BasicResponse> updateStared(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                                                  @PathVariable long id, @RequestParam("to_modify_stared_status") boolean toModifyStaredStatus) {
+                                                                @PathVariable long id, @RequestParam("to_modify_stared_status") boolean toModifyStaredStatus) {
         log.info("Bookmark stared status update request received.");
         final Bookmark bookmark = bookmarkService.getOneById(id);
-        if(customUserDetails.getUserInternalId() != bookmark.getOwner()) {
+        if (customUserDetails.getUserInternalId() != bookmark.getOwner()) {
             log.warn("It is different from the logged in user and the owner of the requested item. Therefore, the update does not proceed.");
             // 권한이 없을 경우 에러 표출
             return ResponseEntity.badRequest().body(new CommonResponse<>("false"));
         }
 
-        if(bookmark.isStared() == toModifyStaredStatus) {
+        if (bookmark.isStared() == toModifyStaredStatus) {
             // 동일한 상태로 변경을 요청한 경우
             log.warn("This request requested a change to the same status. so this is not processed.");
             return ResponseEntity.badRequest().body(new CommonResponse<>("false"));
         }
 
-        if(bookmarkService.updateIsStaredById(id, toModifyStaredStatus)) {
+        if (bookmarkService.updateIsStaredById(id, toModifyStaredStatus)) {
             // 정상적으로 변경이 된 경우
             return ResponseEntity.ok().body(new CommonResponse<>("true"));
         }
@@ -171,19 +170,19 @@ public class BookmarkController {
                                                                 @PathVariable long id, @RequestParam("to_modify_shared_status") boolean toModifySharedStatus) {
         log.info("Bookmark shared status update request received.");
         final Bookmark bookmark = bookmarkService.getOneById(id);
-        if(customUserDetails.getUserInternalId() != bookmark.getOwner()) {
+        if (customUserDetails.getUserInternalId() != bookmark.getOwner()) {
             log.warn("It is different from the logged in user and the owner of the requested item. Therefore, the update does not proceed.");
             // 권한이 없을 경우 에러 표출
             return ResponseEntity.badRequest().body(new CommonResponse<>("false"));
         }
 
-        if(bookmark.isShared() == toModifySharedStatus) {
+        if (bookmark.isShared() == toModifySharedStatus) {
             // 동일한 상태로 변경을 요청한 경우
             log.warn("This request requested a change to the same status. so this is not processed.");
             return ResponseEntity.badRequest().body(new CommonResponse<>("false"));
         }
 
-        if(bookmarkService.updateIsSharedById(id, toModifySharedStatus)) {
+        if (bookmarkService.updateIsSharedById(id, toModifySharedStatus)) {
             // 정상적으로 변경이 된 경우
             return ResponseEntity.ok().body(new CommonResponse<>("true"));
         }
@@ -209,23 +208,23 @@ public class BookmarkController {
     @PostMapping("/copy/{id}")
     @ResponseBody
     public ResponseEntity<? extends BasicResponse> postCopyBookmarkRequest(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                  @PathVariable("id") long id) {
+                                                                           @PathVariable("id") long id) {
         log.info("Bookmark Copy Request Received");
         log.info("From Item ID: " + id + " / To User ID: " + customUserDetails.getUserInternalId());
         final Bookmark bookmark = bookmarkService.getOneById(id);
 
         // 없는 북마크를 요청한 경우
-        if(bookmark == null) {
+        if (bookmark == null) {
             return ResponseEntity.badRequest().body(new CommonResponse<>("NOT FOUND"));
         }
 
         // 본인의 북마크를 요청한 경우
-        if(customUserDetails.getUserInternalId() == bookmark.getOwner()) {
+        if (customUserDetails.getUserInternalId() == bookmark.getOwner()) {
             return ResponseEntity.badRequest().body(new CommonResponse<>("Requested Your Own Bookmark"));
         }
 
         // 공유하지 않은 북마크를 요청한 경우
-        if(!bookmark.isShared()) {
+        if (!bookmark.isShared()) {
             return ResponseEntity.badRequest().body(new CommonResponse<>("Requested Bookmark is not shared"));
         }
 
@@ -249,28 +248,28 @@ public class BookmarkController {
         final Bookmark bookmark = bookmarkService.getOneById(bookmarkId);
 
         // 없는 폴더에 요청한 경우
-        if(bookmark == null) {
+        if (bookmark == null) {
             return ResponseEntity.badRequest().body(new CommonResponse<>("NOT FOUND"));
         }
 
         // 본인의 폴더에 요청한 경우
-        if(customUserDetails.getUserInternalId() == bookmark.getOwner()) {
+        if (customUserDetails.getUserInternalId() == bookmark.getOwner()) {
             return ResponseEntity.badRequest().body(new CommonResponse<>("Requested your own bookmark"));
         }
 
         final boolean likeStatus = bookmarkLikeService.getCountByBookmarkIdAndUserId(customUserDetails.getUserInternalId(), bookmarkId);
 
         // 추천 요청인데 이미 추천한 경우
-        if(likeStatus && toModifyLikedStatus) {
+        if (likeStatus && toModifyLikedStatus) {
             return ResponseEntity.badRequest().body(new CommonResponse<>("Requested Already Do Like"));
         }
 
         // 추천 취소 요청인데 추천하지 않은 경우
-        if(!likeStatus && !toModifyLikedStatus) {
+        if (!likeStatus && !toModifyLikedStatus) {
             return ResponseEntity.badRequest().body(new CommonResponse<>("Requested Already Dislike"));
         }
 
-        if(toModifyLikedStatus) {
+        if (toModifyLikedStatus) {
             bookmarkLikeService.insertBookmarkLike(customUserDetails.getUserInternalId(), bookmarkId);
         } else {
             bookmarkLikeService.deleteBookmarkLikeByUserIdAndFolderId(customUserDetails.getUserInternalId(), bookmarkId);

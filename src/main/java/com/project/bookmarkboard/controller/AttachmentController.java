@@ -39,8 +39,7 @@ public class AttachmentController {
             contentType = request.getServletContext().getMimeType(
                     resource.getFile().getAbsolutePath()
             );
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             log.warn("Could not determine file type.");
             contentType = "application/octet-stream";
         }
