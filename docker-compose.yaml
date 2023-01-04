@@ -8,15 +8,18 @@ networks:
 
 services:
   bookmark:
-    container_name: boookmark_board
-    image: shin6949/bookmark-board:1.0
+    container_name: bookmark_board
+    image: shin6949/bookmark-board:1.0.1
     restart: always
     expose:
       - "8080"
+    volumes:
+      - ./attachments:/attachments
     environment:
       - DB_URL=jdbc:mysql://
       - DB_USER=
       - DB_PASSWORD=
+      - UPLOAD_FILE_PATH=/attachments/
     networks:
       - service-front
       - db-net
