@@ -7,7 +7,7 @@ networks:
     external: true
 
 services:
-  boookmark:
+  bookmark:
     container_name: boookmark_board
     image: shin6949/bookmark-board:1.0
     restart: always
