@@ -1,12 +1,10 @@
 package com.project.bookmarkboard.service;
 
-import com.project.bookmarkboard.dto.User;
-import com.project.bookmarkboard.dto.UserRole;
+import com.project.bookmarkboard.dto.user.User;
+import com.project.bookmarkboard.dto.user.UserRole;
 import com.project.bookmarkboard.mapper.UserMapper;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +14,10 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserMapper userMapper;
     private PasswordEncoder passwordEncoder;
+
+    public User getOneByInternalId(long userInternalId) {
+        return userMapper.getOneByInternalId(userInternalId);
+    }
 
     public boolean isNicknameExists(String nickname) {
         final int result = userMapper.countByNickname(nickname);

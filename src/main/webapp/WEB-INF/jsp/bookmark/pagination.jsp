@@ -4,7 +4,7 @@
 <nav>
   <ul class="pagination justify-content-center">
     <c:if test="${param.previousPageExists}">
-      <c:url value="${pageContext.request.contextPath}/bookmark" var="minusTenUrl">
+      <c:url value="${param.baseUrl}" var="minusTenUrl">
         <c:param name="${param.currentPageParam}" value="${param.startIndexNum - 10}" />
         <c:if test="${param.anotherPageName ne null}">
           <c:param name="${param.anotherPageName}" value="${param.anotherPageNum}" />
@@ -26,7 +26,7 @@
         </c:when>
 
         <c:otherwise>
-          <c:url value="${pageContext.request.contextPath}/bookmark" var="url">
+          <c:url value="${param.baseUrl}" var="url">
             <c:param name="${param.currentPageParam}" value="${status.current}" />
             <c:if test="${param.anotherPageName ne null}">
               <c:param name="${param.anotherPageName}" value="${param.anotherPageNum}" />
@@ -39,7 +39,7 @@
     </c:forEach>
 
     <c:if test="${param.nextPageExists}">
-      <c:url value="${pageContext.request.contextPath}/bookmark" var="plusTenUrl">
+      <c:url value="${param.baseUrl}" var="plusTenUrl">
         <c:param name="${param.currentPageParam}" value="${param.startIndexNum + 10}" />
         <c:if test="${param.anotherPageName ne null}">
           <c:param name="${param.anotherPageName}" value="${param.anotherPageNum}" />

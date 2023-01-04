@@ -1,6 +1,6 @@
-package com.project.bookmarkboard.dto.pagination;
+package com.project.bookmarkboard.dto.bookmark;
 
-import com.project.bookmarkboard.dto.BookmarkDTO;
+import com.project.bookmarkboard.dto.basic.BasicPagination;
 import lombok.*;
 
 import java.util.List;
@@ -11,13 +11,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookmarkPagination extends BasicPagination {
-    private List<BookmarkDTO> bookmarkDTOList;
+    private List<BookmarkView> bookmarkViewList;
 
-    public BookmarkPagination(int totalCount, int currentPageNum, int finalPageNum, List<BookmarkDTO> bookmarkDTOList) {
+    public BookmarkPagination(int totalCount, int currentPageNum, int finalPageNum, List<BookmarkView> bookmarkViewList) {
         super.totalCount = totalCount;
         super.currentPageNum = currentPageNum;
         super.finalPageNum = finalPageNum;
-        this.bookmarkDTOList = bookmarkDTOList;
+        this.bookmarkViewList = bookmarkViewList;
     }
 
     public BasicPagination getPagination() {

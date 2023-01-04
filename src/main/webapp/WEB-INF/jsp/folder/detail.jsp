@@ -12,6 +12,7 @@
     <meta name="generator" content="Hugo 0.104.2">
     <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/dashboard/">
     <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/folder/detail.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/folder/item.js"></script>
     <title>'${folder.title}' 폴더 상세</title>
     <jsp:include page="/WEB-INF/jsp/include/bootstrap.jsp"/>
     <sec:csrfMetaTags/>
@@ -48,7 +49,7 @@
                         <a href="${pageContext.request.contextPath}/profile/${folder.owner}" style="text-decoration: none; color:black;">
                             <p class="card-text detail-card">생성자: ${folder.authorNickname}님
                         </a>
-                        <br><i class="bi bi-hand-thumbs-up-fill"></i>: ${folder.likeCount}회</p>
+                        <br><p class="card-text detail-card"><i class="bi bi-hand-thumbs-up-fill"></i>: ${folder.likeCount}회</p>
                     </c:if>
 
                     <p class="card-text detail-card">${folder.memo}</p>
@@ -99,9 +100,19 @@
                                 <br>
                             </c:if>
                             <c:if test="${principal.userInternalId ne folder.owner}">
-                                <button type="button" onclick="copyFolder(${param.id})" class="btn btn-sm btn-secondary">
+                                <button type="button" onclick="copyFolder(${folder.id})" class="btn btn-sm btn-secondary">
                                     <i class="bi bi-clipboard-plus"></i>
                                 </button>
+                                <c:if test="${folder.isLiked eq false}">
+                                    <button type="button" onclick="likeFolder(${folder.id}, true)" class="btn btn-sm btn-secondary">
+                                        <i class="bi bi-hand-thumbs-up"></i>
+                                    </button>
+                                </c:if>
+                                <c:if test="${folder.isLiked eq true}">
+                                    <button type="button" onclick="likeFolder(${folder.id}, false)" class="btn btn-sm btn-secondary">
+                                        <i class="bi bi-hand-thumbs-up-fill"></i>
+                                    </button>
+                                </c:if>
                             </c:if>
                         </sec:authorize>
                         <p class="fst-italic">${folder.createdAtFormatted}에 생성 됨</p>

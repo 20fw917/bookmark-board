@@ -10,7 +10,21 @@
       <c:if test="${param.memo eq null || param.memo eq ''}">
         <div style="padding-bottom: 32px"></div>
       </c:if>
-      <div class="row"></div>
+      <c:if test="${param.shared eq true}">
+        <p class="card-text"><i class="bi bi-hand-thumbs-up-fill"></i>: ${param.likeCount}회</p>
+        <sec:authorize access="isAuthenticated()">
+          <sec:authentication property="principal" var="principal"/>
+          <c:if test="${principal.userInternalId ne param.owner}">
+          <p class="card-text">생성자: ${param.authorNickname}님
+          </c:if>
+          <c:if test="${principal.userInternalId eq param.owner}">
+          <div style="padding-bottom: 43px"></div>
+          </c:if>
+        </sec:authorize>
+      </c:if>
+      <c:if test="${param.shared eq false}">
+        <div style="padding-bottom: 43px"></div>
+      </c:if>
       <p class="card-text">${param.url}</p>
       <c:if test="${param.showToolbar eq false}">
         <div class="text-end">
@@ -25,18 +39,32 @@
                 <i class="bi bi-clipboard-plus"></i>
                 복사
               </button>
+              <c:if test="${param.isLiked ne null}">
+              <c:if test="${param.isLiked eq false}">
+              <button type="button" onclick="likeBookmark(${param.id}, true)" class="btn btn-secondary">
+                <i class="bi bi-hand-thumbs-up"></i>
+                좋아요
+              </button>
+              </c:if>
+              <c:if test="${param.isLiked eq true}">
+                <button type="button" onclick="likeBookmark(${param.id}, false)" class="btn btn-secondary">
+                  <i class="bi bi-hand-thumbs-up-fill"></i>
+                  좋아요
+                </button>
+              </c:if>
+            </c:if>
             </c:if>
           </sec:authorize>
+
         </div>
       </c:if>
 
       <c:if test="${param.showToolbar eq true}">
-      <a href="${param.url}" class="btn btn-primary">
-        <i class="bi bi-globe"></i>
-        방문
-      </a>
-
       <span style="float: right;">
+        <a href="${param.url}" class="btn btn-primary">
+          <i class="bi bi-globe"></i>
+          방문
+        </a>
       <%-- 즐겨찾기 버튼 --%>
       <button type="button" class="btn btn-sm"
               <c:if test="${param.stared eq true}">
@@ -77,7 +105,7 @@
         <p class="fst-italic">${param.createdAtFormatted}에 추가 됨</p>
       </div>
     </span>
-      </c:if>
+    </c:if>
     </div>
   </div>
 </div>

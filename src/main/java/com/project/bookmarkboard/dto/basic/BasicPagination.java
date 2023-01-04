@@ -1,4 +1,4 @@
-package com.project.bookmarkboard.dto.pagination;
+package com.project.bookmarkboard.dto.basic;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

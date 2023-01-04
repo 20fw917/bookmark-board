@@ -3,12 +3,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.project.bookmarkboard.mapper.FolderViewMapper">
-    <select id="getOneById" resultType="com.project.bookmarkboard.dto.FolderViewDTO">
+    <select id="getOneById" resultType="com.project.bookmarkboard.dto.folder.FolderView">
         SELECT * FROM folder_view WHERE id = #{id}
     </select>
 
     <select id="getAllByOwnerOrderByIsStaredAndIdDescLimitByFromAndTo"
-            resultType="com.project.bookmarkboard.dto.FolderViewDTO">
+            resultType="com.project.bookmarkboard.dto.folder.FolderView">
         SELECT * FROM folder_view
         WHERE owner = #{owner}
         ORDER BY
@@ -20,30 +20,48 @@
     </select>
 
     <select id="getAllByOwnerAndIsSharedOrderByIsStaredAndIdDescLimitByFromAndTo"
-            resultType="com.project.bookmarkboard.dto.FolderViewDTO">
+            resultType="com.project.bookmarkboard.dto.folder.FolderView">
         SELECT * FROM folder_view
         WHERE owner = #{owner} AND is_shared = #{isShared}
         ORDER BY id DESC
         LIMIT #{from}, #{itemPerPage}
     </select>
 
-    <select id="getAllByIsSharedOrderByLikeCountLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.FolderViewDTO">
+    <select id="getAllByIsSharedOrderByLikeCountLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.folder.FolderView">
         SELECT * FROM folder_view
         WHERE is_shared = #{isShared}
         ORDER BY id DESC
         LIMIT #{from}, #{itemPerPage}
     </select>
 
-    <select id="getAllByOwnerAndIsStaredOrderById" resultType="com.project.bookmarkboard.dto.FolderViewDTO">
+    <select id="getAllByOwnerAndIsStaredOrderById" resultType="com.project.bookmarkboard.dto.folder.FolderView">
         SELECT * FROM folder_view
         WHERE owner = #{owner} AND is_stared = #{isStared}
         ORDER BY id DESC
     </select>
 
-    <select id="getAllByNotOwnerAndIsSharedOrderByLikeCountLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.FolderViewDTO">
+    <select id="getAllByNotOwnerAndIsSharedOrderByLikeCountLimitByFromAndTo" resultType="com.project.bookmarkboard.dto.folder.FolderView">
         SELECT * FROM folder_view
         WHERE owner != #{owner} AND is_shared = #{isShared}
         ORDER BY like_count DESC
         LIMIT #{from}, #{itemPerPage}
+    </select>
+
+    <select id="getAllByOwnerAndKeywordOrderByIdDesc" resultType="com.project.bookmarkboard.dto.folder.FolderView">
+        SELECT * FROM folder_view
+        WHERE owner = #{owner} AND (title LIKE CONCAT('%',#{keyword},'%') OR memo LIKE CONCAT('%',#{keyword},'%'))
+        ORDER BY id DESC
+    </select>
+
+    <select id="getAllByNotOwnerAndIsSharedAndKeywordOrderByIdDesc" resultType="com.project.bookmarkboard.dto.folder.FolderView">
+        SELECT * FROM folder_view
+        WHERE owner != #{owner} AND is_shared = #{isShared} OR (title LIKE CONCAT('%',#{keyword},'%') OR memo LIKE CONCAT('%',#{keyword},'%'))
+        ORDER BY id DESC
+    </select>
+
+    <select id="getAllByIsSharedAndKeywordOrderByIdDesc" resultType="com.project.bookmarkboard.dto.folder.FolderView">
+        SELECT * FROM folder_view
+        WHERE is_shared = #{isShared} OR (title LIKE CONCAT('%',#{keyword},'%') OR memo LIKE CONCAT('%',#{keyword},'%'))
+        ORDER BY id DESC
     </select>
 </mapper>

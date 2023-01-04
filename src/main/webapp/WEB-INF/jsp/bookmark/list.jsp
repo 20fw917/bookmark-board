@@ -14,7 +14,7 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <div class="container d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-    <h2 style="width: 50%" class="h2 bi bi-asterisk"> 내 북마크</h2>
+    <h2 style="width: 50%" class="h2 bi bi-bookmark"> 내 북마크</h2>
     <div class="container text-end">
         <a href="${pageContext.request.contextPath}/bookmark/add" class="btn btn-outline-secondary">
             <i class="bi bi-bookmark-plus"></i>
@@ -44,6 +44,7 @@
                     <jsp:param name="stared" value="${item.stared}"/>
                     <jsp:param name="createdAtFormatted" value="${item.createdAtFormatted}"/>
                     <jsp:param name="showToolbar" value="true"/>
+                    <jsp:param name="baseUrl" value="${pageContext.request.contextPath}/bookmark"/>
                 </jsp:include>
                 </div>
             </c:forEach>

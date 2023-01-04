@@ -1,9 +1,12 @@
 DROP VIEW IF EXISTS `comment_view`;
 DROP VIEW IF EXISTS `article_view`;
 DROP VIEW IF EXISTS `folder_view`;
+DROP VIEW IF EXISTS `bookmark_view`;
 DROP TABLE IF EXISTS `comment`;
 DROP TABLE IF EXISTS `folder_item`;
 DROP TABLE IF EXISTS `article_like`;
+DROP TABLE IF EXISTS `folder_like`;
+DROP TABLE IF EXISTS `bookmark_like`;
 DROP TABLE IF EXISTS `attachment_index`;
 DROP TABLE IF EXISTS `article`;
 DROP TABLE IF EXISTS `folder`;
@@ -52,16 +55,6 @@ CREATE TABLE `folder_item` (
    FOREIGN KEY (`parent_folder`) REFERENCES `folder` (`id`) ON DELETE CASCADE
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-CREATE TABLE `comment` (
-   `id` bigint(20) NOT NULL PRIMARY KEY auto_increment,
-   `author_id` bigint(20) NOT NULL,
-   `folder_id` bigint(20) NOT NULL,
-   `content` varchar(1000) NOT NULL COMMENT '댓글 1,000자 제한',
-   `created_at` datetime NOT NULL DEFAULT now(),
-   FOREIGN KEY (`author_id`) REFERENCES `user` (`internal_id`) ON DELETE CASCADE,
-   FOREIGN KEY (`folder_id`) REFERENCES `folder` (`id`) ON DELETE CASCADE
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
 CREATE TABLE `folder_like` (
     `id` bigint(20) NOT NULL PRIMARY KEY auto_increment,
     `user_id` bigint(20) NOT NULL,
@@ -70,18 +63,27 @@ CREATE TABLE `folder_like` (
     FOREIGN KEY (`folder_id`) REFERENCES `folder` (`id`) ON DELETE CASCADE
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-CREATE VIEW `comment_view` AS (
-  SELECT c.id AS `id`, c.content AS `content`,
-     c.created_at AS `created_at`, c.author_id AS `author_id`, u.nickname AS `author_nickname`
-  FROM `comment` c
-    JOIN `user` u ON c.author_id = u.internal_id
-);
+CREATE TABLE `bookmark_like` (
+   `id` bigint(20) NOT NULL PRIMARY KEY auto_increment,
+   `user_id` bigint(20) NOT NULL,
+   `bookmark_id` bigint(20) NOT NULL,
+   FOREIGN KEY (`user_id`) REFERENCES `user` (`internal_id`) ON DELETE CASCADE,
+   FOREIGN KEY (`bookmark_id`) REFERENCES `bookmark` (`id`) ON DELETE CASCADE
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE VIEW `folder_view` AS (
-  SELECT f.id AS `id`, f.owner AS `owner`, f.title AS `title`, f.memo AS `memo`, f.thumbnail AS thumbnail,
+  SELECT f.id AS `id`, f.owner AS `owner`, f.title AS `title`, f.memo AS `memo`, f.thumbnail AS `thumbnail`,
          f.created_at AS `created_at`, f.is_shared as `is_shared`, f.is_stared as `is_stared`,
          (SELECT COUNT(*) FROM folder_item fi WHERE fi.parent_folder = f.id) AS `item_count`,
          (SELECT nickname FROM user u WHERE u.internal_id = f.owner) AS `author_nickname`,
          (SELECT COUNT(*) FROM folder_like fl WHERE fl.folder_id = f.id) AS `like_count`
   FROM `folder` f
-  );
+);
+
+CREATE VIEW `bookmark_view` AS (
+     SELECT b.id AS `id`, b.owner AS `owner`, b.title AS `title`, b.memo AS `memo`, b.url AS `url`,
+            b.created_at AS `created_at`, b.is_shared as `is_shared`, b.is_stared as `is_stared`,
+            (SELECT nickname FROM user u WHERE u.internal_id = b.owner) AS `author_nickname`,
+            (SELECT COUNT(*) FROM bookmark_like bl WHERE bl.bookmark_id = b.id) AS `like_count`
+     FROM `bookmark` b
+);

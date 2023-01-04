@@ -3,20 +3,20 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.project.bookmarkboard.mapper.FolderLikeMapper">
-    <select id="getCountByFolderIdAndUserId" parameterType="com.project.bookmarkboard.dto.FolderLikeDTO" resultType="boolean">
+    <select id="getCountByFolderIdAndUserId" parameterType="com.project.bookmarkboard.dto.folder.FolderLike" resultType="integer">
         SELECT count(*) FROM folder_like WHERE folder_id = #{folderId} AND user_id = #{userId}
     </select>
 
-    <select id="getAllByUserId" parameterType="com.project.bookmarkboard.dto.FolderLikeDTO">
+    <select id="getAllByUserId" parameterType="com.project.bookmarkboard.dto.folder.FolderLike">
         SELECT * FROM folder_like WHERE user_id = #{userId}
     </select>
 
-    <insert id="insertFolderLike" parameterType="com.project.bookmarkboard.dto.FolderLikeDTO" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertFolderLike" parameterType="com.project.bookmarkboard.dto.folder.FolderLike" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO folder_like(`user_id`, `folder_id`)
         VALUES(#{userId}, #{folderId})
     </insert>
 
-    <delete id="deleteFolderLikeById">
-        DELETE FROM folder_like WHERE id = #{id};
+    <delete id="deleteFolderLikeByUserIdAndFolderId">
+        DELETE FROM folder_like WHERE user_id = #{userId} AND folder_id = #{folderId};
     </delete>
 </mapper>

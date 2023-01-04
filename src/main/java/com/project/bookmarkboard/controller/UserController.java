@@ -1,6 +1,6 @@
 package com.project.bookmarkboard.controller;
 
-import com.project.bookmarkboard.dto.UserDTO;
+import com.project.bookmarkboard.dto.user.UserDTO;
 import com.project.bookmarkboard.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

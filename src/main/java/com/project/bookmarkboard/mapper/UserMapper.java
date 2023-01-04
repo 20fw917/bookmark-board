@@ -1,13 +1,13 @@
 package com.project.bookmarkboard.mapper;
 
-import com.project.bookmarkboard.dto.User;
+import com.project.bookmarkboard.dto.user.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface UserMapper {
     User findByUsername(@Param("username") String username);
-    User findByInternalId(@Param("internalId") long internalId);
+    User getOneByInternalId(@Param("internalId") long internalId);
     int countByUsername(@Param("username") String username);
     int countByEmail(@Param("email") String email);
     int insertUser(User user);

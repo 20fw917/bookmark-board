@@ -1,4 +1,4 @@
-package com.project.bookmarkboard.dto;
+package com.project.bookmarkboard.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
