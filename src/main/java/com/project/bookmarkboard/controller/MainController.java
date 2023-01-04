@@ -1,8 +1,10 @@
 package com.project.bookmarkboard.controller;
 
+import com.project.bookmarkboard.dto.bookmark.BookmarkViewPagination;
 import com.project.bookmarkboard.dto.folder.FolderView;
 import com.project.bookmarkboard.dto.user.CustomUserDetails;
 import com.project.bookmarkboard.dto.folder.FolderViewPagination;
+import com.project.bookmarkboard.service.BookmarkViewService;
 import com.project.bookmarkboard.service.FolderViewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -26,6 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MainController {
     private final FolderViewService folderViewService;
+    private final BookmarkViewService bookmarkViewService;
 
     @GetMapping({"/"})
     public String getMain(@AuthenticationPrincipal CustomUserDetails customUserDetails,
@@ -76,9 +79,40 @@ public class MainController {
     }
 
     @GetMapping("/search")
-    public String getSearch(@RequestParam(name = "keyword") String keyword,
+    public String getSearch(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                            @RequestParam(name = "keyword") String keyword,
+                            @RequestParam(name = "folder_page", required = false, defaultValue = "1") int folderPageNum,
+                            @RequestParam(name = "folder_current_user_only", required = false, defaultValue = "false") boolean folderCurrentUserOnly,
+                            @RequestParam(name = "bookmark_page", required = false, defaultValue = "1") int bookmarkPageNum,
+                            @RequestParam(name = "bookmark_current_user_only", required = false, defaultValue = "false") boolean bookmarkCurrentUserOnly,
                             Model model) {
         model.addAttribute("keyword", keyword.trim());
+        model.addAttribute("folderPageNum", folderPageNum);
+        model.addAttribute("folderCurrentUserOnly", folderCurrentUserOnly);
+        model.addAttribute("bookmarkPageNum", bookmarkPageNum);
+        model.addAttribute("bookmarkCurrentUserOnly", bookmarkCurrentUserOnly);
+
+        FolderViewPagination folderViewPagination;
+        if(customUserDetails != null) {
+            folderViewPagination = folderViewService.getSearchResult(keyword, customUserDetails.getUserInternalId(), folderCurrentUserOnly, folderPageNum);
+        } else {
+            folderViewPagination = folderViewService.getSearchResult(keyword, null, folderCurrentUserOnly, folderPageNum);
+        }
+        model.addAttribute("folderPagination", folderViewPagination.getPagination());
+        model.addAttribute("folderItems", folderViewPagination.getFolderViewList());
+        log.debug("folderPagination: " + folderViewPagination.getPagination());
+        log.debug("folderItems: " + folderViewPagination.getFolderViewList());
+
+        BookmarkViewPagination bookmarkViewPagination;
+        if(customUserDetails != null) {
+            bookmarkViewPagination = bookmarkViewService.getSearchResult(keyword, customUserDetails.getUserInternalId(), folderCurrentUserOnly, folderPageNum);
+        } else {
+            bookmarkViewPagination = bookmarkViewService.getSearchResult(keyword, null, folderCurrentUserOnly, folderPageNum);
+        }
+        model.addAttribute("bookmarkPagination", bookmarkViewPagination.getPagination());
+        model.addAttribute("bookmarkItems", bookmarkViewPagination.getBookmarkViewList());
+        log.debug("bookmarkPagination: " + bookmarkViewPagination.getPagination());
+        log.debug("bookmarkItems: " + bookmarkViewPagination.getPagination());
 
         return "search/list";
     }

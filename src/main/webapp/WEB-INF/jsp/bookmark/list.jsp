@@ -24,12 +24,12 @@
     <br>
 </div>
 <div class="container border-bottom">
-    <p class="text-justify">총 ${staredBookmarkPagination.totalCount + notStaredBookmarkPagination.totalCount} 개의 저장된 북마크가 있습니다.</p>
+    <p class="text-justify">총 ${staredBookmarkViewPagination.totalCount + notStaredBookmarkViewPagination.totalCount} 개의 저장된 북마크가 있습니다.</p>
 </div>
 
 <%-- 즐겨찾기한 북마크 Area --%>
 <div class="container" style="margin-top: 20px">
-    <c:if test="${staredBookmarkPagination.totalCount ne 0}">
+    <c:if test="${staredBookmarkViewPagination.totalCount ne 0}">
     <h3 class="bi bi-bookmark-star"> 즐겨찾는 북마크</h3>
     <br>
         <div class="row">
@@ -55,13 +55,13 @@
         <jsp:include page="/WEB-INF/jsp/bookmark/pagination.jsp">
             <jsp:param name="currentPageParam" value="stared_page"/>
             <jsp:param name="anotherPageName" value="not_stared_page"/>
-            <jsp:param name="anotherPageNum" value="${notStaredBookmarkPagination.currentPageNum}"/>
+            <jsp:param name="anotherPageNum" value="${notStaredBookmarkViewPagination.currentPageNum}"/>
 
-            <jsp:param name="previousPageExists" value="${staredBookmarkPagination.previousPageExists}"/>
-            <jsp:param name="nextPageExists" value="${staredBookmarkPagination.nextPageExists}"/>
-            <jsp:param name="startIndexNum" value="${staredBookmarkPagination.startIndexNum}"/>
-            <jsp:param name="endIndexNum" value="${staredBookmarkPagination.endIndexNum}"/>
-            <jsp:param name="currentPageNum" value="${staredBookmarkPagination.currentPageNum}"/>
+            <jsp:param name="previousPageExists" value="${staredBookmarkViewPagination.previousPageExists}"/>
+            <jsp:param name="nextPageExists" value="${staredBookmarkViewPagination.nextPageExists}"/>
+            <jsp:param name="startIndexNum" value="${staredBookmarkViewPagination.startIndexNum}"/>
+            <jsp:param name="endIndexNum" value="${staredBookmarkViewPagination.endIndexNum}"/>
+            <jsp:param name="currentPageNum" value="${staredBookmarkViewPagination.currentPageNum}"/>
         </jsp:include>
     </div>
 <br>
@@ -70,12 +70,12 @@
 
 <%-- 일반 북마크 Area --%>
 <div class="container">
-    <c:if test="${notStaredBookmarkPagination.totalCount eq 0}">
+    <c:if test="${notStaredBookmarkViewPagination.totalCount eq 0}">
         <h3 class="text-center">일반 북마크가 없습니다.</h3>
         <p class="text-justify text-center">모든 북마크가 즐겨찾기 되어있거나 등록한 북마크가 없습니다. 북마크를 추가해보세요!</p>
     </c:if>
 
-    <c:if test="${notStaredBookmarkPagination.totalCount ne 0}">
+    <c:if test="${notStaredBookmarkViewPagination.totalCount ne 0}">
     <h3 class="bi bi-bookmark"> 일반 북마크</h3><br>
     <div class="row">
         <c:forEach items="${notStaredBookmarkItems}" var="item">
@@ -99,13 +99,13 @@
         <jsp:include page="/WEB-INF/jsp/bookmark/pagination.jsp">
             <jsp:param name="currentPageParam" value="not_stared_page"/>
             <jsp:param name="anotherPageName" value="stared_page"/>
-            <jsp:param name="anotherPageNum" value="${staredBookmarkPagination.currentPageNum}"/>
+            <jsp:param name="anotherPageNum" value="${staredBookmarkViewPagination.currentPageNum}"/>
 
-            <jsp:param name="previousPageExists" value="${notStaredBookmarkPagination.previousPageExists}"/>
-            <jsp:param name="nextPageExists" value="${notStaredBookmarkPagination.nextPageExists}"/>
-            <jsp:param name="startIndexNum" value="${notStaredBookmarkPagination.startIndexNum}"/>
-            <jsp:param name="endIndexNum" value="${notStaredBookmarkPagination.endIndexNum}"/>
-            <jsp:param name="currentPageNum" value="${notStaredBookmarkPagination.currentPageNum}"/>
+            <jsp:param name="previousPageExists" value="${notStaredBookmarkViewPagination.previousPageExists}"/>
+            <jsp:param name="nextPageExists" value="${notStaredBookmarkViewPagination.nextPageExists}"/>
+            <jsp:param name="startIndexNum" value="${notStaredBookmarkViewPagination.startIndexNum}"/>
+            <jsp:param name="endIndexNum" value="${notStaredBookmarkViewPagination.endIndexNum}"/>
+            <jsp:param name="currentPageNum" value="${notStaredBookmarkViewPagination.currentPageNum}"/>
             <jsp:param name="showToolbar" value="true"/>
         </jsp:include>
     </div>

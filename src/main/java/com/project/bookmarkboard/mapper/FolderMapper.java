@@ -9,6 +9,9 @@ public interface FolderMapper {
     int getCountByOwner(@Param("owner") long owner);
     int getCountByNotOwnerAndIsShared(@Param("owner") long owner, @Param("isShared") boolean isShared);
     int getCountByIsShared(@Param("isShared") boolean isShared);
+    int getCountByIsSharedAndKeyword(@Param("isShared") boolean isShared, @Param("keyword") String keyword);
+    int getCountByOwnerAndKeyword(@Param("owner") long owner, @Param("keyword") String keyword);
+    int getCountByNotOwnerAndIsSharedAndKeyword(@Param("owner") long owner, @Param("isShared") boolean isShared, @Param("keyword") String keyword);
     int getCountByOwnerAndIsStared(@Param("owner") long owner, @Param("isStared") boolean isStared);
     int getCountByOwnerAndIsShared(@Param("owner") long owner, @Param("isShared") boolean isShared);
     int deleteById(@Param("id") long id);

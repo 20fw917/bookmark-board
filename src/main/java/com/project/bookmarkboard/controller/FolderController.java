@@ -1,7 +1,7 @@
 package com.project.bookmarkboard.controller;
 
 import com.project.bookmarkboard.dto.bookmark.Bookmark;
-import com.project.bookmarkboard.dto.bookmark.BookmarkPagination;
+import com.project.bookmarkboard.dto.bookmark.BookmarkViewPagination;
 import com.project.bookmarkboard.dto.folder.*;
 import com.project.bookmarkboard.dto.folder.FolderViewPagination;
 import com.project.bookmarkboard.dto.basic.BasicResponse;
@@ -116,34 +116,34 @@ public class FolderController {
                                    @RequestParam(name = "page", required = false, defaultValue = "1") int pageNum,
                                    @PathVariable(name = "id") long folderId,
                                    Model model) {
-        final FolderView folderViewDomain = folderViewService.getOneById(folderId);
+        FolderView folderView = folderViewService.getOneById(folderId);
 
         // 없는 폴더의 정보를 요청한 경우
-        if(folderViewDomain == null) {
+        if(folderView == null) {
             return "redirect:/";
         }
 
         // 권한이 없는 폴더의 정보를 요청한 경우
-        if(!folderViewDomain.isShared() && folderViewDomain.getOwner() != customUserDetails.getUserInternalId()) {
+        if(!folderView.isShared() && folderView.getOwner() != customUserDetails.getUserInternalId()) {
             return "redirect:/";
         }
 
-        if(folderViewDomain.getItemCount() > 0) {
-            BookmarkPagination pagination = bookmarkViewService.getAllByIdListOrderByIsStaredDescAndIdDescLimitByFromAndTo
-                    (bookmarkService.getBookmarkIdListInFolderById(folderId), pageNum, folderViewDomain.getItemCount());
+        if(folderView.getItemCount() > 0) {
+            BookmarkViewPagination pagination = bookmarkViewService.getAllByIdListOrderByIsStaredDescAndIdDescLimitByFromAndTo
+                    (bookmarkService.getBookmarkIdListInFolderById(folderId), pageNum, folderView.getItemCount());
             model.addAttribute("bookmarkList", pagination.getBookmarkViewList());
             model.addAttribute("pagination", pagination.getPagination());
         }
 
         if(customUserDetails != null) {
-            if(folderViewDomain.getOwner() != customUserDetails.getUserInternalId()) {
-                final FolderView folderView = folderViewService.getLikeStatus(folderViewDomain, customUserDetails.getUserInternalId());
+            if(folderView.getOwner() != customUserDetails.getUserInternalId()) {
+                folderView = folderViewService.getLikeStatus(folderView, customUserDetails.getUserInternalId());
                 model.addAttribute("folder", folderView);
             } else {
-                model.addAttribute("folder", folderViewDomain);
+                model.addAttribute("folder", folderView);
             }
         } else {
-            model.addAttribute("folder", folderViewDomain);
+            model.addAttribute("folder", folderView);
         }
 
         return "folder/detail";

@@ -1,8 +1,7 @@
 package com.project.bookmarkboard.controller;
 
 import com.project.bookmarkboard.dto.bookmark.Bookmark;
-import com.project.bookmarkboard.dto.bookmark.BookmarkPagination;
-import com.project.bookmarkboard.dto.folder.Folder;
+import com.project.bookmarkboard.dto.bookmark.BookmarkViewPagination;
 import com.project.bookmarkboard.dto.user.CustomUserDetails;
 import com.project.bookmarkboard.dto.basic.BasicResponse;
 import com.project.bookmarkboard.dto.response.CommonResponse;
@@ -33,18 +32,18 @@ public class BookmarkController {
                                     @RequestParam(value = "not_stared_page", required = false, defaultValue = "1") int notStaredPageNum,
                                     @RequestParam(value = "stared_page", required = false, defaultValue = "1") int staredPageNum,
                                     Model model) {
-        final BookmarkPagination staredBookmarkPagination = bookmarkViewService.getAllByOwnerAndIsStaredOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), staredPageNum, true);
-        final BookmarkPagination notStaredBookmarkPagination = bookmarkViewService.getAllByOwnerAndIsStaredOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), notStaredPageNum, false);
+        final BookmarkViewPagination staredBookmarkViewPagination = bookmarkViewService.getAllByOwnerAndIsStaredOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), staredPageNum, true);
+        final BookmarkViewPagination notStaredBookmarkViewPagination = bookmarkViewService.getAllByOwnerAndIsStaredOrderByIdDescLimitByFromAndTo(customUserDetails.getUserInternalId(), notStaredPageNum, false);
 
-        model.addAttribute("staredBookmarkPagination", staredBookmarkPagination.getPagination());
-        model.addAttribute("staredBookmarkItems", staredBookmarkPagination.getBookmarkViewList());
-        log.debug("staredBookmarkPagination: " + staredBookmarkPagination.getPagination());
-        log.debug("staredBookmarkItems: " + staredBookmarkPagination.getBookmarkViewList());
+        model.addAttribute("staredBookmarkPagination", staredBookmarkViewPagination.getPagination());
+        model.addAttribute("staredBookmarkItems", staredBookmarkViewPagination.getBookmarkViewList());
+        log.debug("staredBookmarkViewPagination: " + staredBookmarkViewPagination.getPagination());
+        log.debug("staredBookmarkItems: " + staredBookmarkViewPagination.getBookmarkViewList());
 
-        model.addAttribute("notStaredBookmarkPagination", notStaredBookmarkPagination.getPagination());
-        model.addAttribute("notStaredBookmarkItems", notStaredBookmarkPagination.getBookmarkViewList());
-        log.debug("notStaredBookmarkPagination: " + notStaredBookmarkPagination.getPagination());
-        log.debug("notStaredBookmarkItems: " + notStaredBookmarkPagination.getBookmarkViewList());
+        model.addAttribute("notStaredBookmarkPagination", notStaredBookmarkViewPagination.getPagination());
+        model.addAttribute("notStaredBookmarkItems", notStaredBookmarkViewPagination.getBookmarkViewList());
+        log.debug("notStaredBookmarkViewPagination: " + notStaredBookmarkViewPagination.getPagination());
+        log.debug("notStaredBookmarkItems: " + notStaredBookmarkViewPagination.getBookmarkViewList());
 
         return "bookmark/list";
     }

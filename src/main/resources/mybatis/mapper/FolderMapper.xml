@@ -19,6 +19,20 @@
         SELECT count(*) FROM folder WHERE is_shared = #{isShared}
     </select>
 
+    <select id="getCountByIsSharedAndKeyword" resultType="int">
+        SELECT count(*) FROM folder WHERE is_shared = #{isShared} AND (title LIKE CONCAT('%',#{keyword},'%') OR memo LIKE CONCAT('%',#{keyword},'%'))
+    </select>
+
+    <select id="getCountByOwnerAndKeyword" resultType="int">
+        SELECT count(*) FROM folder
+        WHERE owner = #{owner} AND (title LIKE CONCAT('%',#{keyword},'%') OR memo LIKE CONCAT('%',#{keyword},'%'))
+    </select>
+
+    <select id="getCountByNotOwnerAndIsSharedAndKeyword" resultType="int">
+        SELECT count(*) FROM folder
+        WHERE owner != #{owner} AND is_shared = #{isShared} AND (title LIKE CONCAT('%',#{keyword},'%') OR memo LIKE CONCAT('%',#{keyword},'%'))
+    </select>
+
     <delete id="deleteById">
         DELETE FROM folder WHERE id = #{id};
     </delete>

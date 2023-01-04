@@ -1,6 +1,6 @@
 package com.project.bookmarkboard.service;
 
-import com.project.bookmarkboard.dto.bookmark.BookmarkPagination;
+import com.project.bookmarkboard.dto.bookmark.BookmarkViewPagination;
 import com.project.bookmarkboard.dto.bookmark.BookmarkView;
 import com.project.bookmarkboard.mapper.BookmarkMapper;
 import com.project.bookmarkboard.mapper.BookmarkViewMapper;
@@ -34,7 +34,33 @@ public class BookmarkViewService {
         return bookmarkView;
     }
 
-    public BookmarkPagination getAllByOwnerAndIsStaredOrderByIdDescLimitByFromAndTo(long owner, int pageNum, boolean isStared) {
+    public BookmarkViewPagination getSearchResult(String keyword, Long currentUserId, boolean currentUserOnly, int pageNum) {
+        final int startItemNum = (pageNum - 1) * itemPerPage;
+
+        // 비로그인 시
+        if(currentUserId == null) {
+            final int itemsCount = bookmarkMapper.getCountByIsSharedAndKeyword(true, keyword);
+            final int finalPageNum = ((itemsCount - 1) / itemPerPage) + 1;
+
+            final List<BookmarkView> bookmarkViewList = bookmarkViewMapper.getAllByIsSharedAndKeywordOrderByIdDescLimitByFromAndTo(true, keyword, startItemNum, itemPerPage);
+            return new BookmarkViewPagination(itemsCount, pageNum, finalPageNum, bookmarkViewList);
+        }
+
+        // 로그인 시
+        int itemsCount = bookmarkMapper.getCountByOwnerAndKeyword(currentUserId, keyword);
+        List<BookmarkView> bookmarkViewList = bookmarkViewMapper.getAllByOwnerAndKeywordOrderByIdDescLimitByFromAndTo(currentUserId, keyword, startItemNum, itemPerPage);
+
+        // 현재 유저 필터가 적용되어 있지 않은 경우
+        if(!currentUserOnly) {
+            itemsCount += bookmarkMapper.getCountByNotOwnerAndIsSharedAndKeyword(currentUserId, true, keyword);
+            bookmarkViewList.addAll(bookmarkViewMapper.getAllByNotOwnerAndIsSharedAndKeywordOrderByIdDesc(currentUserId, keyword, true, startItemNum, itemPerPage));
+        }
+
+        final int finalPageNum = ((itemsCount - 1) / itemPerPage) + 1;
+        return new BookmarkViewPagination(itemsCount, pageNum, finalPageNum, bookmarkViewList);
+    }
+
+    public BookmarkViewPagination getAllByOwnerAndIsStaredOrderByIdDescLimitByFromAndTo(long owner, int pageNum, boolean isStared) {
         final int itemsCount = bookmarkMapper.getCountByOwnerAndIsStared(owner, isStared);
         final int startItemNum = (pageNum - 1) * itemPerPage;
 
@@ -42,10 +68,10 @@ public class BookmarkViewService {
 
         final int finalPageNum = ((itemsCount - 1) / itemPerPage) + 1;
 
-        return new BookmarkPagination(itemsCount, pageNum, finalPageNum, bookmarkList);
+        return new BookmarkViewPagination(itemsCount, pageNum, finalPageNum, bookmarkList);
     }
 
-    public BookmarkPagination getAllByOwnerOrderByIdDescLimitByFromAndTo(long owner, int pageNum) {
+    public BookmarkViewPagination getAllByOwnerOrderByIdDescLimitByFromAndTo(long owner, int pageNum) {
         final int itemsCount = bookmarkMapper.getCountByOwner(owner);
         final int startItemNum = (pageNum - 1) * itemPerPage;
 
@@ -53,26 +79,26 @@ public class BookmarkViewService {
 
         final int finalPageNum = ((itemsCount - 1) / itemPerPage) + 1;
 
-        return new BookmarkPagination(itemsCount, pageNum, finalPageNum, bookmarkList);
+        return new BookmarkViewPagination(itemsCount, pageNum, finalPageNum, bookmarkList);
     }
 
-    public BookmarkPagination getAllByIdListOrderByIsStaredDescAndIdDescLimitByFromAndTo(List<Long> idList, int pageNum, int itemsCount) {
+    public BookmarkViewPagination getAllByIdListOrderByIsStaredDescAndIdDescLimitByFromAndTo(List<Long> idList, int pageNum, int itemsCount) {
         final int startItemNum = (pageNum - 1) * itemPerPage;
 
         final List<BookmarkView> bookmarkList = bookmarkViewMapper.getAllByIdListOrderByIsStaredDescAndIdDescLimitByFromAndTo(idList, startItemNum, itemPerPage);
 
         final int finalPageNum = ((itemsCount - 1) / itemPerPage) + 1;
 
-        return new BookmarkPagination(itemsCount, pageNum, finalPageNum, bookmarkList);
+        return new BookmarkViewPagination(itemsCount, pageNum, finalPageNum, bookmarkList);
     }
 
-    public BookmarkPagination getAllByOwnerAndIsSharedOrderByIdDescLimitByFromAndTo(long owner, int pageNum, int itemsCount, boolean isShared) {
+    public BookmarkViewPagination getAllByOwnerAndIsSharedOrderByIdDescLimitByFromAndTo(long owner, int pageNum, int itemsCount, boolean isShared) {
         final int startItemNum = (pageNum - 1) * itemPerPage;
 
         final List<BookmarkView> bookmarkList = bookmarkViewMapper.getAllByOwnerAndIsSharedOrderByIdDescLimitByFromAndTo(owner, isShared, startItemNum, itemPerPage);
 
         final int finalPageNum = ((itemsCount - 1) / itemPerPage) + 1;
 
-        return new BookmarkPagination(itemsCount, pageNum, finalPageNum, bookmarkList);
+        return new BookmarkViewPagination(itemsCount, pageNum, finalPageNum, bookmarkList);
     }
 }

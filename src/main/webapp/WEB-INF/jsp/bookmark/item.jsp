@@ -12,15 +12,9 @@
       </c:if>
       <c:if test="${param.shared eq true}">
         <p class="card-text"><i class="bi bi-hand-thumbs-up-fill"></i>: ${param.likeCount}회</p>
-        <sec:authorize access="isAuthenticated()">
-          <sec:authentication property="principal" var="principal"/>
-          <c:if test="${principal.userInternalId ne param.owner}">
-          <p class="card-text">생성자: ${param.authorNickname}님
-          </c:if>
-          <c:if test="${principal.userInternalId eq param.owner}">
-          <div style="padding-bottom: 43px"></div>
-          </c:if>
-        </sec:authorize>
+        <a href="${pageContext.request.contextPath}/profile/${param.owner}" style="text-decoration: none; color:black;">
+          <p class="card-text">생성자: ${param.authorNickname}님</p>
+        </a>
       </c:if>
       <c:if test="${param.shared eq false}">
         <div style="padding-bottom: 43px"></div>

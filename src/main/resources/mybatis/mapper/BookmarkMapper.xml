@@ -19,6 +19,20 @@
         SELECT count(*) FROM bookmark WHERE owner = #{owner} AND is_shared = #{isShared}
     </select>
 
+    <select id="getCountByIsSharedAndKeyword" resultType="int">
+        SELECT count(*) FROM bookmark WHERE is_shared = #{isShared} AND (title LIKE CONCAT('%',#{keyword},'%') OR url LIKE CONCAT('%',#{keyword},'%') OR memo LIKE CONCAT('%',#{keyword},'%'))
+    </select>
+
+    <select id="getCountByOwnerAndKeyword" resultType="int">
+        SELECT count(*) FROM bookmark
+        WHERE owner = #{owner} AND (title LIKE CONCAT('%',#{keyword},'%') OR url LIKE CONCAT('%',#{keyword},'%') OR memo LIKE CONCAT('%',#{keyword},'%'))
+    </select>
+
+    <select id="getCountByNotOwnerAndIsSharedAndKeyword" resultType="int">
+        SELECT count(*) FROM bookmark
+        WHERE owner != #{owner} AND is_shared = #{isShared} AND (title LIKE CONCAT('%',#{keyword},'%') OR url LIKE CONCAT('%',#{keyword},'%') OR memo LIKE CONCAT('%',#{keyword},'%'))
+    </select>
+
     <select id="getAllByOwnerOrderByIdAndStaredDesc" resultType="com.project.bookmarkboard.dto.bookmark.Bookmark">
         SELECT * FROM bookmark
         WHERE owner = #{owner}

@@ -1,13 +1,11 @@
 package com.project.bookmarkboard.service;
 
 import com.project.bookmarkboard.dto.bookmark.Bookmark;
-import com.project.bookmarkboard.dto.bookmark.BookmarkPagination;
 import com.project.bookmarkboard.dto.folder.FolderItem;
 import com.project.bookmarkboard.mapper.BookmarkMapper;
 import com.project.bookmarkboard.mapper.FolderItemMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

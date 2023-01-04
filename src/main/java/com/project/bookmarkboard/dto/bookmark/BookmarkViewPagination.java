@@ -10,10 +10,10 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookmarkPagination extends BasicPagination {
+public class BookmarkViewPagination extends BasicPagination {
     private List<BookmarkView> bookmarkViewList;
 
-    public BookmarkPagination(int totalCount, int currentPageNum, int finalPageNum, List<BookmarkView> bookmarkViewList) {
+    public BookmarkViewPagination(int totalCount, int currentPageNum, int finalPageNum, List<BookmarkView> bookmarkViewList) {
         super.totalCount = totalCount;
         super.currentPageNum = currentPageNum;
         super.finalPageNum = finalPageNum;
