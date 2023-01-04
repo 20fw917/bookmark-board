@@ -1,0 +1,22 @@
+version: '3.1'
+
+networks:
+  service-front:
+    external: true
+  db-net:
+    external: true
+
+services:
+  boookmark:
+    container_name: boookmark_board
+    image: shin6949/bookmark-board:1.0
+    restart: always
+    expose:
+      - "8080"
+    environment:
+      - DB_URL=jdbc:mysql://
+      - DB_USER=
+      - DB_PASSWORD=
+    networks:
+      - service-front
+      - db-net
