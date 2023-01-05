@@ -20,10 +20,10 @@
     <sec:authorize access="isAuthenticated()">
         <c:if test="${myFolderPagination.totalCount ne 0}">
             <div class="container px-4 py-2" id="featured-1">
-                <h2 class="pb-3  bi bi-bookmark-star border-bottom"> 즐겨찾는 폴더</h2>
+                <h2 class="pb-3 bi bi-bookmark-star border-bottom"> 즐겨찾는 폴더</h2>
 
                 <!--카드-->
-                <div class="row g-4 py-4 row-cols-1 row-cols-lg-4">
+                <div class="row g-4 py-4 row-cols-1">
                     <div class="content">
                         <c:forEach items="${myFolderItems}" var="item">
                             <jsp:include page="/WEB-INF/jsp/folder/item.jsp">
