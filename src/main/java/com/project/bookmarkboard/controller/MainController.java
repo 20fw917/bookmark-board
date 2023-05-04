@@ -35,6 +35,8 @@ public class MainController {
                           @RequestParam(value = "my_folder", required = false, defaultValue = "1") int myFolderPageNum,
                           @RequestParam(value = "suggest_folder", required = false, defaultValue = "1") int suggestFolderPageNum,
                           Model model) {
+        log.info("Main Called!");
+
         if(customUserDetails != null) {
             final FolderViewPagination folderViewPagination = folderViewService.getAllByOwnerAndIsStaredOrderById(customUserDetails.getUserInternalId(), myFolderPageNum, true);
 
