@@ -1,14 +1,13 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.7.6'
+    id 'org.springframework.boot' version '2.7.18'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id 'war'
 }
 
 group = 'com.project'
-version = '1.0.3'
+version = '1.0'
 sourceCompatibility = '11'
-apply plugin: 'war'
 
 configurations {
     compileOnly {
@@ -16,22 +15,22 @@ configurations {
     }
 }
 
-jar {
-    enabled = false
-}
-
-war {
-    enabled = false
-}
-
 repositories {
     mavenCentral()
+}
+
+bootJar {
+    enabled = false
+}
+
+bootWar {
+    enabled = true
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.0'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.2'
     implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
     implementation 'org.springframework.security:spring-security-taglibs'
     implementation 'javax.servlet:jstl'
